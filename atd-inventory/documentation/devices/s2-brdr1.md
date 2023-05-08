@@ -1,4 +1,4 @@
-# s1-brdr1
+# s2-brdr1
 # Table of Contents
 
 - [Management](#management)
@@ -140,7 +140,7 @@ management api http-commands
 
 | Domain-id | Local-interface | Peer-address | Peer-link |
 | --------- | --------------- | ------------ | --------- |
-| ATD_BORDER-DC1 | Vlan4094 | 10.255.252.9 | Port-Channel1 |
+| ATD_BORDER-DC2 | Vlan4094 | 10.255.252.9 | Port-Channel1 |
 
 Dual primary detection is disabled.
 
@@ -149,7 +149,7 @@ Dual primary detection is disabled.
 ```eos
 !
 mlag configuration
-   domain-id ATD_BORDER-DC1
+   domain-id ATD_BORDER-DC2
    local-interface Vlan4094
    peer-address 10.255.252.9
    peer-link Port-Channel1
@@ -250,8 +250,8 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | MLAG_PEER_s1-brdr2_Ethernet1 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
-| Ethernet6 | MLAG_PEER_s1-brdr2_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
+| Ethernet1 | MLAG_PEER_s2-brdr2_Ethernet1 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
+| Ethernet6 | MLAG_PEER_s2-brdr2_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -259,10 +259,10 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet2 | P2P_LINK_TO_S1-SPINE1_Ethernet7 | routed | - | 172.30.255.17/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_S1-SPINE2_Ethernet7 | routed | - | 172.30.255.19/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.0/31 | **default | *1500 | *False | **- | **- |
-| Ethernet5 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.0/31 | **default | *1500 | *False | **- | **- |
+| Ethernet2 | P2P_LINK_TO_S2-SPINE1_Ethernet7 | routed | - | 172.30.255.17/31 | default | 1500 | False | - | - |
+| Ethernet3 | P2P_LINK_TO_S2-SPINE2_Ethernet7 | routed | - | 172.30.255.19/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_s1-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.1/31 | **default | *1500 | *False | **- | **- |
+| Ethernet5 | P2P_LINK_TO_s1-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.1/31 | **default | *1500 | *False | **- | **- |
 *Inherited from Port-Channel Interface
 
 ### Ethernet Interfaces Device Configuration
@@ -270,12 +270,12 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description MLAG_PEER_s1-brdr2_Ethernet1
+   description MLAG_PEER_s2-brdr2_Ethernet1
    no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
-   description P2P_LINK_TO_S1-SPINE1_Ethernet7
+   description P2P_LINK_TO_S2-SPINE1_Ethernet7
    no shutdown
    mtu 1500
    no switchport
@@ -284,7 +284,7 @@ interface Ethernet2
    ip ospf area 0.0.0.0
 !
 interface Ethernet3
-   description P2P_LINK_TO_S1-SPINE2_Ethernet7
+   description P2P_LINK_TO_S2-SPINE2_Ethernet7
    no shutdown
    mtu 1500
    no switchport
@@ -293,17 +293,17 @@ interface Ethernet3
    ip ospf area 0.0.0.0
 !
 interface Ethernet4
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
+   description P2P_LINK_TO_s1-brdr1_Port-Channel4
    no shutdown
    channel-group 4 mode active
 !
 interface Ethernet5
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
+   description P2P_LINK_TO_s1-brdr1_Port-Channel4
    no shutdown
    channel-group 4 mode active
 !
 interface Ethernet6
-   description MLAG_PEER_s1-brdr2_Ethernet6
+   description MLAG_PEER_s2-brdr2_Ethernet6
    no shutdown
    channel-group 1 mode active
 ```
@@ -316,20 +316,20 @@ interface Ethernet6
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | MLAG_PEER_s1-brdr2_Po1 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel1 | MLAG_PEER_s2-brdr2_Po1 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 #### IPv4
 
 | Interface | Description | Type | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ---- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
-| Port-Channel4 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | routed | - | 172.16.200.0/31 | default | 1500 | False | - | - |
+| Port-Channel4 | P2P_LINK_TO_s1-brdr1_Port-Channel4 | routed | - | 172.16.200.1/31 | default | 1500 | False | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
 interface Port-Channel1
-   description MLAG_PEER_s1-brdr2_Po1
+   description MLAG_PEER_s2-brdr2_Po1
    no shutdown
    switchport
    switchport trunk allowed vlan 2-4094
@@ -338,11 +338,11 @@ interface Port-Channel1
    switchport trunk group MLAG
 !
 interface Port-Channel4
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
+   description P2P_LINK_TO_s1-brdr1_Port-Channel4
    no shutdown
    mtu 1500
    no switchport
-   ip address 172.16.200.0/31
+   ip address 172.16.200.1/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 ```
@@ -490,7 +490,7 @@ interface Vlan4094
 ```eos
 !
 interface Vxlan1
-   description s1-brdr1_VTEP
+   description s2-brdr1_VTEP
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
@@ -715,20 +715,20 @@ router bgp 65103
    neighbor MLAG-IPv4-UNDERLAY-PEER peer group
    neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65103
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
-   neighbor MLAG-IPv4-UNDERLAY-PEER description s1-brdr2
+   neighbor MLAG-IPv4-UNDERLAY-PEER description s2-brdr2
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 192.0.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.0.255.1 remote-as 65001
-   neighbor 192.0.255.1 description s1-spine1
+   neighbor 192.0.255.1 description s2-spine1
    neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.0.255.2 remote-as 65001
-   neighbor 192.0.255.2 description s1-spine2
+   neighbor 192.0.255.2 description s2-spine2
    neighbor 192.0.255.7 peer group EVPN-OVERLAY-CORE
    neighbor 192.0.255.7 remote-as 65103
-   neighbor 192.0.255.7 description s2-brdr1
+   neighbor 192.0.255.7 description s1-brdr1
    !
    vlan-aware-bundle Extend
       rd 192.0.255.7:10110

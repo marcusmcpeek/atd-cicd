@@ -27,7 +27,7 @@ router_bgp:
       type: ipv4
       remote_as: '65103'
       next_hop_self: true
-      description: s1-brdr2
+      description: s2-brdr2
       password: vnEaG8gMeQf3d3cN6PktXQ==
       maximum_routes: 12000
       send_community: all
@@ -54,15 +54,15 @@ router_bgp:
   neighbors:
     192.0.255.1:
       peer_group: EVPN-OVERLAY-PEERS
-      description: s1-spine1
+      description: s2-spine1
       remote_as: '65001'
     192.0.255.2:
       peer_group: EVPN-OVERLAY-PEERS
-      description: s1-spine2
+      description: s2-spine2
       remote_as: '65001'
     192.0.255.7:
       peer_group: EVPN-OVERLAY-CORE
-      description: s2-brdr1
+      description: s1-brdr1
       remote_as: '65103'
   vrfs:
     Tenant_A_OP_Zone:
@@ -227,7 +227,7 @@ vlan_interfaces:
     ip_address: 10.255.251.8/31
 port_channel_interfaces:
   Port-Channel1:
-    description: MLAG_PEER_s1-brdr2_Po1
+    description: MLAG_PEER_s2-brdr2_Po1
     type: switched
     shutdown: false
     vlans: 2-4094
@@ -236,42 +236,42 @@ port_channel_interfaces:
     - LEAF_PEER_L3
     - MLAG
   Port-Channel4:
-    peer: s2-brdr1
+    peer: s1-brdr1
     peer_interface: Port-Channel4
     peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
+    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
     type: routed
     shutdown: false
     mtu: 1500
-    ip_address: 172.16.200.0/31
+    ip_address: 172.16.200.1/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
 ethernet_interfaces:
   Ethernet1:
-    peer: s1-brdr2
+    peer: s2-brdr2
     peer_interface: Ethernet1
     peer_type: mlag_peer
-    description: MLAG_PEER_s1-brdr2_Ethernet1
+    description: MLAG_PEER_s2-brdr2_Ethernet1
     type: switched
     shutdown: false
     channel_group:
       id: 1
       mode: active
   Ethernet6:
-    peer: s1-brdr2
+    peer: s2-brdr2
     peer_interface: Ethernet6
     peer_type: mlag_peer
-    description: MLAG_PEER_s1-brdr2_Ethernet6
+    description: MLAG_PEER_s2-brdr2_Ethernet6
     type: switched
     shutdown: false
     channel_group:
       id: 1
       mode: active
   Ethernet2:
-    peer: s1-spine1
+    peer: s2-spine1
     peer_interface: Ethernet7
     peer_type: spine
-    description: P2P_LINK_TO_S1-SPINE1_Ethernet7
+    description: P2P_LINK_TO_S2-SPINE1_Ethernet7
     shutdown: false
     mtu: 1500
     type: routed
@@ -279,10 +279,10 @@ ethernet_interfaces:
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
   Ethernet3:
-    peer: s1-spine2
+    peer: s2-spine2
     peer_interface: Ethernet7
     peer_type: spine
-    description: P2P_LINK_TO_S1-SPINE2_Ethernet7
+    description: P2P_LINK_TO_S2-SPINE2_Ethernet7
     shutdown: false
     mtu: 1500
     type: routed
@@ -290,25 +290,25 @@ ethernet_interfaces:
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
   Ethernet4:
-    peer: s2-brdr1
+    peer: s1-brdr1
     peer_interface: Port-Channel4
     peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
+    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
     shutdown: false
     channel_group:
       id: 4
       mode: active
   Ethernet5:
-    peer: s2-brdr1
+    peer: s1-brdr1
     peer_interface: Port-Channel4
     peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
+    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
     shutdown: false
     channel_group:
       id: 4
       mode: active
 mlag_configuration:
-  domain_id: ATD_BORDER-DC1
+  domain_id: ATD_BORDER-DC2
   local_interface: Vlan4094
   peer_address: 10.255.252.9
   peer_link: Port-Channel1
@@ -360,7 +360,7 @@ route_maps:
         description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
 vxlan_interface:
   Vxlan1:
-    description: s1-brdr1_VTEP
+    description: s2-brdr1_VTEP
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
