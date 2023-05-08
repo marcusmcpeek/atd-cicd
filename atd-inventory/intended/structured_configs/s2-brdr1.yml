@@ -1,6 +1,6 @@
 router_bgp:
-  as: '65103'
-  router_id: 192.0.255.7
+  as: '65203'
+  router_id: 192.2.255.7
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -25,7 +25,7 @@ router_bgp:
       ebgp_multihop: 15
     MLAG-IPv4-UNDERLAY-PEER:
       type: ipv4
-      remote_as: '65103'
+      remote_as: '65203'
       next_hop_self: true
       description: s2-brdr2
       password: vnEaG8gMeQf3d3cN6PktXQ==
@@ -52,11 +52,11 @@ router_bgp:
         domain_remote: true
         activate: true
   neighbors:
-    192.0.255.1:
+    192.2.255.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: s2-spine1
       remote_as: '65001'
-    192.0.255.2:
+    192.2.255.2:
       peer_group: EVPN-OVERLAY-PEERS
       description: s2-spine2
       remote_as: '65001'
@@ -66,8 +66,8 @@ router_bgp:
       remote_as: '65103'
   vrfs:
     Tenant_A_OP_Zone:
-      router_id: 192.0.255.7
-      rd: 192.0.255.7:10
+      router_id: 192.2.255.7
+      rd: 192.2.255.7:10
       route_targets:
         import:
           evpn:
@@ -78,11 +78,11 @@ router_bgp:
       redistribute_routes:
       - connected
       neighbors:
-        10.255.251.9:
+        10.254.251.9:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
   vlan_aware_bundles:
     Tenant_A_OP_Zone:
-      rd: 192.0.255.7:10
+      rd: 192.2.255.7:10
       route_targets:
         both:
         - '10:10'
@@ -94,10 +94,10 @@ router_bgp:
       vlan: 100,200,210
       rd_evpn_domain:
         domain: remote
-        rd: 192.0.255.7:10
+        rd: 192.2.255.7:10
     Extend:
       tenant: Tenant_A
-      rd: 192.0.255.7:10110
+      rd: 192.2.255.7:10110
       route_targets:
         both:
         - 10110:10110
@@ -108,7 +108,7 @@ router_bgp:
       - learned
       rd_evpn_domain:
         domain: remote
-        rd: 192.0.255.7:10110
+        rd: 192.2.255.7:10110
       vlan: '110'
 static_routes:
 - vrf: default
@@ -144,7 +144,7 @@ management_interfaces:
     description: oob_management
     shutdown: false
     vrf: default
-    ip_address: 192.168.0.100/24
+    ip_address: 192.168.0.200/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -184,13 +184,13 @@ vlan_interfaces:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
     mtu: 1500
-    ip_address: 10.255.251.8/31
+    ip_address: 10.254.251.8/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
-    ip_address: 10.255.252.8/31
+    ip_address: 10.254.252.8/31
     no_autostate: true
     mtu: 1500
   Vlan100:
@@ -224,7 +224,7 @@ vlan_interfaces:
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
     vrf: Tenant_A_OP_Zone
     mtu: 1500
-    ip_address: 10.255.251.8/31
+    ip_address: 10.254.251.8/31
 port_channel_interfaces:
   Port-Channel1:
     description: MLAG_PEER_s2-brdr2_Po1
@@ -275,7 +275,7 @@ ethernet_interfaces:
     shutdown: false
     mtu: 1500
     type: routed
-    ip_address: 172.30.255.17/31
+    ip_address: 172.31.255.17/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
   Ethernet3:
@@ -286,7 +286,7 @@ ethernet_interfaces:
     shutdown: false
     mtu: 1500
     type: routed
-    ip_address: 172.30.255.19/31
+    ip_address: 172.31.255.19/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
   Ethernet4:
@@ -310,7 +310,7 @@ ethernet_interfaces:
 mlag_configuration:
   domain_id: ATD_BORDER-DC2
   local_interface: Vlan4094
-  peer_address: 10.255.252.9
+  peer_address: 10.254.252.9
   peer_link: Port-Channel1
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
@@ -318,12 +318,12 @@ loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 192.0.255.7/32
+    ip_address: 192.2.255.7/32
     ospf_area: 0.0.0.0
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
-    ip_address: 192.0.254.7/32
+    ip_address: 192.2.254.7/32
     ospf_area: 0.0.0.0
   Loopback100:
     description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
@@ -334,7 +334,7 @@ router_ospf:
   process_ids:
     100:
       passive_interface_default: true
-      router_id: 192.0.255.7
+      router_id: 192.2.255.7
       max_lsa: 12000
       no_passive_interfaces:
       - Ethernet2
@@ -349,7 +349,7 @@ router_bfd:
     multiplier: 3
 ip_igmp_snooping:
   globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
+ip_virtual_router_mac_address: 00:1c:73:00:dc:02
 route_maps:
   RM-MLAG-PEER-IN:
     sequence_numbers:

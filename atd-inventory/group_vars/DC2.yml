@@ -3,7 +3,7 @@ spine:
   defaults:
     platform: CEOS-LAB
     bgp_as: 65001
-    loopback_ipv4_pool: 192.0.255.0/24
+    loopback_ipv4_pool: 192.2.255.0/24
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -13,10 +13,10 @@ spine:
   nodes:
     s2-spine1:
       id: 1
-      mgmt_ip: 192.168.0.10/24
+      mgmt_ip: 192.168.0.20/24
     s2-spine2:
       id: 2
-      mgmt_ip: 192.168.0.11/24
+      mgmt_ip: 192.168.0.21/24
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -25,16 +25,16 @@ spine:
 l3leaf:
   defaults:
     platform: CEOS-LAB
-    loopback_ipv4_pool: 192.0.255.0/24
+    loopback_ipv4_pool: 192.2.255.0/24
     loopback_ipv4_offset: 2
-    vtep_loopback_ipv4_pool: 192.0.254.0/24
+    vtep_loopback_ipv4_pool: 192.2.254.0/24
     uplink_interfaces: [Ethernet2, Ethernet3]
     uplink_switches: [s2-spine1, s2-spine2]
-    uplink_ipv4_pool: 172.30.255.0/24
+    uplink_ipv4_pool: 172.31.255.0/24
     mlag_interfaces: [ Ethernet1, Ethernet6 ]
-    mlag_peer_ipv4_pool: 10.255.252.0/24
-    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
-    virtual_router_mac_address: 00:1c:73:00:dc:01
+    mlag_peer_ipv4_pool: 10.254.252.0/24
+    mlag_peer_l3_ipv4_pool: 10.254.251.0/24
+    virtual_router_mac_address: 00:1c:73:00:dc:02
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -48,37 +48,37 @@ l3leaf:
     ATD_LEAF1-DC2:
       # filter: 
       #   tags: [ special, opzone ]
-      bgp_as: 65101
+      bgp_as: 65201
       nodes:
         s2-leaf1:
           id: 1
-          mgmt_ip: 192.168.0.12/24
+          mgmt_ip: 192.168.0.22/24
           uplink_switch_interfaces: [ Ethernet2, Ethernet2 ]
         s2-leaf2:
           id: 2
-          mgmt_ip: 192.168.0.13/24
+          mgmt_ip: 192.168.0.23/24
           uplink_switch_interfaces: [ Ethernet3, Ethernet3 ]
     ATD_LEAF2-DC2:
       # filter:
       #   tags: [ opzone ]
-      bgp_as: 65102
+      bgp_as: 65202
       nodes:
         s2-leaf3:
           id: 3
-          mgmt_ip: 192.168.0.14/24
+          mgmt_ip: 192.168.0.24/24
           uplink_switch_interfaces: [ Ethernet4, Ethernet4 ]
         s2-leaf4:
           id: 4
-          mgmt_ip: 192.168.0.15/24
+          mgmt_ip: 192.168.0.25/24
           uplink_switch_interfaces: [ Ethernet5, Ethernet5 ]
     ATD_BORDER-DC2:
       # filter: 
       #   tags: [ special, opzone ]
-      bgp_as: 65103
+      bgp_as: 65203
       nodes:
         s2-brdr1:
           id: 5
-          mgmt_ip: 192.168.0.100/24
+          mgmt_ip: 192.168.0.200/24
           uplink_switch_interfaces: [ Ethernet7, Ethernet7 ]
           evpn_gateway:
             remote_peers:
@@ -90,5 +90,5 @@ l3leaf:
               inter_domain: true
         s2-brdr2:
           id: 6
-          mgmt_ip: 192.168.0.101/24
+          mgmt_ip: 192.168.0.201/24
           uplink_switch_interfaces: [ Ethernet8, Ethernet8 ]
