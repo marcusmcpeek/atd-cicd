@@ -8,6 +8,20 @@ router_bgp:
   - graceful-restart
   - maximum-paths 4 ecmp 4
   peer_groups:
+    MLAG-IPv4-UNDERLAY-PEER:
+      type: ipv4
+      remote_as: '65103'
+      next_hop_self: true
+      description: s1-brdr2
+      password: vnEaG8gMeQf3d3cN6PktXQ==
+      maximum_routes: 12000
+      send_community: all
+      route_map_in: RM-MLAG-PEER-IN
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      password: AQQvKeimxJu+uGQ/yYvv9w==
+      maximum_routes: 12000
+      send_community: all
     EVPN-OVERLAY-PEERS:
       type: evpn
       update_source: Loopback0
@@ -23,35 +37,28 @@ router_bgp:
       send_community: all
       maximum_routes: 0
       ebgp_multihop: 15
-    MLAG-IPv4-UNDERLAY-PEER:
-      type: ipv4
-      remote_as: '65103'
-      next_hop_self: true
-      description: s1-brdr2
-      password: vnEaG8gMeQf3d3cN6PktXQ==
-      maximum_routes: 12000
-      send_community: all
-      route_map_in: RM-MLAG-PEER-IN
   address_family_ipv4:
     peer_groups:
-      EVPN-OVERLAY-PEERS:
-        activate: false
-      EVPN-OVERLAY-CORE:
-        activate: false
       MLAG-IPv4-UNDERLAY-PEER:
         activate: true
-  address_family_evpn:
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-        inter_domain: true
-    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
       EVPN-OVERLAY-PEERS:
-        activate: true
+        activate: false
       EVPN-OVERLAY-CORE:
-        domain_remote: true
-        activate: true
+        activate: false
   neighbors:
+    10.255.251.9:
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: s1-brdr2
+    172.30.255.16:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65001'
+      description: s1-spine1_Ethernet7
+    172.30.255.18:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65001'
+      description: s1-spine2_Ethernet7
     192.0.255.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: s1-spine1
@@ -64,6 +71,24 @@ router_bgp:
       peer_group: EVPN-OVERLAY-CORE
       description: s2-brdr1
       remote_as: '65203'
+    172.16.200.1:
+      remote_as: '65203'
+      description: s2-brdr1
+      peer_group: IPv4-UNDERLAY-PEERS
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+        inter_domain: true
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-CORE:
+        domain_remote: true
+        activate: true
   vrfs:
     Tenant_A_OP_Zone:
       router_id: 192.0.255.7
@@ -185,8 +210,6 @@ vlan_interfaces:
     shutdown: false
     mtu: 1500
     ip_address: 10.255.251.8/31
-    ospf_network_point_to_point: true
-    ospf_area: 0.0.0.0
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
@@ -244,8 +267,6 @@ port_channel_interfaces:
     shutdown: false
     mtu: 1500
     ip_address: 172.16.200.0/31
-    ospf_network_point_to_point: true
-    ospf_area: 0.0.0.0
 ethernet_interfaces:
   Ethernet1:
     peer: s1-brdr2
@@ -276,8 +297,6 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     ip_address: 172.30.255.17/31
-    ospf_network_point_to_point: true
-    ospf_area: 0.0.0.0
   Ethernet3:
     peer: s1-spine2
     peer_interface: Ethernet7
@@ -287,8 +306,6 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     ip_address: 172.30.255.19/31
-    ospf_network_point_to_point: true
-    ospf_area: 0.0.0.0
   Ethernet4:
     peer: s2-brdr1
     peer_interface: Port-Channel4
@@ -314,42 +331,6 @@ mlag_configuration:
   peer_link: Port-Channel1
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
-loopback_interfaces:
-  Loopback0:
-    description: EVPN_Overlay_Peering
-    shutdown: false
-    ip_address: 192.0.255.7/32
-    ospf_area: 0.0.0.0
-  Loopback1:
-    description: VTEP_VXLAN_Tunnel_Source
-    shutdown: false
-    ip_address: 192.0.254.7/32
-    ospf_area: 0.0.0.0
-  Loopback100:
-    description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
-    shutdown: false
-    vrf: Tenant_A_OP_Zone
-    ip_address: 10.255.1.7/32
-router_ospf:
-  process_ids:
-    100:
-      passive_interface_default: true
-      router_id: 192.0.255.7
-      max_lsa: 12000
-      no_passive_interfaces:
-      - Ethernet2
-      - Ethernet3
-      - Vlan4093
-      - Port-Channel4
-      bfd_enable: false
-router_bfd:
-  multihop:
-    interval: 1200
-    min_rx: 1200
-    multiplier: 3
-ip_igmp_snooping:
-  globally_enabled: true
-ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 route_maps:
   RM-MLAG-PEER-IN:
     sequence_numbers:
@@ -358,6 +339,41 @@ route_maps:
         set:
         - origin incomplete
         description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 192.0.255.7/32
+  Loopback1:
+    description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
+    ip_address: 192.0.254.7/32
+  Loopback100:
+    description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+    shutdown: false
+    vrf: Tenant_A_OP_Zone
+    ip_address: 10.255.1.7/32
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 192.0.255.0/24 eq 32
+      20:
+        action: permit 192.0.254.0/24 eq 32
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 vxlan_interface:
   Vxlan1:
     description: s1-brdr1_VTEP
