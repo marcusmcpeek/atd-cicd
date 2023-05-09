@@ -91,7 +91,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-LEAF1_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.2/31
     ospf_network_point_to_point: true
@@ -102,7 +102,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-LEAF2_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.6/31
     ospf_network_point_to_point: true
@@ -113,7 +113,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-LEAF3_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.10/31
     ospf_network_point_to_point: true
@@ -124,7 +124,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-LEAF4_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.14/31
     ospf_network_point_to_point: true
@@ -135,7 +135,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-BRDR1_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.18/31
     ospf_network_point_to_point: true
@@ -146,7 +146,7 @@ ethernet_interfaces:
     peer_type: l3leaf
     description: P2P_LINK_TO_S2-BRDR2_Ethernet3
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.31.255.22/31
     ospf_network_point_to_point: true

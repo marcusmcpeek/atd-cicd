@@ -151,7 +151,7 @@ vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     ip_address: 10.255.251.5/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -160,7 +160,7 @@ vlan_interfaces:
     shutdown: false
     ip_address: 10.255.252.5/31
     no_autostate: true
-    mtu: 1500
+    mtu: 9000
   Vlan100:
     tenant: Tenant_A
     tags:
@@ -191,7 +191,7 @@ vlan_interfaces:
     shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
     vrf: Tenant_A_OP_Zone
-    mtu: 1500
+    mtu: 9000
     ip_address: 10.255.251.5/31
 port_channel_interfaces:
   Port-Channel1:
@@ -237,7 +237,7 @@ ethernet_interfaces:
     peer_type: spine
     description: P2P_LINK_TO_S1-SPINE1_Ethernet5
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.30.255.13/31
     ospf_network_point_to_point: true
@@ -248,7 +248,7 @@ ethernet_interfaces:
     peer_type: spine
     description: P2P_LINK_TO_S1-SPINE2_Ethernet5
     shutdown: false
-    mtu: 1500
+    mtu: 9000
     type: routed
     ip_address: 172.30.255.15/31
     ospf_network_point_to_point: true

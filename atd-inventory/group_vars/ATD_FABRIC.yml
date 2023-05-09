@@ -26,7 +26,7 @@ vxlan_vlan_aware_bundles: true
 # overlay_mlag_rfc5549: true
 # underlay_ipv6: true
 
-underlay_routing_protocol: EBGP
+underlay_routing_protocol: OSPF
 
 # Optional, enable multicast features
 # underlay_multicast: true
@@ -49,7 +49,7 @@ bgp_peer_groups:
 # Refer to design guide
 
 # Update p2p mtu 9000 -> 1500
-p2p_uplinks_mtu: 1500
+# p2p_uplinks_mtu: 1500
 
 # Adjust default bfd values
 bfd_multihop:
