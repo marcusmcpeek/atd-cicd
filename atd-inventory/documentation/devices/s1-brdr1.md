@@ -261,9 +261,7 @@ vlan 4094
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet2 | P2P_LINK_TO_S1-SPINE1_Ethernet7 | routed | - | 172.30.255.17/31 | default | 1500 | False | - | - |
 | Ethernet3 | P2P_LINK_TO_S1-SPINE2_Ethernet7 | routed | - | 172.30.255.19/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.0/31 | **default | *1500 | *False | **- | **- |
-| Ethernet5 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | *routed | 4 | *172.16.200.0/31 | **default | *1500 | *False | **- | **- |
-*Inherited from Port-Channel Interface
+| Ethernet4 | P2P_LINK_TO_s2-brdr1_Ethernet4 | routed | - | 172.16.200.0/31 | default | 1500 | False | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -289,14 +287,11 @@ interface Ethernet3
    ip address 172.30.255.19/31
 !
 interface Ethernet4
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
+   description P2P_LINK_TO_s2-brdr1_Ethernet4
    no shutdown
-   channel-group 4 mode active
-!
-interface Ethernet5
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
-   no shutdown
-   channel-group 4 mode active
+   mtu 1500
+   no switchport
+   ip address 172.16.200.0/31
 !
 interface Ethernet6
    description MLAG_PEER_s1-brdr2_Ethernet6
@@ -314,12 +309,6 @@ interface Ethernet6
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel1 | MLAG_PEER_s1-brdr2_Po1 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
-#### IPv4
-
-| Interface | Description | Type | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | ---- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
-| Port-Channel4 | P2P_LINK_TO_s2-brdr1_Port-Channel4 | routed | - | 172.16.200.0/31 | default | 1500 | False | - | - |
-
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
@@ -332,13 +321,6 @@ interface Port-Channel1
    switchport mode trunk
    switchport trunk group LEAF_PEER_L3
    switchport trunk group MLAG
-!
-interface Port-Channel4
-   description P2P_LINK_TO_s2-brdr1_Port-Channel4
-   no shutdown
-   mtu 1500
-   no switchport
-   ip address 172.16.200.0/31
 ```
 
 ## Loopback Interfaces

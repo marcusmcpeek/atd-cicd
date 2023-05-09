@@ -258,15 +258,6 @@ port_channel_interfaces:
     trunk_groups:
     - LEAF_PEER_L3
     - MLAG
-  Port-Channel4:
-    peer: s1-brdr1
-    peer_interface: Port-Channel4
-    peer_type: l3leaf
-    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
-    type: routed
-    shutdown: false
-    mtu: 1500
-    ip_address: 172.16.200.1/31
 ethernet_interfaces:
   Ethernet1:
     peer: s2-brdr2
@@ -308,22 +299,13 @@ ethernet_interfaces:
     ip_address: 172.31.255.19/31
   Ethernet4:
     peer: s1-brdr1
-    peer_interface: Port-Channel4
+    peer_interface: Ethernet4
     peer_type: l3leaf
-    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
+    description: P2P_LINK_TO_s1-brdr1_Ethernet4
+    type: routed
     shutdown: false
-    channel_group:
-      id: 4
-      mode: active
-  Ethernet5:
-    peer: s1-brdr1
-    peer_interface: Port-Channel4
-    peer_type: l3leaf
-    description: P2P_LINK_TO_s1-brdr1_Port-Channel4
-    shutdown: false
-    channel_group:
-      id: 4
-      mode: active
+    mtu: 1500
+    ip_address: 172.16.200.1/31
 mlag_configuration:
   domain_id: ATD_BORDER-DC2
   local_interface: Vlan4094

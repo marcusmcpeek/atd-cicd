@@ -261,6 +261,7 @@ vlan 4094
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet2 | P2P_LINK_TO_S1-SPINE1_Ethernet8 | routed | - | 172.30.255.21/31 | default | 1500 | False | - | - |
 | Ethernet3 | P2P_LINK_TO_S1-SPINE2_Ethernet8 | routed | - | 172.30.255.23/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_s2-brdr2_Ethernet4 | routed | - | 172.16.200.2/31 | default | 1500 | False | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -284,6 +285,13 @@ interface Ethernet3
    mtu 1500
    no switchport
    ip address 172.30.255.23/31
+!
+interface Ethernet4
+   description P2P_LINK_TO_s2-brdr2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.16.200.2/31
 !
 interface Ethernet6
    description MLAG_PEER_s1-brdr1_Ethernet6
@@ -582,6 +590,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
+| 172.16.200.3 | 65203 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
 | 172.30.255.20 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
 | 172.30.255.22 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
 | 192.0.255.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
@@ -641,6 +650,9 @@ router bgp 65103
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.255.251.8 description s1-brdr1
+   neighbor 172.16.200.3 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.16.200.3 remote-as 65203
+   neighbor 172.16.200.3 description s2-brdr2
    neighbor 172.30.255.20 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.30.255.20 remote-as 65001
    neighbor 172.30.255.20 description s1-spine1_Ethernet8
