@@ -11,44 +11,52 @@ CVP_CONFIGLETS:
     \   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface Port-Channel1\n\
     \   description MLAG_PEER_s1-brdr2_Po1\n   no shutdown\n   switchport\n   switchport\
     \ trunk allowed vlan 2-4094\n   switchport mode trunk\n   switchport trunk group\
-    \ LEAF_PEER_L3\n   switchport trunk group MLAG\n!\ninterface Ethernet1\n   description\
+    \ LEAF_PEER_L3\n   switchport trunk group MLAG\n!\ninterface Port-Channel4\n \
+    \  description P2P_LINK_TO_s2-brdr1_Port-Channel4\n   no shutdown\n   mtu 1500\n\
+    \   no switchport\n   ip address 172.16.200.0/31\n!\ninterface Ethernet1\n   description\
     \ MLAG_PEER_s1-brdr2_Ethernet1\n   no shutdown\n   channel-group 1 mode active\n\
     !\ninterface Ethernet2\n   description P2P_LINK_TO_S1-SPINE1_Ethernet7\n   no\
     \ shutdown\n   mtu 1500\n   no switchport\n   ip address 172.30.255.17/31\n!\n\
     interface Ethernet3\n   description P2P_LINK_TO_S1-SPINE2_Ethernet7\n   no shutdown\n\
-    \   mtu 1500\n   no switchport\n   ip address 172.30.255.19/31\n!\ninterface Ethernet6\n\
-    \   description MLAG_PEER_s1-brdr2_Ethernet6\n   no shutdown\n   channel-group\
-    \ 1 mode active\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
-    \   no shutdown\n   ip address 192.0.255.7/32\n!\ninterface Loopback1\n   description\
-    \ VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address 192.0.254.7/32\n!\n\
-    interface Loopback100\n   description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.1.7/32\n!\ninterface\
-    \ Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.100/24\n\
-    !\ninterface Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n\
-    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n\
-    !\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n\
-    \   no shutdown\n   mtu 1500\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.8/31\n\
-    !\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n \
-    \  mtu 1500\n   ip address 10.255.251.8/31\n!\ninterface Vlan4094\n   description\
-    \ MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.255.252.8/31\n\
-    !\ninterface Vxlan1\n   description s1-brdr1_VTEP\n   vxlan source-interface Loopback1\n\
-    \   vxlan virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port\
-    \ 4789\n   vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan\
-    \ 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address\
-    \ 00:1c:73:00:dc:01\n!\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
-    \ 10.255.1.7\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nip prefix-list\
-    \ PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.0.255.0/24 eq 32\n   seq 20\
-    \ permit 192.0.254.0/24 eq 32\n!\nmlag configuration\n   domain-id ATD_BORDER-DC1\n\
-    \   local-interface Vlan4094\n   peer-address 10.255.252.9\n   peer-link Port-Channel1\n\
-    \   reload-delay mlag 300\n   reload-delay non-mlag 330\n!\nip route 0.0.0.0/0\
-    \ 192.168.0.1\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address prefix-list\
-    \ PL-LOOPBACKS-EVPN-OVERLAY\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description\
-    \ Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal\
-    \ routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200\
-    \ min-rx 1200 multiplier 3\n!\nrouter bgp 65103\n   router-id 192.0.255.7\n  \
-    \ no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   graceful-restart\
-    \ restart-time 300\n   graceful-restart\n   maximum-paths 4 ecmp 4\n   neighbor\
+    \   mtu 1500\n   no switchport\n   ip address 172.30.255.19/31\n!\ninterface Ethernet4\n\
+    \   description P2P_LINK_TO_s2-brdr1_Port-Channel4\n   no shutdown\n   channel-group\
+    \ 4 mode active\n!\ninterface Ethernet5\n   description P2P_LINK_TO_s2-brdr1_Port-Channel4\n\
+    \   no shutdown\n   channel-group 4 mode active\n!\ninterface Ethernet6\n   description\
+    \ MLAG_PEER_s1-brdr2_Ethernet6\n   no shutdown\n   channel-group 1 mode active\n\
+    !\ninterface Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n\
+    \   ip address 192.0.255.7/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n\
+    \   no shutdown\n   ip address 192.0.254.7/32\n!\ninterface Loopback100\n   description\
+    \ Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address 10.255.1.7/32\n!\ninterface Management0\n   description oob_management\n\
+    \   no shutdown\n   ip address 192.168.0.100/24\n!\ninterface Vlan100\n   description\
+    \ VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n\
+    !\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf\
+    \ Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n\
+    \   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu\
+    \ 1500\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.8/31\n!\ninterface Vlan4093\n\
+    \   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 1500\n   ip address\
+    \ 10.255.251.8/31\n!\ninterface Vlan4094\n   description MLAG_PEER\n   no shutdown\n\
+    \   mtu 1500\n   no autostate\n   ip address 10.255.252.8/31\n!\ninterface Vxlan1\n\
+    \   description s1-brdr1_VTEP\n   vxlan source-interface Loopback1\n   vxlan virtual-router\
+    \ encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan\
+    \ 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n  \
+    \ vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n\
+    !\nip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.7\n!\n\
+    ip routing\nip routing vrf Tenant_A_OP_Zone\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    \   seq 10 permit 192.0.255.0/24 eq 32\n   seq 20 permit 192.0.254.0/24 eq 32\n\
+    !\nmlag configuration\n   domain-id ATD_BORDER-DC1\n   local-interface Vlan4094\n\
+    \   peer-address 10.255.252.9\n   peer-link Port-Channel1\n   reload-delay mlag\
+    \ 300\n   reload-delay non-mlag 330\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nroute-map\
+    \ RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    !\nroute-map RM-MLAG-PEER-IN permit 10\n   description Make routes learned over\
+    \ MLAG Peer-link less preferred on spines to ensure optimal routing\n   set origin\
+    \ incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier\
+    \ 3\n!\nrouter bgp 65103\n   router-id 192.0.255.7\n   no bgp default ipv4-unicast\n\
+    \   distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n\
+    \   maximum-paths 4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor\
+    \ EVPN-OVERLAY-CORE update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n\
+    \   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE\
+    \ send-community\n   neighbor EVPN-OVERLAY-CORE maximum-routes 0\n   neighbor\
     \ EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS update-source\
     \ Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS\
     \ ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n\
@@ -62,20 +70,29 @@ CVP_CONFIGLETS:
     \   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER\
     \ maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN\
     \ in\n   neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor\
-    \ 10.255.251.9 description s1-brdr2\n   neighbor 172.30.255.16 peer group IPv4-UNDERLAY-PEERS\n\
-    \   neighbor 172.30.255.16 remote-as 65001\n   neighbor 172.30.255.16 description\
-    \ s1-spine1_Ethernet7\n   neighbor 172.30.255.18 peer group IPv4-UNDERLAY-PEERS\n\
-    \   neighbor 172.30.255.18 remote-as 65001\n   neighbor 172.30.255.18 description\
-    \ s1-spine2_Ethernet7\n   neighbor 192.0.255.1 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.0.255.1 remote-as 65001\n   neighbor 192.0.255.1 description\
-    \ s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n\
-    \   redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle\
-    \ Extend\n      rd 192.0.255.7:10110\n      route-target both 10110:10110\n  \
-    \    redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n\
-    \      rd 192.0.255.7:10\n      route-target both 10:10\n      redistribute learned\n\
-    \      vlan 100,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
+    \ 10.255.251.9 description s1-brdr2\n   neighbor 172.16.200.1 peer group IPv4-UNDERLAY-PEERS\n\
+    \   neighbor 172.16.200.1 remote-as 65203\n   neighbor 172.16.200.1 description\
+    \ s2-brdr1\n   neighbor 172.30.255.16 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
+    \ 172.30.255.16 remote-as 65001\n   neighbor 172.30.255.16 description s1-spine1_Ethernet7\n\
+    \   neighbor 172.30.255.18 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.30.255.18\
+    \ remote-as 65001\n   neighbor 172.30.255.18 description s1-spine2_Ethernet7\n\
+    \   neighbor 192.0.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1\
+    \ remote-as 65001\n   neighbor 192.0.255.1 description s1-spine1\n   neighbor\
+    \ 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.2 remote-as\
+    \ 65001\n   neighbor 192.0.255.2 description s1-spine2\n   neighbor 192.2.255.7\
+    \ peer group EVPN-OVERLAY-CORE\n   neighbor 192.2.255.7 remote-as 65203\n   neighbor\
+    \ 192.2.255.7 description s2-brdr1\n   redistribute connected route-map RM-CONN-2-BGP\n\
+    \   !\n   vlan-aware-bundle Extend\n      rd 192.0.255.7:10110\n      rd evpn\
+    \ domain remote 192.0.255.7:10110\n      route-target both 10110:10110\n     \
+    \ route-target import export evpn domain remote 10110:10110\n      redistribute\
+    \ learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n     \
+    \ rd 192.0.255.7:10\n      rd evpn domain remote 192.0.255.7:10\n      route-target\
+    \ both 10:10\n      route-target import export evpn domain remote 10:10\n    \
+    \  redistribute learned\n      vlan 100,210\n   !\n   address-family evpn\n  \
+    \    neighbor EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE domain\
+    \ remote\n      neighbor EVPN-OVERLAY-PEERS activate\n      neighbor default next-hop-self\
+    \ received-evpn-routes route-type ip-prefix inter-domain\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-CORE activate\n      no neighbor EVPN-OVERLAY-PEERS\
     \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
     \ activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.7:10\n      route-target\
     \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.7\n\
@@ -639,44 +656,52 @@ CVP_CONFIGLETS:
     \   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface Port-Channel1\n\
     \   description MLAG_PEER_s2-brdr2_Po1\n   no shutdown\n   switchport\n   switchport\
     \ trunk allowed vlan 2-4094\n   switchport mode trunk\n   switchport trunk group\
-    \ LEAF_PEER_L3\n   switchport trunk group MLAG\n!\ninterface Ethernet1\n   description\
+    \ LEAF_PEER_L3\n   switchport trunk group MLAG\n!\ninterface Port-Channel4\n \
+    \  description P2P_LINK_TO_s1-brdr1_Port-Channel4\n   no shutdown\n   mtu 1500\n\
+    \   no switchport\n   ip address 172.16.200.1/31\n!\ninterface Ethernet1\n   description\
     \ MLAG_PEER_s2-brdr2_Ethernet1\n   no shutdown\n   channel-group 1 mode active\n\
     !\ninterface Ethernet2\n   description P2P_LINK_TO_S2-SPINE1_Ethernet7\n   no\
     \ shutdown\n   mtu 1500\n   no switchport\n   ip address 172.31.255.17/31\n!\n\
     interface Ethernet3\n   description P2P_LINK_TO_S2-SPINE2_Ethernet7\n   no shutdown\n\
-    \   mtu 1500\n   no switchport\n   ip address 172.31.255.19/31\n!\ninterface Ethernet6\n\
-    \   description MLAG_PEER_s2-brdr2_Ethernet6\n   no shutdown\n   channel-group\
-    \ 1 mode active\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
-    \   no shutdown\n   ip address 192.2.255.7/32\n!\ninterface Loopback1\n   description\
-    \ VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address 192.2.254.7/32\n!\n\
-    interface Loopback100\n   description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no\
-    \ shutdown\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.1.7/32\n!\ninterface\
-    \ Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.200/24\n\
-    !\ninterface Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
-    \   ip address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n\
-    \   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n\
-    !\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n\
-    \   no shutdown\n   mtu 1500\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.8/31\n\
-    !\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n \
-    \  mtu 1500\n   ip address 10.255.251.8/31\n!\ninterface Vlan4094\n   description\
-    \ MLAG_PEER\n   no shutdown\n   mtu 1500\n   no autostate\n   ip address 10.255.252.8/31\n\
-    !\ninterface Vxlan1\n   description s2-brdr1_VTEP\n   vxlan source-interface Loopback1\n\
-    \   vxlan virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port\
-    \ 4789\n   vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan\
-    \ 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address\
-    \ 00:1c:73:00:dc:02\n!\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
-    \ 10.255.1.7\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nip prefix-list\
-    \ PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.2.255.0/24 eq 32\n   seq 20\
-    \ permit 192.2.254.0/24 eq 32\n!\nmlag configuration\n   domain-id ATD_BORDER-DC2\n\
-    \   local-interface Vlan4094\n   peer-address 10.255.252.9\n   peer-link Port-Channel1\n\
-    \   reload-delay mlag 300\n   reload-delay non-mlag 330\n!\nip route 0.0.0.0/0\
-    \ 192.168.0.1\n!\nroute-map RM-CONN-2-BGP permit 10\n   match ip address prefix-list\
-    \ PL-LOOPBACKS-EVPN-OVERLAY\n!\nroute-map RM-MLAG-PEER-IN permit 10\n   description\
-    \ Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal\
-    \ routing\n   set origin incomplete\n!\nrouter bfd\n   multihop interval 1200\
-    \ min-rx 1200 multiplier 3\n!\nrouter bgp 65203\n   router-id 192.2.255.7\n  \
-    \ no bgp default ipv4-unicast\n   distance bgp 20 200 200\n   graceful-restart\
-    \ restart-time 300\n   graceful-restart\n   maximum-paths 4 ecmp 4\n   neighbor\
+    \   mtu 1500\n   no switchport\n   ip address 172.31.255.19/31\n!\ninterface Ethernet4\n\
+    \   description P2P_LINK_TO_s1-brdr1_Port-Channel4\n   no shutdown\n   channel-group\
+    \ 4 mode active\n!\ninterface Ethernet5\n   description P2P_LINK_TO_s1-brdr1_Port-Channel4\n\
+    \   no shutdown\n   channel-group 4 mode active\n!\ninterface Ethernet6\n   description\
+    \ MLAG_PEER_s2-brdr2_Ethernet6\n   no shutdown\n   channel-group 1 mode active\n\
+    !\ninterface Loopback0\n   description EVPN_Overlay_Peering\n   no shutdown\n\
+    \   ip address 192.2.255.7/32\n!\ninterface Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n\
+    \   no shutdown\n   ip address 192.2.254.7/32\n!\ninterface Loopback100\n   description\
+    \ Tenant_A_OP_Zone_VTEP_DIAGNOSTICS\n   no shutdown\n   vrf Tenant_A_OP_Zone\n\
+    \   ip address 10.255.1.7/32\n!\ninterface Management0\n   description oob_management\n\
+    \   no shutdown\n   ip address 192.168.0.200/24\n!\ninterface Vlan100\n   description\
+    \ VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n\
+    !\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf\
+    \ Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n\
+    \   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu\
+    \ 1500\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.8/31\n!\ninterface Vlan4093\n\
+    \   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 1500\n   ip address\
+    \ 10.255.251.8/31\n!\ninterface Vlan4094\n   description MLAG_PEER\n   no shutdown\n\
+    \   mtu 1500\n   no autostate\n   ip address 10.255.252.8/31\n!\ninterface Vxlan1\n\
+    \   description s2-brdr1_VTEP\n   vxlan source-interface Loopback1\n   vxlan virtual-router\
+    \ encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan\
+    \ 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n  \
+    \ vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:02\n\
+    !\nip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.7\n!\n\
+    ip routing\nip routing vrf Tenant_A_OP_Zone\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    \   seq 10 permit 192.2.255.0/24 eq 32\n   seq 20 permit 192.2.254.0/24 eq 32\n\
+    !\nmlag configuration\n   domain-id ATD_BORDER-DC2\n   local-interface Vlan4094\n\
+    \   peer-address 10.255.252.9\n   peer-link Port-Channel1\n   reload-delay mlag\
+    \ 300\n   reload-delay non-mlag 330\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nroute-map\
+    \ RM-CONN-2-BGP permit 10\n   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
+    !\nroute-map RM-MLAG-PEER-IN permit 10\n   description Make routes learned over\
+    \ MLAG Peer-link less preferred on spines to ensure optimal routing\n   set origin\
+    \ incomplete\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier\
+    \ 3\n!\nrouter bgp 65203\n   router-id 192.2.255.7\n   no bgp default ipv4-unicast\n\
+    \   distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n\
+    \   maximum-paths 4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor\
+    \ EVPN-OVERLAY-CORE update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n\
+    \   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE\
+    \ send-community\n   neighbor EVPN-OVERLAY-CORE maximum-routes 0\n   neighbor\
     \ EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS update-source\
     \ Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS\
     \ ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n\
@@ -690,26 +715,35 @@ CVP_CONFIGLETS:
     \   neighbor MLAG-IPv4-UNDERLAY-PEER send-community\n   neighbor MLAG-IPv4-UNDERLAY-PEER\
     \ maximum-routes 12000\n   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN\
     \ in\n   neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER\n   neighbor\
-    \ 10.255.251.9 description s2-brdr2\n   neighbor 172.31.255.16 peer group IPv4-UNDERLAY-PEERS\n\
-    \   neighbor 172.31.255.16 remote-as 65002\n   neighbor 172.31.255.16 description\
-    \ s2-spine1_Ethernet7\n   neighbor 172.31.255.18 peer group IPv4-UNDERLAY-PEERS\n\
-    \   neighbor 172.31.255.18 remote-as 65002\n   neighbor 172.31.255.18 description\
-    \ s2-spine2_Ethernet7\n   neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.2.255.1 remote-as 65002\n   neighbor 192.2.255.1 description\
-    \ s2-spine1\n   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.2.255.2 remote-as 65002\n   neighbor 192.2.255.2 description s2-spine2\n\
-    \   redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle\
-    \ Extend\n      rd 192.2.255.7:10110\n      route-target both 10110:10110\n  \
-    \    redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n\
-    \      rd 192.2.255.7:10\n      route-target both 10:10\n      redistribute learned\n\
-    \      vlan 100,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.2.255.7:10\n      route-target\
-    \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.7\n\
-    \      neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
-    \ connected\n!\nmanagement api http-commands\n   protocol https\n   no shutdown\n\
-    \   !\n   vrf default\n      no shutdown\n!\nend\n"
+    \ 10.255.251.9 description s2-brdr2\n   neighbor 172.16.200.0 peer group IPv4-UNDERLAY-PEERS\n\
+    \   neighbor 172.16.200.0 remote-as 65103\n   neighbor 172.16.200.0 description\
+    \ s1-brdr1\n   neighbor 172.31.255.16 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
+    \ 172.31.255.16 remote-as 65002\n   neighbor 172.31.255.16 description s2-spine1_Ethernet7\n\
+    \   neighbor 172.31.255.18 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.18\
+    \ remote-as 65002\n   neighbor 172.31.255.18 description s2-spine2_Ethernet7\n\
+    \   neighbor 192.0.255.7 peer group EVPN-OVERLAY-CORE\n   neighbor 192.0.255.7\
+    \ remote-as 65103\n   neighbor 192.0.255.7 description s1-brdr1\n   neighbor 192.2.255.1\
+    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1 remote-as 65002\n   neighbor\
+    \ 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.2.255.2 remote-as 65002\n   neighbor 192.2.255.2 description\
+    \ s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle\
+    \ Extend\n      rd 192.2.255.7:10110\n      rd evpn domain remote 192.2.255.7:10110\n\
+    \      route-target both 10110:10110\n      route-target import export evpn domain\
+    \ remote 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle\
+    \ Tenant_A_OP_Zone\n      rd 192.2.255.7:10\n      rd evpn domain remote 192.2.255.7:10\n\
+    \      route-target both 10:10\n      route-target import export evpn domain remote\
+    \ 10:10\n      redistribute learned\n      vlan 100,210\n   !\n   address-family\
+    \ evpn\n      neighbor EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE\
+    \ domain remote\n      neighbor EVPN-OVERLAY-PEERS activate\n      neighbor default\
+    \ next-hop-self received-evpn-routes route-type ip-prefix inter-domain\n   !\n\
+    \   address-family ipv4\n      no neighbor EVPN-OVERLAY-CORE activate\n      no\
+    \ neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n\
+    \      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n\
+    \      rd 192.2.255.7:10\n      route-target import evpn 10:10\n      route-target\
+    \ export evpn 10:10\n      router-id 192.2.255.7\n      neighbor 10.255.251.9\
+    \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n!\nmanagement\
+    \ api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n\
+    \      no shutdown\n!\nend\n"
   AVD_s2-brdr2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range\
     \ 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols\
     \ model multi-agent\n!\nhostname s2-brdr2\nip name-server vrf default 8.8.8.8\n\
