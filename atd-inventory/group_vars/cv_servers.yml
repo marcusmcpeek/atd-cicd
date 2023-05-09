@@ -108,23 +108,27 @@ CVP_ATD_CONTAINER:
     parentContainerName: Tenant
 
 CVP_CONTAINERS_DELETE:
-  ATD_LEAF1-DC1:
-    parentContainerName: ATD_LEAFS-DC1
-  ATD_LEAF2-DC1:
-    parentContainerName: ATD_LEAFS-DC1
-  ATD_BORDER-DC1:
-    parentContainerName: ATD_BORDER-DC1
-  ATD_SPINES-DC1:
+  ATD_LEAF1_DC1:
+    parentContainerName: ATD_LEAFS_DC1
+  ATD_LEAF2_DC1:
+    parentContainerName: ATD_LEAFS_DC1
+  ATD_BORDER_DC1:
+    parentContainerName: ATD_BORDER_DC1
+  ATD_LEAFS_DC1:
+    parentContainerName: DC1
+  ATD_SPINES_DC1:
     parentContainerName: DC1
   DC1:
     parentContainerName: ATD_FABRIC
-  ATD_LEAF1-DC2:
-    parentContainerName: ATD_LEAFS-DC1
-  ATD_LEAF2-DC2:
-    parentContainerName: ATD_LEAFS-DC1
-  ATD_BORDER-DC2:
-    parentContainerName: ATD_BORDER-DC1
-  ATD_SPINES-DC2:
+  ATD_LEAF1_DC2:
+    parentContainerName: ATD_LEAFS_DC2
+  ATD_LEAF2_DC2:
+    parentContainerName: ATD_LEAFS_DC2
+  ATD_BORDER_DC2:
+    parentContainerName: ATD_BORDER_DC2
+  ATD_LEAFS_DC2:
+    parentContainerName: DC2
+  ATD_SPINES_DC2:
     parentContainerName: DC1
   DC2:
     parentContainerName: ATD_FABRIC

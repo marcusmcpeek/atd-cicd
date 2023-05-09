@@ -30,13 +30,6 @@ router_bgp:
       send_community: all
       maximum_routes: 0
       ebgp_multihop: 3
-    EVPN-OVERLAY-CORE:
-      type: evpn
-      update_source: Loopback0
-      bfd: true
-      send_community: all
-      maximum_routes: 0
-      ebgp_multihop: 15
   address_family_ipv4:
     peer_groups:
       MLAG-IPv4-UNDERLAY-PEER:
@@ -44,8 +37,6 @@ router_bgp:
       IPv4-UNDERLAY-PEERS:
         activate: true
       EVPN-OVERLAY-PEERS:
-        activate: false
-      EVPN-OVERLAY-CORE:
         activate: false
   neighbors:
     10.255.251.9:
@@ -67,27 +58,12 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
       description: s1-spine2
       remote_as: '65001'
-    192.2.255.7:
-      peer_group: EVPN-OVERLAY-CORE
-      description: s2-brdr1
-      remote_as: '65203'
-    172.16.200.1:
-      remote_as: '65203'
-      description: s2-brdr1
-      peer_group: IPv4-UNDERLAY-PEERS
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-        inter_domain: true
     peer_groups:
       EVPN-OVERLAY-PEERS:
-        activate: true
-      EVPN-OVERLAY-CORE:
-        domain_remote: true
         activate: true
   vrfs:
     Tenant_A_OP_Zone:
@@ -111,29 +87,17 @@ router_bgp:
       route_targets:
         both:
         - '10:10'
-        import_export_evpn_domains:
-        - domain: remote
-          route_target: '10:10'
       redistribute_routes:
       - learned
-      vlan: 100,200,210
-      rd_evpn_domain:
-        domain: remote
-        rd: 192.0.255.7:10
+      vlan: 100,210
     Extend:
       tenant: Tenant_A
       rd: 192.0.255.7:10110
       route_targets:
         both:
         - 10110:10110
-        import_export_evpn_domains:
-        - domain: remote
-          route_target: 10110:10110
       redistribute_routes:
       - learned
-      rd_evpn_domain:
-        domain: remote
-        rd: 192.0.255.7:10110
       vlan: '110'
 static_routes:
 - vrf: default
@@ -190,9 +154,6 @@ vlans:
   100:
     tenant: Tenant_A
     name: VLAN100
-  200:
-    tenant: Tenant_A
-    name: VLAN200
   210:
     tenant: Tenant_A
     name: Tenant_A_OP_Zone_1
@@ -224,14 +185,6 @@ vlan_interfaces:
     shutdown: false
     ip_address_virtual: 10.10.10.1/24
     vrf: Tenant_A_OP_Zone
-  Vlan200:
-    tenant: Tenant_A
-    tags:
-    - special
-    description: VLAN200
-    shutdown: false
-    ip_address_virtual: 20.20.20.1/24
-    vrf: Tenant_A_OP_Zone
   Vlan210:
     tenant: Tenant_A
     tags:
@@ -258,15 +211,6 @@ port_channel_interfaces:
     trunk_groups:
     - LEAF_PEER_L3
     - MLAG
-  Port-Channel4:
-    peer: s2-brdr1
-    peer_interface: Port-Channel4
-    peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
-    type: routed
-    shutdown: false
-    mtu: 1500
-    ip_address: 172.16.200.0/31
 ethernet_interfaces:
   Ethernet1:
     peer: s1-brdr2
@@ -306,24 +250,6 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     ip_address: 172.30.255.19/31
-  Ethernet4:
-    peer: s2-brdr1
-    peer_interface: Port-Channel4
-    peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
-    shutdown: false
-    channel_group:
-      id: 4
-      mode: active
-  Ethernet5:
-    peer: s2-brdr1
-    peer_interface: Port-Channel4
-    peer_type: l3leaf
-    description: P2P_LINK_TO_s2-brdr1_Port-Channel4
-    shutdown: false
-    channel_group:
-      id: 4
-      mode: active
 mlag_configuration:
   domain_id: ATD_BORDER-DC1
   local_interface: Vlan4094
@@ -384,8 +310,6 @@ vxlan_interface:
       vlans:
         100:
           vni: 10100
-        200:
-          vni: 10200
         210:
           vni: 10210
         110:
