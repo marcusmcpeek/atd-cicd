@@ -60,6 +60,21 @@ router_bgp:
       neighbors:
         10.255.251.8:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
+    customerB:
+      router_id: 192.0.255.8
+      rd: '65103:20'
+      route_targets:
+        import:
+          evpn:
+          - '42:20'
+        export:
+          evpn:
+          - '42:20'
+      redistribute_routes:
+      - connected
+      neighbors:
+        10.255.251.8:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
   vlans:
     100:
       tenant: Tenant_A
@@ -69,12 +84,28 @@ router_bgp:
         - 42:10100
       redistribute_routes:
       - learned
+    200:
+      tenant: Tenant_A
+      rd: 65103:10200
+      route_targets:
+        both:
+        - 42:10200
+      redistribute_routes:
+      - learned
     210:
       tenant: Tenant_A
       rd: 65103:10210
       route_targets:
         both:
         - 42:10210
+      redistribute_routes:
+      - learned
+    310:
+      tenant: Tenant_A
+      rd: 65103:10310
+      route_targets:
+        both:
+        - 42:10310
       redistribute_routes:
       - learned
     110:
@@ -114,6 +145,9 @@ vrfs:
   customerA:
     tenant: Tenant_A
     ip_routing: true
+  customerB:
+    tenant: Tenant_A
+    ip_routing: true
 management_interfaces:
   Management0:
     description: oob_management
@@ -140,12 +174,23 @@ vlans:
   100:
     tenant: Tenant_A
     name: VLAN100
+  200:
+    tenant: Tenant_A
+    name: VLAN200
   210:
     tenant: Tenant_A
     name: VLAN210
   3009:
     tenant: Tenant_A
     name: MLAG_iBGP_customerA
+    trunk_groups:
+    - LEAF_PEER_L3
+  310:
+    tenant: Tenant_A
+    name: VLAN310
+  3019:
+    tenant: Tenant_A
+    name: MLAG_iBGP_customerB
     trunk_groups:
     - LEAF_PEER_L3
   110:
@@ -173,6 +218,14 @@ vlan_interfaces:
     shutdown: false
     ip_address_virtual: 10.10.10.1/24
     vrf: customerA
+  Vlan200:
+    tenant: Tenant_A
+    tags:
+    - VLAN200
+    description: VLAN200
+    shutdown: false
+    ip_address_virtual: 20.20.20.1/24
+    vrf: customerA
   Vlan210:
     tenant: Tenant_A
     tags:
@@ -187,6 +240,22 @@ vlan_interfaces:
     shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf customerA'
     vrf: customerA
+    mtu: 9000
+    ip_address: 10.255.251.9/31
+  Vlan310:
+    tenant: Tenant_A
+    tags:
+    - standard_vlans
+    description: VLAN310
+    shutdown: false
+    ip_address_virtual: 30.30.30.1/24
+    vrf: customerB
+  Vlan3019:
+    tenant: Tenant_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf customerB'
+    vrf: customerB
     mtu: 9000
     ip_address: 10.255.251.9/31
 port_channel_interfaces:
@@ -314,13 +383,19 @@ vxlan_interface:
       vlans:
         100:
           vni: 10100
+        200:
+          vni: 10200
         210:
           vni: 10210
+        310:
+          vni: 10310
         110:
           vni: 10110
       vrfs:
         customerA:
           vni: 10
+        customerB:
+          vni: 20
 virtual_source_nat_vrfs:
   customerA:
     ip_address: 10.255.1.8

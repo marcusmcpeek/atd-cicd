@@ -71,7 +71,7 @@ l3leaf:
     ATD_BORDER-DC1:
       filter: 
         only_vlans_in_use: false
-        tags: [ standard_vlans ]
+        tags: [ VLAN200, standard_vlans ]
       bgp_as: 65103
       nodes:
         s1-brdr1:

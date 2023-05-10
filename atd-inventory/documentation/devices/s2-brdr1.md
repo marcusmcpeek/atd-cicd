@@ -205,8 +205,11 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 100 | VLAN100 | - |
 | 110 | Extend | - |
+| 200 | VLAN200 | - |
 | 210 | VLAN210 | - |
+| 310 | VLAN310 | - |
 | 3009 | MLAG_iBGP_customerA | LEAF_PEER_L3 |
+| 3019 | MLAG_iBGP_customerB | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -220,11 +223,21 @@ vlan 100
 vlan 110
    name Extend
 !
+vlan 200
+   name VLAN200
+!
 vlan 210
    name VLAN210
 !
+vlan 310
+   name VLAN310
+!
 vlan 3009
    name MLAG_iBGP_customerA
+   trunk group LEAF_PEER_L3
+!
+vlan 3019
+   name MLAG_iBGP_customerB
    trunk group LEAF_PEER_L3
 !
 vlan 4093
@@ -376,8 +389,11 @@ interface Loopback100
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan100 | VLAN100 | customerA | - | False |
+| Vlan200 | VLAN200 | customerA | - | False |
 | Vlan210 | VLAN210 | customerA | - | False |
+| Vlan310 | VLAN310 | customerB | - | False |
 | Vlan3009 | MLAG_PEER_L3_iBGP: vrf customerA | customerA | 9000 | False |
+| Vlan3019 | MLAG_PEER_L3_iBGP: vrf customerB | customerB | 9000 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9000 | False |
 | Vlan4094 | MLAG_PEER | default | 9000 | False |
 
@@ -386,8 +402,11 @@ interface Loopback100
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan100 |  customerA  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan200 |  customerA  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
 | Vlan210 |  customerA  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan310 |  customerB  |  -  |  30.30.30.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3009 |  customerA  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3019 |  customerB  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.8/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -401,17 +420,36 @@ interface Vlan100
    vrf customerA
    ip address virtual 10.10.10.1/24
 !
+interface Vlan200
+   description VLAN200
+   no shutdown
+   vrf customerA
+   ip address virtual 20.20.20.1/24
+!
 interface Vlan210
    description VLAN210
    no shutdown
    vrf customerA
    ip address virtual 10.1.10.1/24
 !
+interface Vlan310
+   description VLAN310
+   no shutdown
+   vrf customerB
+   ip address virtual 30.30.30.1/24
+!
 interface Vlan3009
    description MLAG_PEER_L3_iBGP: vrf customerA
    no shutdown
    mtu 9000
    vrf customerA
+   ip address 10.255.251.8/31
+!
+interface Vlan3019
+   description MLAG_PEER_L3_iBGP: vrf customerB
+   no shutdown
+   mtu 9000
+   vrf customerB
    ip address 10.255.251.8/31
 !
 interface Vlan4093
@@ -446,13 +484,16 @@ interface Vlan4094
 | ---- | --- | ---------- | --------------- |
 | 100 | 10100 | - | - |
 | 110 | 10110 | - | - |
+| 200 | 10200 | - | - |
 | 210 | 10210 | - | - |
+| 310 | 10310 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
 | customerA | 10 | - |
+| customerB | 20 | - |
 
 ### VXLAN Interface Device Configuration
 
@@ -465,8 +506,11 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 100 vni 10100
    vxlan vlan 110 vni 10110
+   vxlan vlan 200 vni 10200
    vxlan vlan 210 vni 10210
+   vxlan vlan 310 vni 10310
    vxlan vrf customerA vni 10
+   vxlan vrf customerB vni 20
 ```
 
 # Routing
@@ -500,6 +544,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:02
 | --- | --------------- |
 | default | True |
 | customerA | true |
+| customerB | true |
 | default | false |
 
 ### IP Routing Device Configuration
@@ -508,6 +553,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:02
 !
 ip routing
 ip routing vrf customerA
+ip routing vrf customerB
 ```
 ## IPv6 Routing
 
@@ -517,6 +563,7 @@ ip routing vrf customerA
 | --- | --------------- |
 | default | False |
 | customerA | false |
+| customerB | false |
 | default | false |
 
 ## Static Routes
@@ -625,6 +672,7 @@ router ospf 100
 | 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
 | 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
 | 10.255.251.9 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | customerA | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
+| 10.255.251.9 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | customerB | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
 
 ### Router BGP EVPN Address Family
 
@@ -649,13 +697,16 @@ router ospf 100
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
 | 100 | 65203:10100 | 42:10100<br>remote 42:10100 | - | - | learned |
 | 110 | 65203:10110 | 42:10110<br>remote 42:10110 | - | - | learned |
+| 200 | 65203:10200 | 42:10200<br>remote 42:10200 | - | - | learned |
 | 210 | 65203:10210 | 42:10210<br>remote 42:10210 | - | - | learned |
+| 310 | 65203:10310 | 42:10310<br>remote 42:10310 | - | - | learned |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
 | customerA | 65203:10 | connected |
+| customerB | 65203:20 | connected |
 
 ### Router BGP Device Configuration
 
@@ -713,11 +764,25 @@ router bgp 65203
       route-target import export evpn domain remote 42:10110
       redistribute learned
    !
+   vlan 200
+      rd 65203:10200
+      rd evpn domain remote 65203:10200
+      route-target both 42:10200
+      route-target import export evpn domain remote 42:10200
+      redistribute learned
+   !
    vlan 210
       rd 65203:10210
       rd evpn domain remote 65203:10210
       route-target both 42:10210
       route-target import export evpn domain remote 42:10210
+      redistribute learned
+   !
+   vlan 310
+      rd 65203:10310
+      rd evpn domain remote 65203:10310
+      route-target both 42:10310
+      route-target import export evpn domain remote 42:10310
       redistribute learned
    !
    address-family evpn
@@ -735,6 +800,14 @@ router bgp 65203
       rd 65203:10
       route-target import evpn 42:10
       route-target export evpn 42:10
+      router-id 192.2.255.7
+      neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
+      redistribute connected
+   !
+   vrf customerB
+      rd 65203:20
+      route-target import evpn 42:20
+      route-target export evpn 42:20
       router-id 192.2.255.7
       neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
@@ -803,6 +876,7 @@ route-map RM-MLAG-PEER-IN permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | customerA | enabled |
+| customerB | enabled |
 | default | disabled |
 
 ## VRF Instances Device Configuration
@@ -810,6 +884,8 @@ route-map RM-MLAG-PEER-IN permit 10
 ```eos
 !
 vrf instance customerA
+!
+vrf instance customerB
 ```
 
 # Virtual Source NAT
