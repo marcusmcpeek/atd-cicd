@@ -192,6 +192,13 @@ port_channel_interfaces:
     trunk_groups:
     - LEAF_PEER_L3
     - MLAG
+  Port-Channel4:
+    description: s2-Host2_PortChannel to s2-Host2
+    type: switched
+    shutdown: false
+    mode: trunk
+    vlans: 100,110,200,210
+    mlag: 4
 ethernet_interfaces:
   Ethernet1:
     peer: s2-leaf4
@@ -235,6 +242,18 @@ ethernet_interfaces:
     ip_address: 172.31.255.11/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
+  Ethernet4:
+    peer: s2-Host2
+    peer_interface: E1
+    peer_type: server
+    description: s2-Host2_E1
+    type: switched
+    shutdown: false
+    mode: trunk
+    vlans: 100,110,200,210
+    channel_group:
+      id: 4
+      mode: active
 mlag_configuration:
   domain_id: ATD_LEAF2-DC2
   local_interface: Vlan4094

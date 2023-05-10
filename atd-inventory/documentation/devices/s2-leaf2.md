@@ -205,7 +205,6 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 100 | VLAN100 | - |
 | 110 | Extend | - |
-| 210 | VLAN210 | - |
 | 3009 | MLAG_iBGP_customerA | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
@@ -219,9 +218,6 @@ vlan 100
 !
 vlan 110
    name Extend
-!
-vlan 210
-   name VLAN210
 !
 vlan 3009
    name MLAG_iBGP_customerA
@@ -381,7 +377,6 @@ interface Loopback100
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan100 | VLAN100 | customerA | - | False |
-| Vlan210 | VLAN210 | customerA | - | False |
 | Vlan3009 | MLAG_PEER_L3_iBGP: vrf customerA | customerA | 9000 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9000 | False |
 | Vlan4094 | MLAG_PEER | default | 9000 | False |
@@ -391,7 +386,6 @@ interface Loopback100
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan100 |  customerA  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan210 |  customerA  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3009 |  customerA  |  10.255.251.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.1/31  |  -  |  -  |  -  |  -  |  -  |
@@ -405,12 +399,6 @@ interface Vlan100
    no shutdown
    vrf customerA
    ip address virtual 10.10.10.1/24
-!
-interface Vlan210
-   description VLAN210
-   no shutdown
-   vrf customerA
-   ip address virtual 10.1.10.1/24
 !
 interface Vlan3009
    description MLAG_PEER_L3_iBGP: vrf customerA
@@ -451,7 +439,6 @@ interface Vlan4094
 | ---- | --- | ---------- | --------------- |
 | 100 | 10100 | - | - |
 | 110 | 10110 | - | - |
-| 210 | 10210 | - | - |
 
 #### VRF to VNI and Multicast Group Mappings
 
@@ -470,7 +457,6 @@ interface Vxlan1
    vxlan udp-port 4789
    vxlan vlan 100 vni 10100
    vxlan vlan 110 vni 10110
-   vxlan vlan 210 vni 10210
    vxlan vrf customerA vni 10
 ```
 
@@ -629,7 +615,7 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| customerA | 192.2.255.4:10 | 10:10 | - | - | learned | 100,210 |
+| customerA | 192.2.255.4:10 | 10:10 | - | - | learned | 100 |
 | Extend | 192.2.255.4:10110 | 10110:10110 | - | - | learned | 110 |
 
 ### Router BGP VRFs
@@ -675,7 +661,7 @@ router bgp 65201
       rd 192.2.255.4:10
       route-target both 10:10
       redistribute learned
-      vlan 100,210
+      vlan 100
    !
    vlan-aware-bundle Extend
       rd 192.2.255.4:10110

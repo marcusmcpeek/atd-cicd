@@ -10,4 +10,5 @@
       vars:
         container_root: 'ATD_FABRIC'
         configlets_prefix: 'AVD'
+        execute_tasks: false
         state: present

@@ -247,6 +247,7 @@ vlan 4094
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | MLAG_PEER_s2-leaf4_Ethernet1 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
+| Ethernet4 | s2-Host2_E1 | *trunk | *100,110,200,210 | *- | *- | 4 |
 | Ethernet6 | MLAG_PEER_s2-leaf4_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 1 |
 
 *Inherited from Port-Channel Interface
@@ -285,6 +286,11 @@ interface Ethernet3
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 !
+interface Ethernet4
+   description s2-Host2_E1
+   no shutdown
+   channel-group 4 mode active
+!
 interface Ethernet6
    description MLAG_PEER_s2-leaf4_Ethernet6
    no shutdown
@@ -300,6 +306,7 @@ interface Ethernet6
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel1 | MLAG_PEER_s2-leaf4_Po1 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel4 | s2-Host2_PortChannel to s2-Host2 | switched | trunk | 100,110,200,210 | - | - | - | - | 4 | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -313,6 +320,14 @@ interface Port-Channel1
    switchport mode trunk
    switchport trunk group LEAF_PEER_L3
    switchport trunk group MLAG
+!
+interface Port-Channel4
+   description s2-Host2_PortChannel to s2-Host2
+   no shutdown
+   switchport
+   switchport trunk allowed vlan 100,110,200,210
+   switchport mode trunk
+   mlag 4
 ```
 
 ## Loopback Interfaces
