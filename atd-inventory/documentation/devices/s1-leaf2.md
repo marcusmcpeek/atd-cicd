@@ -205,8 +205,8 @@ vlan internal order ascending range 1006 1199
 | ------- | ---- | ------------ |
 | 100 | VLAN100 | - |
 | 110 | Extend | - |
-| 210 | Tenant_A_OP_Zone_1 | - |
-| 3009 | MLAG_iBGP_Tenant_A_OP_Zone | LEAF_PEER_L3 |
+| 210 | VLAN210 | - |
+| 3009 | MLAG_iBGP_customerA | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
@@ -221,10 +221,10 @@ vlan 110
    name Extend
 !
 vlan 210
-   name Tenant_A_OP_Zone_1
+   name VLAN210
 !
 vlan 3009
-   name MLAG_iBGP_Tenant_A_OP_Zone
+   name MLAG_iBGP_customerA
    trunk group LEAF_PEER_L3
 !
 vlan 4093
@@ -340,7 +340,7 @@ interface Port-Channel4
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 192.0.255.4/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 192.0.254.3/32 |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | 10.255.1.4/32 |
+| Loopback100 | customerA_VTEP_DIAGNOSTICS | customerA | 10.255.1.4/32 |
 
 #### IPv6
 
@@ -348,7 +348,7 @@ interface Port-Channel4
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback100 | Tenant_A_OP_Zone_VTEP_DIAGNOSTICS | Tenant_A_OP_Zone | - |
+| Loopback100 | customerA_VTEP_DIAGNOSTICS | customerA | - |
 
 
 ### Loopback Interfaces Device Configuration
@@ -368,9 +368,9 @@ interface Loopback1
    ip ospf area 0.0.0.0
 !
 interface Loopback100
-   description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+   description customerA_VTEP_DIAGNOSTICS
    no shutdown
-   vrf Tenant_A_OP_Zone
+   vrf customerA
    ip address 10.255.1.4/32
 ```
 
@@ -380,9 +380,9 @@ interface Loopback100
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan100 | VLAN100 | Tenant_A_OP_Zone | - | False |
-| Vlan210 | Tenant_A_OP_Zone_1 | Tenant_A_OP_Zone | - | False |
-| Vlan3009 | MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone | Tenant_A_OP_Zone | 9000 | False |
+| Vlan100 | VLAN100 | customerA | - | False |
+| Vlan210 | VLAN210 | customerA | - | False |
+| Vlan3009 | MLAG_PEER_L3_iBGP: vrf customerA | customerA | 9000 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9000 | False |
 | Vlan4094 | MLAG_PEER | default | 9000 | False |
 
@@ -390,9 +390,9 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan100 |  Tenant_A_OP_Zone  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan210 |  Tenant_A_OP_Zone  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  Tenant_A_OP_Zone  |  10.255.251.1/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan100 |  customerA  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan210 |  customerA  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  customerA  |  10.255.251.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.1/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.1/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -403,20 +403,20 @@ interface Loopback100
 interface Vlan100
    description VLAN100
    no shutdown
-   vrf Tenant_A_OP_Zone
+   vrf customerA
    ip address virtual 10.10.10.1/24
 !
 interface Vlan210
-   description Tenant_A_OP_Zone_1
+   description VLAN210
    no shutdown
-   vrf Tenant_A_OP_Zone
+   vrf customerA
    ip address virtual 10.1.10.1/24
 !
 interface Vlan3009
-   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone
+   description MLAG_PEER_L3_iBGP: vrf customerA
    no shutdown
    mtu 9000
-   vrf Tenant_A_OP_Zone
+   vrf customerA
    ip address 10.255.251.1/31
 !
 interface Vlan4093
@@ -457,7 +457,7 @@ interface Vlan4094
 
 | VRF | VNI | Multicast Group |
 | ---- | --- | --------------- |
-| Tenant_A_OP_Zone | 10 | - |
+| customerA | 10 | - |
 
 ### VXLAN Interface Device Configuration
 
@@ -471,7 +471,7 @@ interface Vxlan1
    vxlan vlan 100 vni 10100
    vxlan vlan 110 vni 10110
    vxlan vlan 210 vni 10210
-   vxlan vrf Tenant_A_OP_Zone vni 10
+   vxlan vrf customerA vni 10
 ```
 
 # Routing
@@ -504,15 +504,15 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | True |
+| customerA | true |
 | default | false |
-| Tenant_A_OP_Zone | true |
 
 ### IP Routing Device Configuration
 
 ```eos
 !
 ip routing
-ip routing vrf Tenant_A_OP_Zone
+ip routing vrf customerA
 ```
 ## IPv6 Routing
 
@@ -521,8 +521,8 @@ ip routing vrf Tenant_A_OP_Zone
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | False |
+| customerA | false |
 | default | false |
-| Tenant_A_OP_Zone | false |
 
 ## Static Routes
 
@@ -615,7 +615,7 @@ router ospf 100
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- |
 | 192.0.255.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
 | 192.0.255.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
-| 10.255.251.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_OP_Zone | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
+| 10.255.251.0 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | customerA | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
 
 ### Router BGP EVPN Address Family
 
@@ -629,14 +629,14 @@ router ospf 100
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
+| customerA | 192.0.255.4:10 | 10:10 | - | - | learned | 100,210 |
 | Extend | 192.0.255.4:10110 | 10110:10110 | - | - | learned | 110 |
-| Tenant_A_OP_Zone | 192.0.255.4:10 | 10:10 | - | - | learned | 100,210 |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| Tenant_A_OP_Zone | 192.0.255.4:10 | connected |
+| customerA | 192.0.255.4:10 | connected |
 
 ### Router BGP Device Configuration
 
@@ -671,17 +671,17 @@ router bgp 65101
    neighbor 192.0.255.2 remote-as 65001
    neighbor 192.0.255.2 description s1-spine2
    !
+   vlan-aware-bundle customerA
+      rd 192.0.255.4:10
+      route-target both 10:10
+      redistribute learned
+      vlan 100,210
+   !
    vlan-aware-bundle Extend
       rd 192.0.255.4:10110
       route-target both 10110:10110
       redistribute learned
       vlan 110
-   !
-   vlan-aware-bundle Tenant_A_OP_Zone
-      rd 192.0.255.4:10
-      route-target both 10:10
-      redistribute learned
-      vlan 100,210
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
@@ -690,7 +690,7 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
-   vrf Tenant_A_OP_Zone
+   vrf customerA
       rd 192.0.255.4:10
       route-target import evpn 10:10
       route-target export evpn 10:10
@@ -761,14 +761,14 @@ route-map RM-MLAG-PEER-IN permit 10
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
+| customerA | enabled |
 | default | disabled |
-| Tenant_A_OP_Zone | enabled |
 
 ## VRF Instances Device Configuration
 
 ```eos
 !
-vrf instance Tenant_A_OP_Zone
+vrf instance customerA
 ```
 
 # Virtual Source NAT
@@ -777,13 +777,13 @@ vrf instance Tenant_A_OP_Zone
 
 | Source NAT VRF | Source NAT IP Address |
 | -------------- | --------------------- |
-| Tenant_A_OP_Zone | 10.255.1.4 |
+| customerA | 10.255.1.4 |
 
 ## Virtual Source NAT Configuration
 
 ```eos
 !
-ip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.4
+ip address virtual source-nat vrf customerA address 10.255.1.4
 ```
 
 # Quality Of Service
