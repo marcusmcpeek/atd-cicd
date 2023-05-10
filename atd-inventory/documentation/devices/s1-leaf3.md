@@ -625,12 +625,13 @@ router ospf 100
 | ---------- | -------- |
 | EVPN-OVERLAY-PEERS | True |
 
-### Router BGP VLAN Aware Bundles
+### Router BGP VLANs
 
-| VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
-| ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| customerA | 192.0.255.5:10 | 10:10 | - | - | learned | 100,210 |
-| Extend | 192.0.255.5:10110 | 10110:10110 | - | - | learned | 110 |
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 100 | 192.0.255.5:10100 | 10100:10100 | - | - | learned |
+| 110 | 192.0.255.5:10110 | 10110:10110 | - | - | learned |
+| 210 | 192.0.255.5:10210 | 10210:10210 | - | - | learned |
 
 ### Router BGP VRFs
 
@@ -671,17 +672,20 @@ router bgp 65102
    neighbor 192.0.255.2 remote-as 65001
    neighbor 192.0.255.2 description s1-spine2
    !
-   vlan-aware-bundle customerA
-      rd 192.0.255.5:10
-      route-target both 10:10
+   vlan 100
+      rd 192.0.255.5:10100
+      route-target both 10100:10100
       redistribute learned
-      vlan 100,210
    !
-   vlan-aware-bundle Extend
+   vlan 110
       rd 192.0.255.5:10110
       route-target both 10110:10110
       redistribute learned
-      vlan 110
+   !
+   vlan 210
+      rd 192.0.255.5:10210
+      route-target both 10210:10210
+      redistribute learned
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
