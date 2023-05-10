@@ -6,6 +6,9 @@ port_profiles:
   Profile2:
     mode: trunk
     vlans: "100,110,200,210"
+  Profile3:
+    mode: trunk
+    vlans: "100"
 
 servers:
   s1-Host1:
