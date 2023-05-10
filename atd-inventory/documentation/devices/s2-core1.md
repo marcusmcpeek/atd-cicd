@@ -190,9 +190,9 @@ vlan 2200
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_S2-CORE2_Ethernet1 | routed | - | 10.255.0.9/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_S1-CORE1_Ethernet4 | routed | - | 10.255.0.2/31 | default | 1500 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_S2-CORE2_Ethernet6 | routed | - | 10.255.0.12/31 | default | 1500 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_S2-CORE2_Ethernet1 | routed | - | 10.255.0.9/31 | default | 9214 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_S1-CORE1_Ethernet4 | routed | - | 10.255.0.2/31 | default | 9214 | False | - | - |
+| Ethernet6 | P2P_LINK_TO_S2-CORE2_Ethernet6 | routed | - | 10.255.0.12/31 | default | 9214 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -201,7 +201,7 @@ vlan 2200
 interface Ethernet1
    description P2P_LINK_TO_S2-CORE2_Ethernet1
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
    ip address 10.255.0.9/31
    ip ospf network point-to-point
@@ -218,7 +218,7 @@ interface Ethernet2
 interface Ethernet4
    description P2P_LINK_TO_S1-CORE1_Ethernet4
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
    ip address 10.255.0.2/31
    ip ospf network point-to-point
@@ -227,7 +227,7 @@ interface Ethernet4
 interface Ethernet6
    description P2P_LINK_TO_S2-CORE2_Ethernet6
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
    ip address 10.255.0.12/31
    ip ospf network point-to-point

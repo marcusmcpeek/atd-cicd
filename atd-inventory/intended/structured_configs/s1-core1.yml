@@ -94,7 +94,7 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: P2P_LINK_TO_S1-CORE2_Ethernet1
   shutdown: false
-  mtu: 1500
+  mtu: 9214
   type: routed
   ip_address: 10.255.0.1/31
   ospf_network_point_to_point: true
@@ -105,7 +105,7 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: P2P_LINK_TO_S2-CORE1_Ethernet4
   shutdown: false
-  mtu: 1500
+  mtu: 9214
   type: routed
   ip_address: 10.255.0.3/31
   ospf_network_point_to_point: true
@@ -116,7 +116,7 @@ ethernet_interfaces:
   peer_type: l3leaf
   description: P2P_LINK_TO_S1-CORE2_Ethernet6
   shutdown: false
-  mtu: 1500
+  mtu: 9214
   type: routed
   ip_address: 10.255.0.4/31
   ospf_network_point_to_point: true

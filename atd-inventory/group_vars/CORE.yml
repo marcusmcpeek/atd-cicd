@@ -38,8 +38,7 @@ bgp_peer_groups:
 # which is not supported in vEOS-LAB.
 # Refer to design guide
 
-# Update p2p mtu 9000 -> 1500
-p2p_uplinks_mtu: 1500
+p2p_uplinks_mtu: 9214
 
 # Adjust default bfd values
 bfd_multihop:
