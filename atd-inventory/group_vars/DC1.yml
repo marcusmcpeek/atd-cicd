@@ -19,9 +19,6 @@ spine:
       mgmt_ip: 192.168.0.11/24
 
 # Leaf switch groups
-# A maximum of two nodes can form a leaf group
-# When two nodes are in a leaf group this will automatically form mlag pair
-
 l3leaf:
   defaults:
     platform: CEOS-LAB
@@ -46,8 +43,8 @@ l3leaf:
     #   only_vlans_in_use: true
   node_groups:
     ATD_LEAF1-DC1:
-      # filter: 
-      #   tags: [ special, opzone ]
+      filter: 
+        tags: [ standard_vlans ]
       bgp_as: 65101
       nodes:
         s1-leaf1:
@@ -59,8 +56,8 @@ l3leaf:
           mgmt_ip: 192.168.0.13/24
           uplink_switch_interfaces: [ Ethernet3, Ethernet3 ]
     ATD_LEAF2-DC1:
-      # filter:
-      #   tags: [ opzone ]
+      filter:
+        tags: [ standard_vlans ]
       bgp_as: 65102
       nodes:
         s1-leaf3:
@@ -72,8 +69,8 @@ l3leaf:
           mgmt_ip: 192.168.0.15/24
           uplink_switch_interfaces: [ Ethernet5, Ethernet5 ]
     ATD_BORDER-DC1:
-      # filter: 
-      #   tags: [ special, opzone ]
+      filter: 
+        tags: [ standard_vlans ]
       bgp_as: 65103
       nodes:
         s1-brdr1:

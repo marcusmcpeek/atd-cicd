@@ -35,12 +35,3 @@ servers:
         port_channel:
           description: PortChannel to s2-Host1
           mode: active
-  s2-Host2:
-    adapters:
-      - endpoint_ports: [ E1, E2 ]
-        switch_ports: [ Ethernet4, Ethernet4 ]
-        switches: [ s2-leaf3, s2-leaf4 ]
-        profile: Profile2
-        port_channel:
-          description: PortChannel to s2-Host2
-          mode: active

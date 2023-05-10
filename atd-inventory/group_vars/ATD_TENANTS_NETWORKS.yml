@@ -1,19 +1,4 @@
 ---
-svi_profiles:
-  GENERIC:
-    mtu: 1560
-    enabled: true
-  GENERIC_FULL:
-    name: GENERIC Name
-    mtu: 1560
-    enabled: false
-    ip_address_virtual: 10.1.10.254/24
-  WITH_NO_MTU:
-    enabled: true
-  WITH_SNOOPING:
-    enabled: true
-    igmp_snooping_enabled: false
-
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:
@@ -25,23 +10,23 @@ tenants:
     #   underlay_l2_multicast_group_ipv4_pool: 232.0.0.0/20
     #   underlay_l2_multicast_group_ipv4_pool_offset: 2
     vrfs:
-      Tenant_A_OP_Zone:
+      customerA:
         vrf_vni: 10
         vtep_diagnostic:
           loopback: 100
           loopback_ip_range: 10.255.1.0/24
         svis:
           210:
-            name: Tenant_A_OP_Zone_1
-            tags: [ opzone ]
+            name: VLAN210
+            tags: [ standard_vlans ]
             enabled: true
             ip_address_virtual: 10.1.10.1/24
           100:
             name: VLAN100
-            tags: [ opzone ]
+            tags: [ standard_vlans ]
             enabled: true
             ip_address_virtual: 10.10.10.1/24
     l2vlans:
       110:
         name: Extend
-        tags: [ opzone ]
+        tags: [ standard_vlans ]
