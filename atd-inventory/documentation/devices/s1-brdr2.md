@@ -257,6 +257,7 @@ vlan 4094
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet2 | P2P_LINK_TO_S1-SPINE1_Ethernet8 | routed | - | 172.30.255.21/31 | default | 9000 | False | - | - |
 | Ethernet3 | P2P_LINK_TO_S1-SPINE2_Ethernet8 | routed | - | 172.30.255.23/31 | default | 9000 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_s2-brdr2_Ethernet4 | routed | - | 172.16.200.2/31 | default | 9000 | False | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -282,6 +283,15 @@ interface Ethernet3
    mtu 9000
    no switchport
    ip address 172.30.255.23/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet4
+   description P2P_LINK_TO_s2-brdr2_Ethernet4
+   no shutdown
+   mtu 9000
+   no switchport
+   ip address 172.16.200.2/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 !
@@ -530,7 +540,7 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Process ID | Router ID | Default Passive Interface | No Passive Interface | BFD | Max LSA | Default Information Originate | Log Adjacency Changes Detail | Auto Cost Reference Bandwidth | Maximum Paths | MPLS LDP Sync Default | Distribute List In |
 | ---------- | --------- | ------------------------- | -------------------- | --- | ------- | ----------------------------- | ---------------------------- | ----------------------------- | ------------- | --------------------- | ------------------ |
-| 100 | 192.0.255.8 | enabled | Ethernet2 <br> Ethernet3 <br> Vlan4093 <br> | disabled | 12000 | disabled | disabled | - | - | - | - |
+| 100 | 192.0.255.8 | enabled | Ethernet2 <br> Ethernet3 <br> Vlan4093 <br> Ethernet4 <br> | disabled | 12000 | disabled | disabled | - | - | - | - |
 
 ### OSPF Interfaces
 
@@ -538,6 +548,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | -------- | -------- | -------- | -------- |
 | Ethernet2 | 0.0.0.0 | - | True |
 | Ethernet3 | 0.0.0.0 | - | True |
+| Ethernet4 | 0.0.0.0 | - | True |
 | Vlan4093 | 0.0.0.0 | - | True |
 | Loopback0 | 0.0.0.0 | - | - |
 | Loopback1 | 0.0.0.0 | - | - |
@@ -552,6 +563,7 @@ router ospf 100
    no passive-interface Ethernet2
    no passive-interface Ethernet3
    no passive-interface Vlan4093
+   no passive-interface Ethernet4
    max-lsa 12000
 ```
 
