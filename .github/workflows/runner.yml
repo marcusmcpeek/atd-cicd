@@ -10,7 +10,6 @@ jobs:
       PASS: ${{ secrets.PASS }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    # runs-on: self-hosted
     steps:
       - name: Install Ansible
         run: pip install ansible
@@ -38,11 +37,3 @@ jobs:
       
       - name: Deploy Configurations
         run: ansible-playbook -i atd-inventory/inventory.yml playbooks/atd-fabric-provision.yml
-
-
-
-
-
-# To enable runner on ansible server:
-#   source ~/venv/bin/activate
-#   ./actions-runner/run.sh
