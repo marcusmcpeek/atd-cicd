@@ -1,8 +1,9 @@
 ---
-# overlay_rd_type:
-#   admin_subfield: "bgp_as"
-# overlay_rt_type:
-#   admin_subfield: 42
+overlay_rd_type:
+  admin_subfield: "bgp_as"
+overlay_rt_type:
+  admin_subfield: 42
+
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:

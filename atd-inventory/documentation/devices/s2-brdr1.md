@@ -647,15 +647,15 @@ router ospf 100
 
 | VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
-| 100 | 192.2.255.7:10100 | 10100:10100<br>remote 10100:10100 | - | - | learned |
-| 110 | 192.2.255.7:10110 | 10110:10110<br>remote 10110:10110 | - | - | learned |
-| 210 | 192.2.255.7:10210 | 10210:10210<br>remote 10210:10210 | - | - | learned |
+| 100 | 65203:10100 | 42:10100<br>remote 42:10100 | - | - | learned |
+| 110 | 65203:10110 | 42:10110<br>remote 42:10110 | - | - | learned |
+| 210 | 65203:10210 | 42:10210<br>remote 42:10210 | - | - | learned |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| customerA | 192.2.255.7:10 | connected |
+| customerA | 65203:10 | connected |
 
 ### Router BGP Device Configuration
 
@@ -700,24 +700,24 @@ router bgp 65203
    neighbor 192.2.255.2 description s2-spine2
    !
    vlan 100
-      rd 192.2.255.7:10100
-      rd evpn domain remote 192.2.255.7:10100
-      route-target both 10100:10100
-      route-target import export evpn domain remote 10100:10100
+      rd 65203:10100
+      rd evpn domain remote 65203:10100
+      route-target both 42:10100
+      route-target import export evpn domain remote 42:10100
       redistribute learned
    !
    vlan 110
-      rd 192.2.255.7:10110
-      rd evpn domain remote 192.2.255.7:10110
-      route-target both 10110:10110
-      route-target import export evpn domain remote 10110:10110
+      rd 65203:10110
+      rd evpn domain remote 65203:10110
+      route-target both 42:10110
+      route-target import export evpn domain remote 42:10110
       redistribute learned
    !
    vlan 210
-      rd 192.2.255.7:10210
-      rd evpn domain remote 192.2.255.7:10210
-      route-target both 10210:10210
-      route-target import export evpn domain remote 10210:10210
+      rd 65203:10210
+      rd evpn domain remote 65203:10210
+      route-target both 42:10210
+      route-target import export evpn domain remote 42:10210
       redistribute learned
    !
    address-family evpn
@@ -732,9 +732,9 @@ router bgp 65203
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    vrf customerA
-      rd 192.2.255.7:10
-      route-target import evpn 10:10
-      route-target export evpn 10:10
+      rd 65203:10
+      route-target import evpn 42:10
+      route-target export evpn 42:10
       router-id 192.2.255.7
       neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected

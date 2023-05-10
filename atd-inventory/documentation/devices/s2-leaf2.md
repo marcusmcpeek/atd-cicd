@@ -615,14 +615,14 @@ router ospf 100
 
 | VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
 | ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
-| 100 | 192.2.255.4:10100 | 10100:10100 | - | - | learned |
-| 110 | 192.2.255.4:10110 | 10110:10110 | - | - | learned |
+| 100 | 65201:10100 | 42:10100 | - | - | learned |
+| 110 | 65201:10110 | 42:10110 | - | - | learned |
 
 ### Router BGP VRFs
 
 | VRF | Route-Distinguisher | Redistribute |
 | --- | ------------------- | ------------ |
-| customerA | 192.2.255.4:10 | connected |
+| customerA | 65201:10 | connected |
 
 ### Router BGP Device Configuration
 
@@ -658,13 +658,13 @@ router bgp 65201
    neighbor 192.2.255.2 description s2-spine2
    !
    vlan 100
-      rd 192.2.255.4:10100
-      route-target both 10100:10100
+      rd 65201:10100
+      route-target both 42:10100
       redistribute learned
    !
    vlan 110
-      rd 192.2.255.4:10110
-      route-target both 10110:10110
+      rd 65201:10110
+      route-target both 42:10110
       redistribute learned
    !
    address-family evpn
@@ -675,9 +675,9 @@ router bgp 65201
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    vrf customerA
-      rd 192.2.255.4:10
-      route-target import evpn 10:10
-      route-target export evpn 10:10
+      rd 65201:10
+      route-target import evpn 42:10
+      route-target export evpn 42:10
       router-id 192.2.255.4
       neighbor 10.255.251.0 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected

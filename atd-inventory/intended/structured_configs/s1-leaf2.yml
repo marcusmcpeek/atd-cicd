@@ -47,14 +47,14 @@ router_bgp:
   vrfs:
     customerA:
       router_id: 192.0.255.4
-      rd: 192.0.255.4:10
+      rd: '65101:10'
       route_targets:
         import:
           evpn:
-          - '10:10'
+          - '42:10'
         export:
           evpn:
-          - '10:10'
+          - '42:10'
       redistribute_routes:
       - connected
       neighbors:
@@ -63,18 +63,18 @@ router_bgp:
   vlans:
     100:
       tenant: Tenant_A
-      rd: 192.0.255.4:10100
+      rd: 65101:10100
       route_targets:
         both:
-        - 10100:10100
+        - 42:10100
       redistribute_routes:
       - learned
     110:
       tenant: Tenant_A
-      rd: 192.0.255.4:10110
+      rd: 65101:10110
       route_targets:
         both:
-        - 10110:10110
+        - 42:10110
       redistribute_routes:
       - learned
 static_routes:
