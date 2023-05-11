@@ -5,6 +5,7 @@ all:
       hosts:
         cv_atd1:
           ansible_host: avd-cicd-demo-prep-1-2de17e3f-eos.topo.testdrive.arista.com
+          # ansible_host: marcus-dual-dc-testing-1-6d5bc3c3-eos.topo.testdrive-dev.arista.com
           cv_collection: v3
           execute_tasks: true
     ATD_LAB:
@@ -96,6 +97,7 @@ all:
   vars:
     ansible_user: arista
     ansible_password: "{{ lookup('env', 'PASS') }}"
+    # ansible_password: aristabtsd
     ansible_network_os: arista.eos.eos
     # Configure privilege escalation
     ansible_become: true

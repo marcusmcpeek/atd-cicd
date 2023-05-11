@@ -24,14 +24,6 @@ CVP_DEVICES_INIT:
     parentContainerName: STAGING
     configlets:
       - BASE_s1-brdr2
-  # - fqdn: s1-core1
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s1-core1
-  # - fqdn: s1-core2
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s1-core2
   - fqdn: s1-spine1
     parentContainerName: STAGING
     configlets:
@@ -40,14 +32,6 @@ CVP_DEVICES_INIT:
     parentContainerName: STAGING
     configlets:
       - BASE_s1-spine2
-  # - fqdn: s1-host1
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s1-host1
-  # - fqdn: s1-host2
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s1-host2
   - fqdn: s2-leaf1
     parentContainerName: STAGING
     configlets:
@@ -72,14 +56,6 @@ CVP_DEVICES_INIT:
     parentContainerName: STAGING
     configlets:
       - BASE_s2-brdr2
-  # - fqdn: s2-core1
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s2-core1
-  # - fqdn: s2-core2
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s2-core2
   - fqdn: s2-spine1
     parentContainerName: STAGING
     configlets:
@@ -88,14 +64,47 @@ CVP_DEVICES_INIT:
     parentContainerName: STAGING
     configlets:
       - BASE_s2-spine2
-  # - fqdn: s2-host1
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s2-host1
-  # - fqdn: s2-host2
-  #   parentContainerName: STAGING
-  #   configlets:
-  #     - BASE_s2-host2
+
+  - fqdn: s1-core1
+    parentContainerName: S1
+    configlets:
+      - BASE_s1-core1
+      - AVD__s1-core1  
+  - fqdn: s1-core2
+    parentContainerName: S1
+    configlets:
+      - BASE_s1-core2
+      - AVD__s1-core2
+  - fqdn: s1-host1
+    parentContainerName: S1
+    configlets:
+      - BASE_s1-host1
+      - AVD__s1-host1
+  - fqdn: s1-host2
+    parentContainerName: S1
+    configlets:
+      - BASE_s1-host2
+      - AVD__s1-host2
+  - fqdn: s2-core1
+    parentContainerName: S2
+    configlets:
+      - BASE_s2-core1
+      - AVD__s2-core1
+  - fqdn: s2-core2
+    parentContainerName: S2
+    configlets:
+      - BASE_s2-core2
+      - AVD__s2-core2
+  - fqdn: s2-host1
+    parentContainerName: S2
+    configlets:
+      - BASE_s2-host1
+      - AVD__s2-host1
+  - fqdn: s2-host2
+    parentContainerName: S2
+    configlets:
+      - BASE_s2-host2
+      - AVD__s2-host2
 
 CVP_CONTAINERS_INIT:
   STAGING:
@@ -109,32 +118,32 @@ CVP_ATD_CONTAINER:
 
 CVP_CONTAINERS_DELETE:
 # Use the following if setting up ATD after running through the demo once
-  ATD_LEAF1_DC1:
-    parentContainerName: ATD_LEAFS_DC1
-  ATD_LEAF2_DC1:
-    parentContainerName: ATD_LEAFS_DC1
-  ATD_BORDER_DC1:
-    parentContainerName: ATD_BORDER_DC1
-  ATD_LEAFS_DC1:
-    parentContainerName: DC1
-  ATD_SPINES_DC1:
-    parentContainerName: DC1
-  DC1:
-    parentContainerName: ATD_FABRIC
-  ATD_LEAF1_DC2:
-    parentContainerName: ATD_LEAFS_DC2
-  ATD_LEAF2_DC2:
-    parentContainerName: ATD_LEAFS_DC2
-  ATD_BORDER_DC2:
-    parentContainerName: ATD_BORDER_DC2
-  ATD_LEAFS_DC2:
-    parentContainerName: DC2
-  ATD_SPINES_DC2:
-    parentContainerName: DC2
-  DC2:
-    parentContainerName: ATD_FABRIC
-  ATD_FABRIC:
-    parentContainerName: Tenant
+  # ATD_LEAF1_DC1:
+  #   parentContainerName: ATD_LEAFS_DC1
+  # ATD_LEAF2_DC1:
+  #   parentContainerName: ATD_LEAFS_DC1
+  # ATD_BORDER_DC1:
+  #   parentContainerName: ATD_BORDER_DC1
+  # ATD_LEAFS_DC1:
+  #   parentContainerName: DC1
+  # ATD_SPINES_DC1:
+  #   parentContainerName: DC1
+  # DC1:
+  #   parentContainerName: ATD_FABRIC
+  # ATD_LEAF1_DC2:
+  #   parentContainerName: ATD_LEAFS_DC2
+  # ATD_LEAF2_DC2:
+  #   parentContainerName: ATD_LEAFS_DC2
+  # ATD_BORDER_DC2:
+  #   parentContainerName: ATD_BORDER_DC2
+  # ATD_LEAFS_DC2:
+  #   parentContainerName: DC2
+  # ATD_SPINES_DC2:
+  #   parentContainerName: DC2
+  # DC2:
+  #   parentContainerName: ATD_FABRIC
+  # ATD_FABRIC:
+  #   parentContainerName: Tenant
 
 # Use the following if setting up ATD Initially
   S1-Leaf:
@@ -149,16 +158,15 @@ CVP_CONTAINERS_DELETE:
     parentContainerName: S2
   S2-Spine:
     parentContainerName: S2
-
-  # S1-Core:
-  #   parentContainerName: S1
-  # S1-Hosts:
-  #   parentContainerName: S1
+  S1-Core:
+    parentContainerName: S1
+  S1-Hosts:
+    parentContainerName: S1
+  S2-Core:
+    parentContainerName: S2
+  S2-Hosts:
+    parentContainerName: S2
   # S1:
   #   parentContainerName: Tenant
-  # S2-Core:
-  #   parentContainerName: S2
-  # S2-Hosts:
-  #   parentContainerName: S2
   # S2:
   #   parentContainerName: Tenant

@@ -1,8 +1,8 @@
 ---
-overlay_rd_type:
-  admin_subfield: "bgp_as"
-overlay_rt_type:
-  admin_subfield: 42
+# overlay_rd_type:
+#   admin_subfield: "bgp_as"
+# overlay_rt_type:
+#   admin_subfield: 42
 
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
@@ -36,14 +36,6 @@ tenants:
             tags: [ VLAN200 ]
             enabled: true
             ip_address_virtual: 20.20.20.1/24
-      customerB:
-        vrf_vni: 20
-        svis:
-          310:
-            name: VLAN310
-            tags: [ standard_vlans ]
-            enabled: true
-            ip_address_virtual: 30.30.30.1/24
     l2vlans:
       110:
         name: Extend
