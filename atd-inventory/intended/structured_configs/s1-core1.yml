@@ -73,9 +73,6 @@ ethernet_interfaces:
   type: routed
   mpls:
     ip: true
-    ldp:
-      interface: true
-      igp_sync: true
   ip_address: 10.255.0.0/31
   isis_enable: CORE
   isis_metric: 50
@@ -94,9 +91,6 @@ ethernet_interfaces:
   type: routed
   mpls:
     ip: true
-    ldp:
-      interface: true
-      igp_sync: true
   ip_address: 10.255.0.4/31
   isis_enable: CORE
   isis_metric: 50
@@ -115,9 +109,6 @@ ethernet_interfaces:
   type: routed
   mpls:
     ip: true
-    ldp:
-      interface: true
-      igp_sync: true
   ip_address: 10.255.0.2/31
   isis_enable: CORE
   isis_metric: 50
@@ -126,16 +117,19 @@ ethernet_interfaces:
   isis_hello_padding: true
   isis_authentication_mode: md5
   isis_authentication_key: $1c$sTNAlR6rKSw=
+- name: Ethernet2
+  type: routed
+  peer_type: l3_interface
+  shutdown: false
 loopback_interfaces:
 - name: Loopback0
   description: MPLS_Overlay_peering
   shutdown: false
   ip_address: 10.200.10.1/32
-  mpls:
-    ldp:
-      interface: true
   isis_enable: CORE
   isis_passive: true
+  node_segment:
+    ipv4_index: 1
 router_isis:
   instance: CORE
   log_adjacency_changes: true
@@ -149,19 +143,29 @@ router_isis:
   - Ethernet1
   - Ethernet4
   - Ethernet6
-  mpls_ldp_sync_default: true
+  advertise:
+    passive_only: false
+  segment_routing_mpls:
+    router_id: 10.200.10.1
+    enabled: true
 mpls:
   ip: true
-  ldp:
-    interface_disabled_default: true
-    router_id: 10.200.10.1
-    shutdown: false
-    transport_address_interface: Loopback0
 router_bfd:
   multihop:
     interval: 1200
     min_rx: 1200
     multiplier: 3
+patch_panel:
+  patches:
+  - name: CIRCUIT_1
+    enabled: true
+    connectors:
+    - id: '1'
+      type: interface
+      endpoint: Ethernet2
+    - id: '2'
+      type: pseudowire
+      endpoint: bgp vpws VPN_SERVICE pseudowire CIRCUIT_1
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:cc:00

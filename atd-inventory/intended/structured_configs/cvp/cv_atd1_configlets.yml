@@ -185,86 +185,84 @@ cvp_configlets:
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-core1\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
-    mstp\nspanning-tree mst 0 priority 16384\n!\nno enable password\nno aaa root\n!\nvlan
-    2100\n   name CORE_LINK1\n!\nvlan 2200\n   name CORE_LINK2\n!\ninterface Ethernet1\n
-    \  description P2P_LINK_TO_S1-CORE2_Ethernet1\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.1/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Ethernet2\n   description CORE_LINK1\n   no shutdown\n
-    \  switchport access vlan 2100\n   switchport mode access\n   switchport\n   spanning-tree
-    portfast\n!\ninterface Ethernet4\n   description P2P_LINK_TO_S2-CORE1_Ethernet4\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.3/31\n   ip
-    ospf network point-to-point\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet6\n
-    \  description P2P_LINK_TO_S1-CORE2_Ethernet6\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.4/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
-    \  no shutdown\n   ip address 10.200.10.1/32\n   ip ospf area 0.0.0.0\n!\ninterface
-    Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.200.20.1/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n   description
-    oob_management\n   no shutdown\n   ip address 192.168.0.102/24\n!\ninterface Vxlan1\n
-    \  description s1-core1_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port
-    4789\n   vxlan vlan 2100 vni 12100\n   vxlan vlan 2200 vni 12200\n!\nip virtual-router
-    mac-address 00:1c:73:00:cc:01\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
-    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65501\n
-    \  router-id 10.200.10.1\n   no bgp default ipv4-unicast\n   distance bgp 20 200
-    200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
-    next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
-    EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
-    send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.200.10.2
-    peer group EVPN-OVERLAY-PEERS\n   neighbor 10.200.10.2 remote-as 65502\n   neighbor
-    10.200.10.2 description s1-core2\n   neighbor 10.200.10.3 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 10.200.10.3 remote-as 65503\n   neighbor 10.200.10.3 description s2-core1\n
-    \  !\n   vlan 2100\n      rd 10.200.10.1:12100\n      route-target both 12100:12100\n
-    \     redistribute learned\n   !\n   vlan 2200\n      rd 10.200.10.1:12200\n      route-target
-    both 12200:12200\n      redistribute learned\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
-    activate\n!\nrouter ospf 100\n   router-id 10.200.10.1\n   passive-interface default\n
-    \  no passive-interface Ethernet1\n   no passive-interface Ethernet4\n   no passive-interface
-    Ethernet6\n   max-lsa 12000\n!\nmanagement api http-commands\n   protocol https\n
-    \  no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
+    P2P_LINK_TO_s1-core2_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.0/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet2\n   no shutdown\n   no switchport\n!\ninterface Ethernet4\n   description
+    P2P_LINK_TO_s2-core1_Ethernet4\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.4/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s1-core2_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.2/31\n   mpls ip\n   isis enable
+    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
+    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.200.10.1/32\n   isis enable CORE\n   isis passive\n
+    \  node-segment ipv4 index 1\n!\ninterface Management0\n   description oob_management\n
+    \  no shutdown\n   ip address 192.168.0.102/24\n!\nip virtual-router mac-address
+    00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
+    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65555\n
+    \  router-id 10.200.10.1\n   bgp cluster-id 10.200.10.1\n   no bgp default ipv4-unicast\n
+    \  distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n
+    \  maximum-paths 4 ecmp 4\n   neighbor MPLS-OVERLAY-PEERS peer group\n   neighbor
+    MPLS-OVERLAY-PEERS remote-as 65555\n   neighbor MPLS-OVERLAY-PEERS update-source
+    Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   !\n   address-family evpn\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.0000.0001.0001.00\n   is-type level-2\n   router-id
+    ipv4 10.200.10.1\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\npatch panel\n   patch CIRCUIT_1\n      connector 1 interface Ethernet2\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nend\n"
   AVD_s1-core2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-core2\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
-    mstp\nspanning-tree mst 0 priority 16384\n!\nno enable password\nno aaa root\n!\nvlan
-    2100\n   name CORE_LINK1\n!\nvlan 2200\n   name CORE_LINK2\n!\ninterface Ethernet1\n
-    \  description P2P_LINK_TO_S1-CORE1_Ethernet1\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.0/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Ethernet3\n   description CORE_LINK2\n   no shutdown\n
-    \  switchport access vlan 2200\n   switchport mode access\n   switchport\n   spanning-tree
-    portfast\n!\ninterface Ethernet4\n   description P2P_LINK_TO_S2-CORE2_Ethernet4\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.7/31\n   ip
-    ospf network point-to-point\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet6\n
-    \  description P2P_LINK_TO_S1-CORE1_Ethernet6\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.5/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
-    \  no shutdown\n   ip address 10.200.10.2/32\n   ip ospf area 0.0.0.0\n!\ninterface
-    Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.200.20.2/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n   description
-    oob_management\n   no shutdown\n   ip address 192.168.0.103/24\n!\ninterface Vxlan1\n
-    \  description s1-core2_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port
-    4789\n   vxlan vlan 2100 vni 12100\n   vxlan vlan 2200 vni 12200\n!\nip virtual-router
-    mac-address 00:1c:73:00:cc:01\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
-    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65502\n
-    \  router-id 10.200.10.2\n   no bgp default ipv4-unicast\n   distance bgp 20 200
-    200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
-    next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
-    EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
-    send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.200.10.1
-    peer group EVPN-OVERLAY-PEERS\n   neighbor 10.200.10.1 remote-as 65501\n   neighbor
-    10.200.10.1 description s1-core1\n   neighbor 10.200.10.4 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 10.200.10.4 remote-as 65505\n   neighbor 10.200.10.4 description s2-core2\n
-    \  !\n   vlan 2100\n      rd 10.200.10.2:12100\n      route-target both 12100:12100\n
-    \     redistribute learned\n   !\n   vlan 2200\n      rd 10.200.10.2:12200\n      route-target
-    both 12200:12200\n      redistribute learned\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
-    activate\n!\nrouter ospf 100\n   router-id 10.200.10.2\n   passive-interface default\n
-    \  no passive-interface Ethernet1\n   no passive-interface Ethernet4\n   no passive-interface
-    Ethernet6\n   max-lsa 12000\n!\nmanagement api http-commands\n   protocol https\n
-    \  no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
+    P2P_LINK_TO_s1-core1_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.1/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet3\n   no shutdown\n   no switchport\n!\ninterface Ethernet4\n   description
+    P2P_LINK_TO_s2-core2_Ethernet4\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.6/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s1-core1_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.3/31\n   mpls ip\n   isis enable
+    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
+    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.200.10.2/32\n   isis enable CORE\n   isis passive\n
+    \  node-segment ipv4 index 2\n!\ninterface Management0\n   description oob_management\n
+    \  no shutdown\n   ip address 192.168.0.103/24\n!\nip virtual-router mac-address
+    00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
+    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65555\n
+    \  router-id 10.200.10.2\n   bgp cluster-id 10.200.10.2\n   no bgp default ipv4-unicast\n
+    \  distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n
+    \  maximum-paths 4 ecmp 4\n   neighbor MPLS-OVERLAY-PEERS peer group\n   neighbor
+    MPLS-OVERLAY-PEERS remote-as 65555\n   neighbor MPLS-OVERLAY-PEERS update-source
+    Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   !\n   address-family evpn\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.0000.0001.0002.00\n   is-type level-2\n   router-id
+    ipv4 10.200.10.2\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\npatch panel\n   patch CIRCUIT_2\n      connector 1 interface Ethernet3\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nend\n"
   AVD_s1-leaf1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-leaf1\nip name-server vrf default 8.8.8.8\nip
@@ -907,86 +905,84 @@ cvp_configlets:
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-core1\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
-    mstp\nspanning-tree mst 0 priority 16384\n!\nno enable password\nno aaa root\n!\nvlan
-    2100\n   name CORE_LINK1\n!\nvlan 2200\n   name CORE_LINK2\n!\ninterface Ethernet1\n
-    \  description P2P_LINK_TO_S2-CORE2_Ethernet1\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.9/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Ethernet2\n   description CORE_LINK1\n   no shutdown\n
-    \  switchport access vlan 2100\n   switchport mode access\n   switchport\n   spanning-tree
-    portfast\n!\ninterface Ethernet4\n   description P2P_LINK_TO_S1-CORE1_Ethernet4\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.2/31\n   ip
-    ospf network point-to-point\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet6\n
-    \  description P2P_LINK_TO_S2-CORE2_Ethernet6\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.12/31\n   ip ospf network point-to-point\n
-    \  ip ospf area 0.0.0.0\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
-    \  no shutdown\n   ip address 10.200.10.3/32\n   ip ospf area 0.0.0.0\n!\ninterface
-    Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.200.20.3/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n   description
-    oob_management\n   no shutdown\n   ip address 192.168.0.202/24\n!\ninterface Vxlan1\n
-    \  description s2-core1_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port
-    4789\n   vxlan vlan 2100 vni 12100\n   vxlan vlan 2200 vni 12200\n!\nip virtual-router
-    mac-address 00:1c:73:00:cc:01\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
-    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65503\n
-    \  router-id 10.200.10.3\n   no bgp default ipv4-unicast\n   distance bgp 20 200
-    200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
-    next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
-    EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
-    send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.200.10.1
-    peer group EVPN-OVERLAY-PEERS\n   neighbor 10.200.10.1 remote-as 65501\n   neighbor
-    10.200.10.1 description s1-core1\n   neighbor 10.200.10.4 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 10.200.10.4 remote-as 65505\n   neighbor 10.200.10.4 description s2-core2\n
-    \  !\n   vlan 2100\n      rd 10.200.10.3:12100\n      route-target both 12100:12100\n
-    \     redistribute learned\n   !\n   vlan 2200\n      rd 10.200.10.3:12200\n      route-target
-    both 12200:12200\n      redistribute learned\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
-    activate\n!\nrouter ospf 100\n   router-id 10.200.10.3\n   passive-interface default\n
-    \  no passive-interface Ethernet1\n   no passive-interface Ethernet4\n   no passive-interface
-    Ethernet6\n   max-lsa 12000\n!\nmanagement api http-commands\n   protocol https\n
-    \  no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
+    P2P_LINK_TO_s2-core2_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.8/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet2\n   no shutdown\n   no switchport\n!\ninterface Ethernet4\n   description
+    P2P_LINK_TO_s1-core1_Ethernet4\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.5/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s2-core2_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.10/31\n   mpls ip\n   isis enable
+    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
+    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.200.10.3/32\n   isis enable CORE\n   isis passive\n
+    \  node-segment ipv4 index 3\n!\ninterface Management0\n   description oob_management\n
+    \  no shutdown\n   ip address 192.168.0.202/24\n!\nip virtual-router mac-address
+    00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
+    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65555\n
+    \  router-id 10.200.10.3\n   bgp cluster-id 10.200.10.3\n   no bgp default ipv4-unicast\n
+    \  distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n
+    \  maximum-paths 4 ecmp 4\n   neighbor MPLS-OVERLAY-PEERS peer group\n   neighbor
+    MPLS-OVERLAY-PEERS remote-as 65555\n   neighbor MPLS-OVERLAY-PEERS update-source
+    Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   !\n   address-family evpn\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.0000.0001.0003.00\n   is-type level-2\n   router-id
+    ipv4 10.200.10.3\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\npatch panel\n   patch CIRCUIT_1\n      connector 1 interface Ethernet2\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nend\n"
   AVD_s2-core2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-core2\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
-    mstp\nspanning-tree mst 0 priority 16384\n!\nno enable password\nno aaa root\n!\nvlan
-    2100\n   name CORE_LINK1\n!\nvlan 2200\n   name CORE_LINK2\n!\ninterface Ethernet1\n
-    \  description P2P_LINK_TO_S2-CORE1_Ethernet1\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.8/31\n   ip ospf network point-to-point\n   ip
-    ospf area 0.0.0.0\n!\ninterface Ethernet3\n   description CORE_LINK2\n   no shutdown\n
-    \  switchport access vlan 2200\n   switchport mode access\n   switchport\n   spanning-tree
-    portfast\n!\ninterface Ethernet4\n   description P2P_LINK_TO_S1-CORE2_Ethernet4\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.6/31\n   ip
-    ospf network point-to-point\n   ip ospf area 0.0.0.0\n!\ninterface Ethernet6\n
-    \  description P2P_LINK_TO_S2-CORE1_Ethernet6\n   no shutdown\n   mtu 9214\n   no
-    switchport\n   ip address 10.255.0.13/31\n   ip ospf network point-to-point\n
-    \  ip ospf area 0.0.0.0\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n
-    \  no shutdown\n   ip address 10.200.10.4/32\n   ip ospf area 0.0.0.0\n!\ninterface
-    Loopback1\n   description VTEP_VXLAN_Tunnel_Source\n   no shutdown\n   ip address
-    10.200.20.4/32\n   ip ospf area 0.0.0.0\n!\ninterface Management0\n   description
-    oob_management\n   no shutdown\n   ip address 192.168.0.203/24\n!\ninterface Vxlan1\n
-    \  description s2-core2_VTEP\n   vxlan source-interface Loopback1\n   vxlan udp-port
-    4789\n   vxlan vlan 2100 vni 12100\n   vxlan vlan 2200 vni 12200\n!\nip virtual-router
-    mac-address 00:1c:73:00:cc:01\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
-    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65505\n
-    \  router-id 10.200.10.4\n   no bgp default ipv4-unicast\n   distance bgp 20 200
-    200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
-    next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
-    EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
-    send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor 10.200.10.2
-    peer group EVPN-OVERLAY-PEERS\n   neighbor 10.200.10.2 remote-as 65502\n   neighbor
-    10.200.10.2 description s1-core2\n   neighbor 10.200.10.3 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 10.200.10.3 remote-as 65503\n   neighbor 10.200.10.3 description s2-core1\n
-    \  !\n   vlan 2100\n      rd 10.200.10.4:12100\n      route-target both 12100:12100\n
-    \     redistribute learned\n   !\n   vlan 2200\n      rd 10.200.10.4:12200\n      route-target
-    both 12200:12200\n      redistribute learned\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
-    activate\n!\nrouter ospf 100\n   router-id 10.200.10.4\n   passive-interface default\n
-    \  no passive-interface Ethernet1\n   no passive-interface Ethernet4\n   no passive-interface
-    Ethernet6\n   max-lsa 12000\n!\nmanagement api http-commands\n   protocol https\n
-    \  no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
+    P2P_LINK_TO_s2-core1_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.9/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet3\n   no shutdown\n   no switchport\n!\ninterface Ethernet4\n   description
+    P2P_LINK_TO_s1-core2_Ethernet4\n   no shutdown\n   mtu 9214\n   no switchport\n
+    \  ip address 10.255.0.7/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
+    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
+    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s2-core1_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.11/31\n   mpls ip\n   isis enable
+    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
+    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
+    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description MPLS_Overlay_peering\n
+    \  no shutdown\n   ip address 10.200.10.4/32\n   isis enable CORE\n   isis passive\n
+    \  node-segment ipv4 index 4\n!\ninterface Management0\n   description oob_management\n
+    \  no shutdown\n   ip address 192.168.0.203/24\n!\nip virtual-router mac-address
+    00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0 192.168.0.1\n!\nrouter
+    bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65555\n
+    \  router-id 10.200.10.4\n   bgp cluster-id 10.200.10.4\n   no bgp default ipv4-unicast\n
+    \  distance bgp 20 200 200\n   graceful-restart restart-time 300\n   graceful-restart\n
+    \  maximum-paths 4 ecmp 4\n   neighbor MPLS-OVERLAY-PEERS peer group\n   neighbor
+    MPLS-OVERLAY-PEERS remote-as 65555\n   neighbor MPLS-OVERLAY-PEERS update-source
+    Loopback0\n   neighbor MPLS-OVERLAY-PEERS bfd\n   neighbor MPLS-OVERLAY-PEERS
+    password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==\n   neighbor MPLS-OVERLAY-PEERS send-community\n
+    \  neighbor MPLS-OVERLAY-PEERS maximum-routes 0\n   !\n   address-family evpn\n
+    \  !\n   address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n
+    \  !\n   address-family vpn-ipv4\n      neighbor MPLS-OVERLAY-PEERS activate\n
+    \     neighbor default encapsulation mpls next-hop-self source-interface Loopback0\n!\nrouter
+    isis CORE\n   net 49.0001.0000.0001.0004.00\n   is-type level-2\n   router-id
+    ipv4 10.200.10.4\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
+    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
+    ip\n!\npatch panel\n   patch CIRCUIT_2\n      connector 1 interface Ethernet3\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nend\n"
   AVD_s2-leaf1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-leaf1\nip name-server vrf default 8.8.8.8\nip
@@ -1444,7 +1440,7 @@ cvp_configlets:
     IPv4-UNDERLAY-PEERS activate\n!\nmanagement api http-commands\n   protocol https\n
     \  no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
 cvp_topology:
-  CORE:
+  CORE_MPLS:
     devices:
     - s1-core1
     - s1-core2

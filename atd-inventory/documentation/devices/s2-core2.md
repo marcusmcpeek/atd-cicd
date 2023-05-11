@@ -32,6 +32,9 @@
 - [MPLS](#mpls)
   - [MPLS and LDP](#mpls-and-ldp)
   - [MPLS Interfaces](#mpls-interfaces)
+- [Patch Panel](#patch-panel)
+  - [Patch Panel Summary](#patch-panel-summary)
+  - [Patch Panel Configuration](#patch-panel-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [VRF Instances](#vrf-instances)
@@ -202,8 +205,6 @@ interface Ethernet1
    mtu 9214
    no switchport
    ip address 10.255.0.9/31
-   mpls ldp igp sync
-   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -213,14 +214,16 @@ interface Ethernet1
    isis authentication mode md5
    isis authentication key 7 $1c$sTNAlR6rKSw=
 !
+interface Ethernet3
+   no shutdown
+   no switchport
+!
 interface Ethernet4
    description P2P_LINK_TO_s1-core2_Ethernet4
    no shutdown
    mtu 9214
    no switchport
    ip address 10.255.0.7/31
-   mpls ldp igp sync
-   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -236,8 +239,6 @@ interface Ethernet6
    mtu 9214
    no switchport
    ip address 10.255.0.11/31
-   mpls ldp igp sync
-   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -280,7 +281,7 @@ interface Loopback0
    ip address 10.200.10.4/32
    isis enable CORE
    isis passive
-   mpls ldp interface
+   node-segment ipv4 index 4
 ```
 
 ## Routing
@@ -357,7 +358,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Type | level-2 |
 | Router-ID | 10.200.10.4 |
 | Log Adjacency Changes | True |
-| MPLS LDP Sync Default | True |
+| SR MPLS Enabled | True |
 
 #### ISIS Interfaces Summary
 
@@ -367,6 +368,12 @@ ip route 0.0.0.0/0 192.168.0.1
 | Ethernet4 | CORE | 50 | point-to-point |
 | Ethernet6 | CORE | 50 | point-to-point |
 | Loopback0 | CORE | - | passive |
+
+#### ISIS Segment-routing Node-SID
+
+| Loopback | IPv4 Index | IPv6 Index |
+| -------- | ---------- | ---------- |
+| Loopback0 | 4 | - |
 
 #### ISIS IPv4 Address Family Summary
 
@@ -384,11 +391,12 @@ router isis CORE
    is-type level-2
    router-id ipv4 10.200.10.4
    log-adjacency-changes
-   mpls ldp sync default
    !
    address-family ipv4 unicast
       maximum-paths 4
    !
+   segment-routing mpls
+      no shutdown
 ```
 
 ### Router BGP
@@ -496,32 +504,44 @@ router bfd
 | Setting | Value |
 | -------- | ---- |
 | MPLS IP Enabled | True |
-| LDP Enabled | True |
-| LDP Router ID | 10.200.10.4 |
-| LDP Interface Disabled Default | True |
-| LDP Transport-Address Interface | Loopback0 |
+| LDP Enabled | False |
+| LDP Router ID | - |
+| LDP Interface Disabled Default | - |
+| LDP Transport-Address Interface | - |
 
 #### MPLS and LDP Configuration
 
 ```eos
 !
 mpls ip
-!
-mpls ldp
-   interface disabled default
-   router-id 10.200.10.4
-   no shutdown
-   transport-address interface Loopback0
 ```
 
 ### MPLS Interfaces
 
 | Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
 | --------- | --------------- | ----------- | -------- |
-| Ethernet1 | True | True | True |
-| Ethernet4 | True | True | True |
-| Ethernet6 | True | True | True |
-| Loopback0 | - | True | - |
+| Ethernet1 | True | - | - |
+| Ethernet4 | True | - | - |
+| Ethernet6 | True | - | - |
+
+## Patch Panel
+
+### Patch Panel Summary
+
+| Patch Name | Enabled | Connector A Type | Connector A Endpoint | Connector B Type | Connector B Endpoint |
+| ---------- | ------- | ---------------- | -------------------- | ---------------- | -------------------- |
+| CIRCUIT_2 | True | Interface | Ethernet3 | Pseudowire | bgp vpws VPN_SERVICE pseudowire CIRCUIT_2 |
+
+### Patch Panel Configuration
+
+```eos
+!
+patch panel
+   patch CIRCUIT_2
+      connector 1 interface Ethernet3
+      connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2
+   !
+```
 
 ## Multicast
 

@@ -22,7 +22,7 @@ name_servers:
 
 dns_domain: atd.lab
 
-underlay_routing_protocol: isis-ldp
+underlay_routing_protocol: isis-sr
 overlay_routing_protocol: ibgp
 
 bgp_as: 65555
@@ -165,6 +165,6 @@ tenants:
             nodes: [ s1-core2 ]
             interfaces: [ Ethernet3 ]
           - id: 202
-            nodes: [ s2-core1 ]
+            nodes: [ s2-core2 ]
             interfaces: [ Ethernet3 ]
 
