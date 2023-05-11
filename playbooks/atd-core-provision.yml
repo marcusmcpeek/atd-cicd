@@ -8,6 +8,6 @@
       ansible.builtin.import_role:
         name: arista.avd.eos_config_deploy_cvp
       vars:
-        container_root: 'CORE'
+        container_root: 'CORE_MPLS'
         configlets_prefix: 'AVD'
         state: present

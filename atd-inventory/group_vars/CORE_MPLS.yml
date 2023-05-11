@@ -2,7 +2,7 @@
 # L3LS Fabric Values - update these values with caution,
 # SOME CHANGES COULD BE DISRUPTIVE.
 
-fabric_name: CORE
+fabric_name: CORE_MPLS
 
 design:
   type: mpls
@@ -139,38 +139,32 @@ core_interfaces:
 
 
 
-# tenants:
-#   # Tenant A Specific Information - VRFs / VLANs
-#   Tenant_A:
-#     mac_vrf_vni_base: 10000
-#     l2vlans:
-#       2100:
-#         name: CORE_LINK1
-#       2200:
-#         name: CORE_LINK2
+tenants:
 
-# port_profiles:
-#   - profile: CORE_LINK1
-#     mode: access
-#     vlans: "2100"
-#     spanning_tree_portfast: edge
-#   - profile: CORE_LINK2
-#     mode: access
-#     vlans: "2200"
-#     spanning_tree_portfast: edge
+  # Specify a tenant name. | Required
+  # Tenant provide a construct to group L3 VRFs and L2 VLANs.
+  # Networks services can be filtered by tenant name.
+  VPN_SERVICE:
+    pseudowire_rt_base: 10000
+    point_to_point_services:
+      - name: CIRCUIT_1
+        type: vpws-pseudowire
+        lldp_disable: false
+        endpoints:
+          - id: 101
+            nodes: [ s1-core1 ]
+            interfaces: [ Ethernet2 ]
+          - id: 201
+            nodes: [ s2-core1 ]
+            interfaces: [ Ethernet2 ]
+      - name: CIRCUIT_2
+        type: vpws-pseudowire
+        lldp_disable: false
+        endpoints:
+          - id: 102
+            nodes: [ s1-core2 ]
+            interfaces: [ Ethernet3 ]
+          - id: 202
+            nodes: [ s2-core1 ]
+            interfaces: [ Ethernet3 ]
 
-# network_ports:
-#   - switches:
-#       - s1-core1
-#       - s2-core1
-#     switch_ports:
-#       - Ethernet2
-#     profile: CORE_LINK1
-#     description: CORE_LINK1
-#   - switches:
-#       - s1-core2
-#       - s2-core2
-#     switch_ports:
-#       - Ethernet3
-#     profile: CORE_LINK2
-#     description: CORE_LINK2

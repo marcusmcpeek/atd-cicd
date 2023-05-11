@@ -7,9 +7,21 @@ all:
           ansible_host: dual-dc-testing-1-a10d91c1-eos.topo.testdrive-dev.arista.com
           cv_collection: v3
           execute_tasks: true
-    CORE:
+    # CORE_EVPN:
+    #   vars:
+    #     type: l3leaf
+    #   hosts:
+    #     s1-core1:
+    #       ansible_host: 192.168.0.102
+    #     s1-core2:
+    #       ansible_host: 192.168.0.103
+    #     s2-core1:
+    #       ansible_host: 192.168.0.202
+    #     s2-core2:
+    #       ansible_host: 192.168.0.203
+    CORE_MPLS:
       vars:
-        type: l3leaf
+        type: pe
       hosts:
         s1-core1:
           ansible_host: 192.168.0.102

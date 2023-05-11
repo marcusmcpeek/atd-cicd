@@ -7,29 +7,31 @@
   - [DNS Domain](#dns-domain)
   - [IP Name Servers](#ip-name-servers)
   - [Management API HTTP](#management-api-http)
+- [Management Security](#management-security)
+  - [Management Security Summary](#management-security-summary)
+  - [Management Security Configuration](#management-security-configuration)
 - [Spanning Tree](#spanning-tree)
   - [Spanning Tree Summary](#spanning-tree-summary)
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
   - [Internal VLAN Allocation Policy Configuration](#internal-vlan-allocation-policy-configuration)
-- [VLANs](#vlans)
-  - [VLANs Summary](#vlans-summary)
-  - [VLANs Device Configuration](#vlans-device-configuration)
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
-  - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [Virtual Router MAC Address](#virtual-router-mac-address)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
-  - [Router OSPF](#router-ospf)
+  - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
 - [BFD](#bfd)
   - [Router BFD](#router-bfd)
+- [MPLS](#mpls)
+  - [MPLS and LDP](#mpls-and-ldp)
+  - [MPLS Interfaces](#mpls-interfaces)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [VRF Instances](#vrf-instances)
@@ -117,24 +119,33 @@ management api http-commands
       no shutdown
 ```
 
+## Management Security
+
+### Management Security Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Common password encryption key | True |
+
+### Management Security Configuration
+
+```eos
+!
+management security
+   password encryption-key common
+```
+
 ## Spanning Tree
 
 ### Spanning Tree Summary
 
-STP mode: **mstp**
-
-#### MSTP Instance and Priority
-
-| Instance(s) | Priority |
-| -------- | -------- |
-| 0 | 16384 |
+STP mode: **none**
 
 ### Spanning Tree Device Configuration
 
 ```eos
 !
-spanning-tree mode mstp
-spanning-tree mst 0 priority 16384
+spanning-tree mode none
 ```
 
 ## Internal VLAN Allocation Policy
@@ -152,26 +163,6 @@ spanning-tree mst 0 priority 16384
 vlan internal order ascending range 1006 1199
 ```
 
-## VLANs
-
-### VLANs Summary
-
-| VLAN ID | Name | Trunk Groups |
-| ------- | ---- | ------------ |
-| 2100 | CORE_LINK1 | - |
-| 2200 | CORE_LINK2 | - |
-
-### VLANs Device Configuration
-
-```eos
-!
-vlan 2100
-   name CORE_LINK1
-!
-vlan 2200
-   name CORE_LINK2
-```
-
 ## Interfaces
 
 ### Ethernet Interfaces
@@ -182,7 +173,6 @@ vlan 2200
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet3 |  CORE_LINK2 | access | 2200 | - | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -190,48 +180,72 @@ vlan 2200
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 | P2P_LINK_TO_S1-CORE1_Ethernet1 | routed | - | 10.255.0.0/31 | default | 9214 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_S2-CORE2_Ethernet4 | routed | - | 10.255.0.7/31 | default | 9214 | False | - | - |
-| Ethernet6 | P2P_LINK_TO_S1-CORE1_Ethernet6 | routed | - | 10.255.0.5/31 | default | 9214 | False | - | - |
+| Ethernet1 | P2P_LINK_TO_s1-core1_Ethernet1 | routed | - | 10.255.0.1/31 | default | 9214 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_s2-core2_Ethernet4 | routed | - | 10.255.0.6/31 | default | 9214 | False | - | - |
+| Ethernet6 | P2P_LINK_TO_s1-core1_Ethernet6 | routed | - | 10.255.0.3/31 | default | 9214 | False | - | - |
+
+##### ISIS
+
+| Interface | Channel Group | ISIS Instance | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
+| --------- | ------------- | ------------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Ethernet1 | - | CORE | 50 | point-to-point | level-2 | True | md5 |
+| Ethernet4 | - | CORE | 50 | point-to-point | level-2 | True | md5 |
+| Ethernet6 | - | CORE | 50 | point-to-point | level-2 | True | md5 |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface Ethernet1
-   description P2P_LINK_TO_S1-CORE1_Ethernet1
+   description P2P_LINK_TO_s1-core1_Ethernet1
    no shutdown
    mtu 9214
    no switchport
-   ip address 10.255.0.0/31
-   ip ospf network point-to-point
-   ip ospf area 0.0.0.0
-!
-interface Ethernet3
-   description CORE_LINK2
-   no shutdown
-   switchport access vlan 2200
-   switchport mode access
-   switchport
-   spanning-tree portfast
+   ip address 10.255.0.1/31
+   mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
+   isis enable CORE
+   isis circuit-type level-2
+   isis metric 50
+   isis hello padding
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 $1c$sTNAlR6rKSw=
 !
 interface Ethernet4
-   description P2P_LINK_TO_S2-CORE2_Ethernet4
+   description P2P_LINK_TO_s2-core2_Ethernet4
    no shutdown
    mtu 9214
    no switchport
-   ip address 10.255.0.7/31
-   ip ospf network point-to-point
-   ip ospf area 0.0.0.0
+   ip address 10.255.0.6/31
+   mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
+   isis enable CORE
+   isis circuit-type level-2
+   isis metric 50
+   isis hello padding
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 $1c$sTNAlR6rKSw=
 !
 interface Ethernet6
-   description P2P_LINK_TO_S1-CORE1_Ethernet6
+   description P2P_LINK_TO_s1-core1_Ethernet6
    no shutdown
    mtu 9214
    no switchport
-   ip address 10.255.0.5/31
-   ip ospf network point-to-point
-   ip ospf area 0.0.0.0
+   ip address 10.255.0.3/31
+   mpls ldp igp sync
+   mpls ldp interface
+   mpls ip
+   isis enable CORE
+   isis circuit-type level-2
+   isis metric 50
+   isis hello padding
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 $1c$sTNAlR6rKSw=
 ```
 
 ### Loopback Interfaces
@@ -242,60 +256,31 @@ interface Ethernet6
 
 | Interface | Description | VRF | IP Address |
 | --------- | ----------- | --- | ---------- |
-| Loopback0 | EVPN_Overlay_Peering | default | 10.200.10.2/32 |
-| Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 10.200.20.2/32 |
+| Loopback0 | MPLS_Overlay_peering | default | 10.200.10.2/32 |
 
 ##### IPv6
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | - |
-| Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
+| Loopback0 | MPLS_Overlay_peering | default | - |
 
+##### ISIS
+
+| Interface | ISIS instance | ISIS metric | Interface mode |
+| --------- | ------------- | ----------- | -------------- |
+| Loopback0 | CORE | - | passive |
 
 #### Loopback Interfaces Device Configuration
 
 ```eos
 !
 interface Loopback0
-   description EVPN_Overlay_Peering
+   description MPLS_Overlay_peering
    no shutdown
    ip address 10.200.10.2/32
-   ip ospf area 0.0.0.0
-!
-interface Loopback1
-   description VTEP_VXLAN_Tunnel_Source
-   no shutdown
-   ip address 10.200.20.2/32
-   ip ospf area 0.0.0.0
-```
-
-### VXLAN Interface
-
-#### VXLAN Interface Summary
-
-| Setting | Value |
-| ------- | ----- |
-| Source Interface | Loopback1 |
-| UDP port | 4789 |
-
-##### VLAN to VNI, Flood List and Multicast Group Mappings
-
-| VLAN | VNI | Flood List | Multicast Group |
-| ---- | --- | ---------- | --------------- |
-| 2100 | 12100 | - | - |
-| 2200 | 12200 | - | - |
-
-#### VXLAN Interface Device Configuration
-
-```eos
-!
-interface Vxlan1
-   description s1-core2_VTEP
-   vxlan source-interface Loopback1
-   vxlan udp-port 4789
-   vxlan vlan 2100 vni 12100
-   vxlan vlan 2200 vni 12200
+   isis enable CORE
+   isis passive
+   mpls ldp interface
 ```
 
 ## Routing
@@ -313,13 +298,13 @@ service routing protocols model multi-agent
 
 #### Virtual Router MAC Address Summary
 
-##### Virtual Router MAC Address: 00:1c:73:00:cc:01
+##### Virtual Router MAC Address: 00:1c:73:00:cc:00
 
 #### Virtual Router MAC Address Configuration
 
 ```eos
 !
-ip virtual-router mac-address 00:1c:73:00:cc:01
+ip virtual-router mac-address 00:1c:73:00:cc:00
 ```
 
 ### IP Routing
@@ -361,35 +346,49 @@ ip routing
 ip route 0.0.0.0/0 192.168.0.1
 ```
 
-### Router OSPF
+### Router ISIS
 
-#### Router OSPF Summary
+#### Router ISIS Summary
 
-| Process ID | Router ID | Default Passive Interface | No Passive Interface | BFD | Max LSA | Default Information Originate | Log Adjacency Changes Detail | Auto Cost Reference Bandwidth | Maximum Paths | MPLS LDP Sync Default | Distribute List In |
-| ---------- | --------- | ------------------------- | -------------------- | --- | ------- | ----------------------------- | ---------------------------- | ----------------------------- | ------------- | --------------------- | ------------------ |
-| 100 | 10.200.10.2 | enabled | Ethernet1 <br> Ethernet4 <br> Ethernet6 <br> | disabled | 12000 | disabled | disabled | - | - | - | - |
+| Settings | Value |
+| -------- | ----- |
+| Instance | CORE |
+| Net-ID | 49.0001.0000.0001.0002.00 |
+| Type | level-2 |
+| Router-ID | 10.200.10.2 |
+| Log Adjacency Changes | True |
+| MPLS LDP Sync Default | True |
 
-#### OSPF Interfaces
+#### ISIS Interfaces Summary
 
-| Interface | Area | Cost | Point To Point |
-| -------- | -------- | -------- | -------- |
-| Ethernet1 | 0.0.0.0 | - | True |
-| Ethernet4 | 0.0.0.0 | - | True |
-| Ethernet6 | 0.0.0.0 | - | True |
-| Loopback0 | 0.0.0.0 | - | - |
-| Loopback1 | 0.0.0.0 | - | - |
+| Interface | ISIS Instance | ISIS Metric | Interface Mode |
+| --------- | ------------- | ----------- | -------------- |
+| Ethernet1 | CORE | 50 | point-to-point |
+| Ethernet4 | CORE | 50 | point-to-point |
+| Ethernet6 | CORE | 50 | point-to-point |
+| Loopback0 | CORE | - | passive |
 
-#### Router OSPF Device Configuration
+#### ISIS IPv4 Address Family Summary
+
+| Settings | Value |
+| -------- | ----- |
+| IPv4 Address-family Enabled | True |
+| Maximum-paths | 4 |
+
+#### Router ISIS Device Configuration
 
 ```eos
 !
-router ospf 100
-   router-id 10.200.10.2
-   passive-interface default
-   no passive-interface Ethernet1
-   no passive-interface Ethernet4
-   no passive-interface Ethernet6
-   max-lsa 12000
+router isis CORE
+   net 49.0001.0000.0001.0002.00
+   is-type level-2
+   router-id ipv4 10.200.10.2
+   log-adjacency-changes
+   mpls ldp sync default
+   !
+   address-family ipv4 unicast
+      maximum-paths 4
+   !
 ```
 
 ### Router BGP
@@ -398,7 +397,11 @@ router ospf 100
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65502|  10.200.10.2 |
+| 65555|  10.200.10.2 |
+
+| BGP AS | Cluster ID |
+| ------ | --------- |
+| 65555|  10.200.10.2 |
 
 | BGP Tuning |
 | ---------- |
@@ -410,24 +413,16 @@ router ospf 100
 
 #### Router BGP Peer Groups
 
-##### EVPN-OVERLAY-PEERS
+##### MPLS-OVERLAY-PEERS
 
 | Settings | Value |
 | -------- | ----- |
-| Address Family | evpn |
-| Next-hop unchanged | True |
+| Address Family | mpls |
+| Remote AS | 65555 |
 | Source | Loopback0 |
 | BFD | True |
-| Ebgp multihop | 3 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
-
-#### BGP Neighbors
-
-| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
-| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
-| 10.200.10.1 | 65501 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-| 10.200.10.4 | 65505 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -435,56 +430,43 @@ router ospf 100
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
-| EVPN-OVERLAY-PEERS | True | default |
 
-#### Router BGP VLANs
+#### Router BGP VPN-IPv4 Address Family
 
-| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
-| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
-| 2100 | 10.200.10.2:12100 | 12100:12100 | - | - | learned |
-| 2200 | 10.200.10.2:12200 | 12200:12200 | - | - | learned |
+##### VPN-IPv4 Peer Groups
+
+| Peer Group | Activate | Route-map In | Route-map Out |
+| ---------- | -------- | ------------ | ------------- |
+| MPLS-OVERLAY-PEERS | True | - | - |
 
 #### Router BGP Device Configuration
 
 ```eos
 !
-router bgp 65502
+router bgp 65555
    router-id 10.200.10.2
+   bgp cluster-id 10.200.10.2
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 4 ecmp 4
-   neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
-   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
-   neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
-   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
-   neighbor EVPN-OVERLAY-PEERS send-community
-   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
-   neighbor 10.200.10.1 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.200.10.1 remote-as 65501
-   neighbor 10.200.10.1 description s1-core1
-   neighbor 10.200.10.4 peer group EVPN-OVERLAY-PEERS
-   neighbor 10.200.10.4 remote-as 65505
-   neighbor 10.200.10.4 description s2-core2
-   !
-   vlan 2100
-      rd 10.200.10.2:12100
-      route-target both 12100:12100
-      redistribute learned
-   !
-   vlan 2200
-      rd 10.200.10.2:12200
-      route-target both 12200:12200
-      redistribute learned
+   neighbor MPLS-OVERLAY-PEERS peer group
+   neighbor MPLS-OVERLAY-PEERS remote-as 65555
+   neighbor MPLS-OVERLAY-PEERS update-source Loopback0
+   neighbor MPLS-OVERLAY-PEERS bfd
+   neighbor MPLS-OVERLAY-PEERS password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==
+   neighbor MPLS-OVERLAY-PEERS send-community
+   neighbor MPLS-OVERLAY-PEERS maximum-routes 0
    !
    address-family evpn
-      neighbor EVPN-OVERLAY-PEERS activate
    !
    address-family ipv4
-      no neighbor EVPN-OVERLAY-PEERS activate
+      no neighbor MPLS-OVERLAY-PEERS activate
+   !
+   address-family vpn-ipv4
+      neighbor MPLS-OVERLAY-PEERS activate
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
 ```
 
 ## BFD
@@ -504,6 +486,42 @@ router bgp 65502
 router bfd
    multihop interval 1200 min-rx 1200 multiplier 3
 ```
+
+## MPLS
+
+### MPLS and LDP
+
+#### MPLS and LDP Summary
+
+| Setting | Value |
+| -------- | ---- |
+| MPLS IP Enabled | True |
+| LDP Enabled | True |
+| LDP Router ID | 10.200.10.2 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | Loopback0 |
+
+#### MPLS and LDP Configuration
+
+```eos
+!
+mpls ip
+!
+mpls ldp
+   interface disabled default
+   router-id 10.200.10.2
+   no shutdown
+   transport-address interface Loopback0
+```
+
+### MPLS Interfaces
+
+| Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
+| --------- | --------------- | ----------- | -------- |
+| Ethernet1 | True | True | True |
+| Ethernet4 | True | True | True |
+| Ethernet6 | True | True | True |
+| Loopback0 | - | True | - |
 
 ## Multicast
 

@@ -1,6 +1,6 @@
 ---
 - name: Manage Arista EOS EVPN/VXLAN Configuration
-  hosts: CORE
+  hosts: CORE_MPLS
   connection: local
   gather_facts: false
   vars:
