@@ -45,6 +45,7 @@
 - [Virtual Source NAT](#virtual-source-nat)
   - [Virtual Source NAT Summary](#virtual-source-nat-summary)
   - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
+- [EOS CLI](#eos-cli)
 
 ## Management
 
@@ -571,7 +572,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Address Family | evpn |
 | Source | Loopback0 |
 | BFD | True |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 8 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
 
@@ -599,6 +600,8 @@ ip route 0.0.0.0/0 192.168.0.1
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 192.0.255.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 
 #### BGP Neighbor Interfaces
 
@@ -644,7 +647,7 @@ router bgp 65102
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -669,6 +672,12 @@ router bgp 65102
    neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.0.255.2 remote-as 65001
    neighbor 192.0.255.2 description s1-spine2
+   neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.2.255.1 remote-as 65002
+   neighbor 192.2.255.1 description s2-spine1
+   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.2.255.2 remote-as 65002
+   neighbor 192.2.255.2 description s2-spine2
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle Extend
@@ -813,4 +822,11 @@ vrf instance Tenant_A_OP_Zone
 ```eos
 !
 ip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.5
+```
+
+## EOS CLI
+
+```eos
+!
+platform tfa personality arfa
 ```

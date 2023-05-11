@@ -45,6 +45,7 @@
 - [Virtual Source NAT](#virtual-source-nat)
   - [Virtual Source NAT Summary](#virtual-source-nat-summary)
   - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
+- [EOS CLI](#eos-cli)
 
 ## Management
 
@@ -574,17 +575,6 @@ ip route 0.0.0.0/0 192.168.0.1
 
 #### Router BGP Peer Groups
 
-##### EVPN-OVERLAY-CORE
-
-| Settings | Value |
-| -------- | ----- |
-| Address Family | evpn |
-| Source | Loopback0 |
-| BFD | True |
-| Ebgp multihop | 15 |
-| Send community | all |
-| Maximum routes | 0 (no limit) |
-
 ##### EVPN-OVERLAY-PEERS
 
 | Settings | Value |
@@ -592,7 +582,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Address Family | evpn |
 | Source | Loopback0 |
 | BFD | True |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 8 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
 
@@ -620,7 +610,8 @@ ip route 0.0.0.0/0 192.168.0.1
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
 | 192.0.255.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-| 192.2.255.7 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - | - |
+| 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 
 #### BGP Neighbor Interfaces
 
@@ -639,23 +630,14 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
-| EVPN-OVERLAY-CORE | True | default |
 | EVPN-OVERLAY-PEERS | True | default |
-
-##### EVPN DCI Gateway Summary
-
-| Settings | Value |
-| -------- | ----- |
-| Remote Domain Peer Groups | EVPN-OVERLAY-CORE |
-| L3 Gateway Configured | True |
-| L3 Gateway Inter-domain | True |
 
 #### Router BGP VLAN Aware Bundles
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Extend | 192.0.255.7:10110 | 10110:10110<br>remote 10110:10110 | - | - | learned | 110 |
-| Tenant_A_OP_Zone | 192.0.255.7:10 | 10:10<br>remote 10:10 | - | - | learned | 100,200,210 |
+| Extend | 192.0.255.7:10110 | 10110:10110 | - | - | learned | 110 |
+| Tenant_A_OP_Zone | 192.0.255.7:10 | 10:10 | - | - | learned | 100,200,210 |
 
 #### Router BGP VRFs
 
@@ -674,16 +656,10 @@ router bgp 65103
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 4 ecmp 4
-   neighbor EVPN-OVERLAY-CORE peer group
-   neighbor EVPN-OVERLAY-CORE update-source Loopback0
-   neighbor EVPN-OVERLAY-CORE bfd
-   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
-   neighbor EVPN-OVERLAY-CORE send-community
-   neighbor EVPN-OVERLAY-CORE maximum-routes 0
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -710,35 +686,30 @@ router bgp 65103
    neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.0.255.2 remote-as 65001
    neighbor 192.0.255.2 description s1-spine2
-   neighbor 192.2.255.7 peer group EVPN-OVERLAY-CORE
-   neighbor 192.2.255.7 remote-as 65203
-   neighbor 192.2.255.7 description s2-brdr1
+   neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.2.255.1 remote-as 65002
+   neighbor 192.2.255.1 description s2-spine1
+   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.2.255.2 remote-as 65002
+   neighbor 192.2.255.2 description s2-spine2
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle Extend
       rd 192.0.255.7:10110
-      rd evpn domain remote 192.0.255.7:10110
       route-target both 10110:10110
-      route-target import export evpn domain remote 10110:10110
       redistribute learned
       vlan 110
    !
    vlan-aware-bundle Tenant_A_OP_Zone
       rd 192.0.255.7:10
-      rd evpn domain remote 192.0.255.7:10
       route-target both 10:10
-      route-target import export evpn domain remote 10:10
       redistribute learned
       vlan 100,200,210
    !
    address-family evpn
-      neighbor EVPN-OVERLAY-CORE activate
-      neighbor EVPN-OVERLAY-CORE domain remote
       neighbor EVPN-OVERLAY-PEERS activate
-      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
    !
    address-family ipv4
-      no neighbor EVPN-OVERLAY-CORE activate
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate
       neighbor IPv4-UNDERLAY-PEERS activate
@@ -865,4 +836,11 @@ vrf instance Tenant_A_OP_Zone
 ```eos
 !
 ip address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.7
+```
+
+## EOS CLI
+
+```eos
+!
+platform tfa personality arfa
 ```

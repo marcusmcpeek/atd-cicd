@@ -20,7 +20,7 @@ router_bgp:
     password: q+VNViP5i4rVjW1cxFv2wA==
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
+    ebgp_multihop: 8
     next_hop_unchanged: true
   address_family_ipv4:
     peer_groups:
@@ -198,3 +198,4 @@ router_bfd:
     interval: 1200
     min_rx: 1200
     multiplier: 3
+eos_cli: platform tfa personality arfa

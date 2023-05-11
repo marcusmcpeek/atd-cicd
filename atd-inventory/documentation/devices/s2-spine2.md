@@ -30,6 +30,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [EOS CLI](#eos-cli)
 
 ## Management
 
@@ -321,7 +322,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Next-hop unchanged | True |
 | Source | Loopback0 |
 | BFD | True |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 8 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
 
@@ -337,6 +338,12 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
+| 192.0.255.3 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.0.255.4 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.0.255.5 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.0.255.6 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.0.255.7 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+| 192.0.255.8 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.2.255.3 | 65201 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.2.255.4 | 65201 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.2.255.5 | 65202 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
@@ -378,7 +385,7 @@ router bgp 65002
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -392,6 +399,24 @@ router bgp 65002
    neighbor interface Ethernet5 peer-group IPv4-UNDERLAY-PEERS remote-as 65202
    neighbor interface Ethernet7 peer-group IPv4-UNDERLAY-PEERS remote-as 65203
    neighbor interface Ethernet8 peer-group IPv4-UNDERLAY-PEERS remote-as 65203
+   neighbor 192.0.255.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.3 remote-as 65101
+   neighbor 192.0.255.3 description s1-leaf1
+   neighbor 192.0.255.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.4 remote-as 65101
+   neighbor 192.0.255.4 description s1-leaf2
+   neighbor 192.0.255.5 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.5 remote-as 65102
+   neighbor 192.0.255.5 description s1-leaf3
+   neighbor 192.0.255.6 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.6 remote-as 65102
+   neighbor 192.0.255.6 description s1-leaf4
+   neighbor 192.0.255.7 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.7 remote-as 65103
+   neighbor 192.0.255.7 description s1-brdr1
+   neighbor 192.0.255.8 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.0.255.8 remote-as 65103
+   neighbor 192.0.255.8 description s1-brdr2
    neighbor 192.2.255.3 peer group EVPN-OVERLAY-PEERS
    neighbor 192.2.255.3 remote-as 65201
    neighbor 192.2.255.3 description s2-leaf1
@@ -487,4 +512,11 @@ route-map RM-CONN-2-BGP permit 10
 ### VRF Instances Device Configuration
 
 ```eos
+```
+
+## EOS CLI
+
+```eos
+!
+platform tfa personality arfa
 ```

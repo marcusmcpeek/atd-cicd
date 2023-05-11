@@ -35,6 +35,7 @@ l3leaf:
     mlag_peer_ipv4_pool: 10.255.252.0/24
     mlag_peer_l3_ipv4_pool: 10.255.251.0/24
     virtual_router_mac_address: 00:1c:73:00:dc:01
+    # evpn_route_servers: [s1-spine1, s1-spine2, s2-spine1, s2-spine2]
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -80,23 +81,25 @@ l3leaf:
           id: 5
           mgmt_ip: 192.168.0.200/24
           uplink_switch_interfaces: [ Ethernet7, Ethernet7 ]
-          evpn_gateway:
-            remote_peers:
-              - hostname: s1-brdr1
-            evpn_l2:
-              enabled: true
-            evpn_l3:
-              enabled: true
-              inter_domain: true
+          # evpn_gateway:
+          #   remote_peers:
+          #     - hostname: s1-brdr1
+          #     - hostname: s1-brdr2
+          #   evpn_l2:
+          #     enabled: true
+          #   evpn_l3:
+          #     enabled: true
+          #     inter_domain: true
         s2-brdr2:
           id: 6
           mgmt_ip: 192.168.0.201/24
           uplink_switch_interfaces: [ Ethernet8, Ethernet8 ]
-          evpn_gateway:
-            remote_peers:
-              - hostname: s1-brdr2
-            evpn_l2:
-              enabled: true
-            evpn_l3:
-              enabled: true
-              inter_domain: true
+          # evpn_gateway:
+          #   remote_peers:
+          #     - hostname: s1-brdr1
+          #     - hostname: s1-brdr2
+          #   evpn_l2:
+          #     enabled: true
+          #   evpn_l3:
+          #     enabled: true
+          #     inter_domain: true

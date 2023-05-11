@@ -22,7 +22,7 @@ name_servers:
 
 dns_domain: atd.lab
 
-underlay_routing_protocol: isis-sr
+underlay_routing_protocol: isis-ldp
 overlay_routing_protocol: ibgp
 
 bgp_as: 65555

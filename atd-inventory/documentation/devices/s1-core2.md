@@ -206,6 +206,8 @@ interface Ethernet1
    mtu 9214
    no switchport
    ip address 10.255.0.1/31
+   mpls ldp igp sync
+   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -233,6 +235,8 @@ interface Ethernet4
    mtu 9214
    no switchport
    ip address 10.255.0.6/31
+   mpls ldp igp sync
+   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -248,6 +252,8 @@ interface Ethernet6
    mtu 9214
    no switchport
    ip address 10.255.0.3/31
+   mpls ldp igp sync
+   mpls ldp interface
    mpls ip
    isis enable CORE
    isis circuit-type level-2
@@ -290,7 +296,7 @@ interface Loopback0
    ip address 10.200.10.2/32
    isis enable CORE
    isis passive
-   node-segment ipv4 index 2
+   mpls ldp interface
 ```
 
 ## Routing
@@ -367,7 +373,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Type | level-2 |
 | Router-ID | 10.200.10.2 |
 | Log Adjacency Changes | True |
-| SR MPLS Enabled | True |
+| MPLS LDP Sync Default | True |
 
 #### ISIS Interfaces Summary
 
@@ -377,12 +383,6 @@ ip route 0.0.0.0/0 192.168.0.1
 | Ethernet4 | CORE | 50 | point-to-point |
 | Ethernet6 | CORE | 50 | point-to-point |
 | Loopback0 | CORE | - | passive |
-
-#### ISIS Segment-routing Node-SID
-
-| Loopback | IPv4 Index | IPv6 Index |
-| -------- | ---------- | ---------- |
-| Loopback0 | 2 | - |
 
 #### ISIS IPv4 Address Family Summary
 
@@ -400,12 +400,11 @@ router isis CORE
    is-type level-2
    router-id ipv4 10.200.10.2
    log-adjacency-changes
+   mpls ldp sync default
    !
    address-family ipv4 unicast
       maximum-paths 4
    !
-   segment-routing mpls
-      no shutdown
 ```
 
 ### Router BGP
@@ -533,25 +532,32 @@ router bfd
 | Setting | Value |
 | -------- | ---- |
 | MPLS IP Enabled | True |
-| LDP Enabled | False |
-| LDP Router ID | - |
-| LDP Interface Disabled Default | - |
-| LDP Transport-Address Interface | - |
+| LDP Enabled | True |
+| LDP Router ID | 10.200.10.2 |
+| LDP Interface Disabled Default | True |
+| LDP Transport-Address Interface | Loopback0 |
 
 #### MPLS and LDP Configuration
 
 ```eos
 !
 mpls ip
+!
+mpls ldp
+   interface disabled default
+   router-id 10.200.10.2
+   no shutdown
+   transport-address interface Loopback0
 ```
 
 ### MPLS Interfaces
 
 | Interface | MPLS IP Enabled | LDP Enabled | IGP Sync |
 | --------- | --------------- | ----------- | -------- |
-| Ethernet1 | True | - | - |
-| Ethernet4 | True | - | - |
-| Ethernet6 | True | - | - |
+| Ethernet1 | True | True | True |
+| Ethernet4 | True | True | True |
+| Ethernet6 | True | True | True |
+| Loopback0 | - | True | - |
 
 ## Patch Panel
 

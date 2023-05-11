@@ -29,7 +29,7 @@ router_bgp:
     password: q+VNViP5i4rVjW1cxFv2wA==
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
+    ebgp_multihop: 8
   address_family_ipv4:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
@@ -363,3 +363,4 @@ vxlan_interface:
 virtual_source_nat_vrfs:
 - name: Tenant_A_OP_Zone
   ip_address: 10.255.1.5
+eos_cli: platform tfa personality arfa

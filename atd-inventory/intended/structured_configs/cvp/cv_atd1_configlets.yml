@@ -53,12 +53,9 @@ cvp_configlets:
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65103\n
     \  router-id 192.0.255.7\n   no bgp default ipv4-unicast\n   distance bgp 20 200
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE
-    update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE
-    ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
-    maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -76,27 +73,24 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  neighbor 192.2.255.7 peer group EVPN-OVERLAY-CORE\n   neighbor 192.2.255.7
-    remote-as 65203\n   neighbor 192.2.255.7 description s2-brdr1\n   redistribute
-    connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle Extend\n      rd
-    192.0.255.7:10110\n      rd evpn domain remote 192.0.255.7:10110\n      route-target
-    both 10110:10110\n      route-target import export evpn domain remote 10110:10110\n
-    \     redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n
-    \     rd 192.0.255.7:10\n      rd evpn domain remote 192.0.255.7:10\n      route-target
-    both 10:10\n      route-target import export evpn domain remote 10:10\n      redistribute
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.7:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.7:10\n      route-target both 10:10\n      redistribute
     learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE domain remote\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n      neighbor default next-hop-self received-evpn-routes
-    route-type ip-prefix inter-domain\n   !\n   address-family ipv4\n      no neighbor
-    EVPN-OVERLAY-CORE activate\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
-    IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
-    activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6
-    originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
-    \     rd 192.0.255.7:10\n      route-target import evpn 10:10\n      route-target
-    export evpn 10:10\n      router-id 192.0.255.7\n      neighbor interface Vlan3009
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65103\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
-    shutdown\n!\nend\n"
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.7:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.7\n
+    \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
+    65103\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-brdr2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-brdr2\nip name-server vrf default 8.8.8.8\nip
@@ -151,12 +145,9 @@ cvp_configlets:
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65103\n
     \  router-id 192.0.255.8\n   no bgp default ipv4-unicast\n   distance bgp 20 200
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE
-    update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE
-    ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
-    maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -174,50 +165,49 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  neighbor 192.2.255.8 peer group EVPN-OVERLAY-CORE\n   neighbor 192.2.255.8
-    remote-as 65203\n   neighbor 192.2.255.8 description s2-brdr2\n   redistribute
-    connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle Extend\n      rd
-    192.0.255.8:10110\n      rd evpn domain remote 192.0.255.8:10110\n      route-target
-    both 10110:10110\n      route-target import export evpn domain remote 10110:10110\n
-    \     redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n
-    \     rd 192.0.255.8:10\n      rd evpn domain remote 192.0.255.8:10\n      route-target
-    both 10:10\n      route-target import export evpn domain remote 10:10\n      redistribute
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.8:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.8:10\n      route-target both 10:10\n      redistribute
     learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE domain remote\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n      neighbor default next-hop-self received-evpn-routes
-    route-type ip-prefix inter-domain\n   !\n   address-family ipv4\n      no neighbor
-    EVPN-OVERLAY-CORE activate\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
-    IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
-    activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6
-    originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
-    \     rd 192.0.255.8:10\n      route-target import evpn 10:10\n      route-target
-    export evpn 10:10\n      router-id 192.0.255.8\n      neighbor interface Vlan3009
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65103\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
-    shutdown\n!\nend\n"
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.8:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.8\n
+    \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
+    65103\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-core1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-core1\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
     P2P_LINK_TO_s1-core2_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
-    \  ip address 10.255.0.0/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
-    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
-    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
-    Ethernet2\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet3\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet4\n   description P2P_LINK_TO_s2-core1_Ethernet4\n   no shutdown\n   mtu
-    9214\n   no switchport\n   ip address 10.255.0.4/31\n   mpls ip\n   isis enable
-    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
-    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
-    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_s1-core2_Ethernet6\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.2/31\n   mpls
+    \  ip address 10.255.0.0/31\n   mpls ldp igp sync\n   mpls ldp interface\n   mpls
     ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis
     hello padding\n   isis network point-to-point\n   isis authentication mode md5\n
-    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description
-    MPLS_Overlay_peering\n   no shutdown\n   ip address 10.200.10.1/32\n   isis enable
-    CORE\n   isis passive\n   node-segment ipv4 index 1\n!\ninterface Management0\n
-    \  description oob_management\n   no shutdown\n   ip address 192.168.0.102/24\n!\nip
+    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   no shutdown\n
+    \  no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface Ethernet3\n
+    \  no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
+    Ethernet4\n   description P2P_LINK_TO_s2-core1_Ethernet4\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.4/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s1-core2_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.2/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Loopback0\n   description MPLS_Overlay_peering\n   no shutdown\n   ip address
+    10.200.10.1/32\n   isis enable CORE\n   isis passive\n   mpls ldp interface\n!\ninterface
+    Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.102/24\n!\nip
     virtual-router mac-address 00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0
     192.168.0.1\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter
     bgp 65555\n   router-id 10.200.10.1\n   bgp cluster-id 10.200.10.1\n   no bgp
@@ -242,37 +232,41 @@ cvp_configlets:
     activate\n      neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n
     \     no neighbor MPLS-OVERLAY-PEERS activate\n      no neighbor RR-OVERLAY-PEERS
     activate\n!\nrouter isis CORE\n   net 49.0001.0000.0001.0001.00\n   is-type level-2\n
-    \  router-id ipv4 10.200.10.1\n   log-adjacency-changes\n   !\n   address-family
-    ipv4 unicast\n      maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
-    ip\n!\npatch panel\n   patch CIRCUIT_1\n      connector 1 interface Ethernet2\n
-    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1\n   !\n
-    \  patch CIRCUIT_2\n      connector 1 interface Ethernet3\n      connector 2 pseudowire
-    bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement api http-commands\n
-    \  protocol https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nmanagement
-    security\n   password encryption-key common\n!\nplatform tfa personality arfa\n!\nend\n"
+    \  router-id ipv4 10.200.10.1\n   log-adjacency-changes\n   mpls ldp sync default\n
+    \  !\n   address-family ipv4 unicast\n      maximum-paths 4\n   !\n!\nmpls ip\n!\nmpls
+    ldp\n   interface disabled default\n   router-id 10.200.10.1\n   no shutdown\n
+    \  transport-address interface Loopback0\n!\npatch panel\n   patch CIRCUIT_1\n
+    \     connector 1 interface Ethernet2\n      connector 2 pseudowire bgp vpws VPN_SERVICE
+    pseudowire CIRCUIT_1\n   !\n   patch CIRCUIT_2\n      connector 1 interface Ethernet3\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nplatform
+    tfa personality arfa\n!\nend\n"
   AVD_s1-core2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-core2\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
     P2P_LINK_TO_s1-core1_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
-    \  ip address 10.255.0.1/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
-    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
-    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
-    Ethernet2\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet3\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet4\n   description P2P_LINK_TO_s2-core2_Ethernet4\n   no shutdown\n   mtu
-    9214\n   no switchport\n   ip address 10.255.0.6/31\n   mpls ip\n   isis enable
-    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
-    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
-    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_s1-core1_Ethernet6\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.3/31\n   mpls
+    \  ip address 10.255.0.1/31\n   mpls ldp igp sync\n   mpls ldp interface\n   mpls
     ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis
     hello padding\n   isis network point-to-point\n   isis authentication mode md5\n
-    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n   description
-    MPLS_Overlay_peering\n   no shutdown\n   ip address 10.200.10.2/32\n   isis enable
-    CORE\n   isis passive\n   node-segment ipv4 index 2\n!\ninterface Management0\n
-    \  description oob_management\n   no shutdown\n   ip address 192.168.0.103/24\n!\nip
+    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   no shutdown\n
+    \  no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface Ethernet3\n
+    \  no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
+    Ethernet4\n   description P2P_LINK_TO_s2-core2_Ethernet4\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.6/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s1-core1_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.3/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Loopback0\n   description MPLS_Overlay_peering\n   no shutdown\n   ip address
+    10.200.10.2/32\n   isis enable CORE\n   isis passive\n   mpls ldp interface\n!\ninterface
+    Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.103/24\n!\nip
     virtual-router mac-address 00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0
     192.168.0.1\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter
     bgp 65555\n   router-id 10.200.10.2\n   no bgp default ipv4-unicast\n   distance
@@ -291,14 +285,16 @@ cvp_configlets:
     source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.0000.0001.0002.00\n   is-type level-2\n   router-id
-    ipv4 10.200.10.2\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
-    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
-    ip\n!\npatch panel\n   patch CIRCUIT_3\n      connector 1 interface Ethernet2\n
-    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_3\n   !\n
-    \  patch CIRCUIT_4\n      connector 1 interface Ethernet3\n      connector 2 pseudowire
-    bgp vpws VPN_SERVICE pseudowire CIRCUIT_4\n   !\n!\nmanagement api http-commands\n
-    \  protocol https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nmanagement
-    security\n   password encryption-key common\n!\nplatform tfa personality arfa\n!\nend\n"
+    ipv4 10.200.10.2\n   log-adjacency-changes\n   mpls ldp sync default\n   !\n   address-family
+    ipv4 unicast\n      maximum-paths 4\n   !\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.200.10.2\n   no shutdown\n   transport-address
+    interface Loopback0\n!\npatch panel\n   patch CIRCUIT_3\n      connector 1 interface
+    Ethernet2\n      connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_3\n
+    \  !\n   patch CIRCUIT_4\n      connector 1 interface Ethernet3\n      connector
+    2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_4\n   !\n!\nmanagement api
+    http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nplatform
+    tfa personality arfa\n!\nend\n"
   AVD_s1-leaf1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-leaf1\nip name-server vrf default 8.8.8.8\nip
@@ -355,7 +351,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -371,20 +367,24 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
-    Extend\n      rd 192.0.255.3:10110\n      route-target both 10110:10110\n      redistribute
-    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
-    192.0.255.3:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
-    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
-    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
-    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
-    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
-    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.3:10\n      route-target import
-    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.3\n
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.3:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.3:10\n      route-target both 10:10\n      redistribute
+    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.3:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.3\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65101\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-leaf2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-leaf2\nip name-server vrf default 8.8.8.8\nip
@@ -441,7 +441,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -457,20 +457,24 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
-    Extend\n      rd 192.0.255.4:10110\n      route-target both 10110:10110\n      redistribute
-    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
-    192.0.255.4:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
-    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
-    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
-    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
-    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
-    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.4:10\n      route-target import
-    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.4\n
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.4:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.4:10\n      route-target both 10:10\n      redistribute
+    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.4:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.4\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65101\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-leaf3: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-leaf3\nip name-server vrf default 8.8.8.8\nip
@@ -527,7 +531,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -543,20 +547,24 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
-    Extend\n      rd 192.0.255.5:10110\n      route-target both 10110:10110\n      redistribute
-    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
-    192.0.255.5:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
-    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
-    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
-    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
-    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
-    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.5:10\n      route-target import
-    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.5\n
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.5:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.5:10\n      route-target both 10:10\n      redistribute
+    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.5:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.5\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65102\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-leaf4: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-leaf4\nip name-server vrf default 8.8.8.8\nip
@@ -613,7 +621,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -629,20 +637,24 @@ cvp_configlets:
     group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.1 remote-as 65001\n   neighbor
     192.0.255.1 description s1-spine1\n   neighbor 192.0.255.2 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.0.255.2 remote-as 65001\n   neighbor 192.0.255.2 description s1-spine2\n
-    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
-    Extend\n      rd 192.0.255.6:10110\n      route-target both 10110:10110\n      redistribute
-    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
-    192.0.255.6:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
-    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
-    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
-    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
-    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
-    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.6:10\n      route-target import
-    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.6\n
+    \  neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1
+    remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2 remote-as 65002\n   neighbor
+    192.2.255.2 description s2-spine2\n   redistribute connected route-map RM-CONN-2-BGP\n
+    \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.6:10110\n      route-target
+    both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
+    Tenant_A_OP_Zone\n      rd 192.0.255.6:10\n      route-target both 10:10\n      redistribute
+    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
+    activate\n      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n
+    \     neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    next-hop address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER
+    activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.6:10\n      route-target
+    import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.0.255.6\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65102\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s1-spine1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-spine1\nip name-server vrf default 8.8.8.8\nip
@@ -667,7 +679,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
+    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8\n   neighbor
     EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
     send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS
     peer group\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n
@@ -693,7 +705,7 @@ cvp_configlets:
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
     activate\n!\nmanagement api http-commands\n   protocol https\n   no shutdown\n
-    \  !\n   vrf default\n      no shutdown\n!\nend\n"
+    \  !\n   vrf default\n      no shutdown\n!\nplatform tfa personality arfa\n!\nend\n"
   AVD_s1-spine2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s1-spine2\nip name-server vrf default 8.8.8.8\nip
@@ -718,7 +730,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
+    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8\n   neighbor
     EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
     send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS
     peer group\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n
@@ -744,7 +756,7 @@ cvp_configlets:
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
     activate\n!\nmanagement api http-commands\n   protocol https\n   no shutdown\n
-    \  !\n   vrf default\n      no shutdown\n!\nend\n"
+    \  !\n   vrf default\n      no shutdown\n!\nplatform tfa personality arfa\n!\nend\n"
   AVD_s2-brdr1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-brdr1\nip name-server vrf default 8.8.8.8\nip
@@ -799,12 +811,9 @@ cvp_configlets:
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65203\n
     \  router-id 192.2.255.7\n   no bgp default ipv4-unicast\n   distance bgp 20 200
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE
-    update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE
-    ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
-    maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -818,31 +827,25 @@ cvp_configlets:
     peer-group IPv4-UNDERLAY-PEERS remote-as 65002\n   neighbor interface Ethernet4
     peer-group IPv4-UNDERLAY-PEERS remote-as 65103\n   neighbor interface Ethernet5
     peer-group IPv4-UNDERLAY-PEERS remote-as 65103\n   neighbor interface Vlan4093
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n   neighbor 192.0.255.7 peer
-    group EVPN-OVERLAY-CORE\n   neighbor 192.0.255.7 remote-as 65103\n   neighbor
-    192.0.255.7 description s1-brdr1\n   neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 192.2.255.1 remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n
-    \  neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2
-    remote-as 65002\n   neighbor 192.2.255.2 description s2-spine2\n   redistribute
-    connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle Extend\n      rd
-    192.2.255.7:10110\n      rd evpn domain remote 192.2.255.7:10110\n      route-target
-    both 10110:10110\n      route-target import export evpn domain remote 10110:10110\n
-    \     redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n
-    \     rd 192.2.255.7:10\n      rd evpn domain remote 192.2.255.7:10\n      route-target
-    both 10:10\n      route-target import export evpn domain remote 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE domain remote\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n      neighbor default next-hop-self received-evpn-routes
-    route-type ip-prefix inter-domain\n   !\n   address-family ipv4\n      no neighbor
-    EVPN-OVERLAY-CORE activate\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
-    IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
-    activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6
-    originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
-    \     rd 192.2.255.7:10\n      route-target import evpn 10:10\n      route-target
-    export evpn 10:10\n      router-id 192.2.255.7\n      neighbor interface Vlan3009
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
-    shutdown\n!\nend\n"
+    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n   neighbor 192.2.255.1 peer
+    group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1 remote-as 65002\n   neighbor
+    192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.2.255.2 remote-as 65002\n   neighbor 192.2.255.2 description s2-spine2\n
+    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
+    Extend\n      rd 192.2.255.7:10110\n      route-target both 10110:10110\n      redistribute
+    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
+    192.2.255.7:10\n      route-target both 10:10\n      redistribute learned\n      vlan
+    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
+    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
+    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
+    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
+    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.2.255.7:10\n      route-target import
+    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.7\n
+    \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
+    65203\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-brdr2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-brdr2\nip name-server vrf default 8.8.8.8\nip
@@ -897,12 +900,9 @@ cvp_configlets:
     bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter bgp 65203\n
     \  router-id 192.2.255.8\n   no bgp default ipv4-unicast\n   distance bgp 20 200
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
-    4 ecmp 4\n   neighbor EVPN-OVERLAY-CORE peer group\n   neighbor EVPN-OVERLAY-CORE
-    update-source Loopback0\n   neighbor EVPN-OVERLAY-CORE bfd\n   neighbor EVPN-OVERLAY-CORE
-    ebgp-multihop 15\n   neighbor EVPN-OVERLAY-CORE send-community\n   neighbor EVPN-OVERLAY-CORE
-    maximum-routes 0\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
+    4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -916,53 +916,49 @@ cvp_configlets:
     peer-group IPv4-UNDERLAY-PEERS remote-as 65002\n   neighbor interface Ethernet4
     peer-group IPv4-UNDERLAY-PEERS remote-as 65103\n   neighbor interface Ethernet5
     peer-group IPv4-UNDERLAY-PEERS remote-as 65103\n   neighbor interface Vlan4093
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n   neighbor 192.0.255.8 peer
-    group EVPN-OVERLAY-CORE\n   neighbor 192.0.255.8 remote-as 65103\n   neighbor
-    192.0.255.8 description s1-brdr2\n   neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS\n
-    \  neighbor 192.2.255.1 remote-as 65002\n   neighbor 192.2.255.1 description s2-spine1\n
-    \  neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.2
-    remote-as 65002\n   neighbor 192.2.255.2 description s2-spine2\n   redistribute
-    connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle Extend\n      rd
-    192.2.255.8:10110\n      rd evpn domain remote 192.2.255.8:10110\n      route-target
-    both 10110:10110\n      route-target import export evpn domain remote 10110:10110\n
-    \     redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n
-    \     rd 192.2.255.8:10\n      rd evpn domain remote 192.2.255.8:10\n      route-target
-    both 10:10\n      route-target import export evpn domain remote 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
-    EVPN-OVERLAY-CORE activate\n      neighbor EVPN-OVERLAY-CORE domain remote\n      neighbor
-    EVPN-OVERLAY-PEERS activate\n      neighbor default next-hop-self received-evpn-routes
-    route-type ip-prefix inter-domain\n   !\n   address-family ipv4\n      no neighbor
-    EVPN-OVERLAY-CORE activate\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
-    IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
-    activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6
-    originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
-    \     rd 192.2.255.8:10\n      route-target import evpn 10:10\n      route-target
-    export evpn 10:10\n      router-id 192.2.255.8\n      neighbor interface Vlan3009
-    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n      redistribute connected\n!\nmanagement
-    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
-    shutdown\n!\nend\n"
+    peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65203\n   neighbor 192.2.255.1 peer
+    group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.1 remote-as 65002\n   neighbor
+    192.2.255.1 description s2-spine1\n   neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.2.255.2 remote-as 65002\n   neighbor 192.2.255.2 description s2-spine2\n
+    \  redistribute connected route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle
+    Extend\n      rd 192.2.255.8:10110\n      route-target both 10110:10110\n      redistribute
+    learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
+    192.2.255.8:10\n      route-target both 10:10\n      redistribute learned\n      vlan
+    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
+    \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
+    \     neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor
+    IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop
+    address-family ipv6 originate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n
+    \  !\n   vrf Tenant_A_OP_Zone\n      rd 192.2.255.8:10\n      route-target import
+    evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.8\n
+    \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
+    65203\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-core1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-core1\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
     P2P_LINK_TO_s2-core2_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
-    \  ip address 10.255.0.8/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
-    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
-    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
-    Ethernet2\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet3\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
+    \  ip address 10.255.0.8/31\n   mpls ldp igp sync\n   mpls ldp interface\n   mpls
+    ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis
+    hello padding\n   isis network point-to-point\n   isis authentication mode md5\n
+    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   no shutdown\n
+    \  no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface Ethernet3\n
+    \  no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
     Ethernet4\n   description P2P_LINK_TO_s1-core1_Ethernet4\n   no shutdown\n   mtu
-    9214\n   no switchport\n   ip address 10.255.0.5/31\n   mpls ip\n   isis enable
-    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
-    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
-    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_s2-core2_Ethernet6\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.10/31\n
-    \  mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric
-    50\n   isis hello padding\n   isis network point-to-point\n   isis authentication
-    mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n
-    \  description MPLS_Overlay_peering\n   no shutdown\n   ip address 10.200.10.3/32\n
-    \  isis enable CORE\n   isis passive\n   node-segment ipv4 index 3\n!\ninterface
+    9214\n   no switchport\n   ip address 10.255.0.5/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s2-core2_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.10/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Loopback0\n   description MPLS_Overlay_peering\n   no shutdown\n   ip address
+    10.200.10.3/32\n   isis enable CORE\n   isis passive\n   mpls ldp interface\n!\ninterface
     Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.202/24\n!\nip
     virtual-router mac-address 00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0
     192.168.0.1\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter
@@ -982,36 +978,40 @@ cvp_configlets:
     source-interface Loopback0\n      neighbor MPLS-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor MPLS-OVERLAY-PEERS activate\n!\nrouter
     isis CORE\n   net 49.0001.0000.0001.0003.00\n   is-type level-2\n   router-id
-    ipv4 10.200.10.3\n   log-adjacency-changes\n   !\n   address-family ipv4 unicast\n
-    \     maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
-    ip\n!\npatch panel\n   patch CIRCUIT_1\n      connector 1 interface Ethernet2\n
-    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1\n   !\n
-    \  patch CIRCUIT_2\n      connector 1 interface Ethernet3\n      connector 2 pseudowire
-    bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement api http-commands\n
-    \  protocol https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nmanagement
-    security\n   password encryption-key common\n!\nplatform tfa personality arfa\n!\nend\n"
+    ipv4 10.200.10.3\n   log-adjacency-changes\n   mpls ldp sync default\n   !\n   address-family
+    ipv4 unicast\n      maximum-paths 4\n   !\n!\nmpls ip\n!\nmpls ldp\n   interface
+    disabled default\n   router-id 10.200.10.3\n   no shutdown\n   transport-address
+    interface Loopback0\n!\npatch panel\n   patch CIRCUIT_1\n      connector 1 interface
+    Ethernet2\n      connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1\n
+    \  !\n   patch CIRCUIT_2\n      connector 1 interface Ethernet3\n      connector
+    2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2\n   !\n!\nmanagement api
+    http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nplatform
+    tfa personality arfa\n!\nend\n"
   AVD_s2-core2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-core2\nip name-server vrf default 8.8.8.8\nip
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     none\n!\nno enable password\nno aaa root\n!\ninterface Ethernet1\n   description
     P2P_LINK_TO_s2-core1_Ethernet1\n   no shutdown\n   mtu 9214\n   no switchport\n
-    \  ip address 10.255.0.9/31\n   mpls ip\n   isis enable CORE\n   isis circuit-type
-    level-2\n   isis metric 50\n   isis hello padding\n   isis network point-to-point\n
-    \  isis authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
-    Ethernet2\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
-    Ethernet3\n   no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
+    \  ip address 10.255.0.9/31\n   mpls ldp igp sync\n   mpls ldp interface\n   mpls
+    ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis
+    hello padding\n   isis network point-to-point\n   isis authentication mode md5\n
+    \  isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet2\n   no shutdown\n
+    \  no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface Ethernet3\n
+    \  no shutdown\n   no switchport\n   no lldp transmit\n   no lldp receive\n!\ninterface
     Ethernet4\n   description P2P_LINK_TO_s1-core2_Ethernet4\n   no shutdown\n   mtu
-    9214\n   no switchport\n   ip address 10.255.0.7/31\n   mpls ip\n   isis enable
-    CORE\n   isis circuit-type level-2\n   isis metric 50\n   isis hello padding\n
-    \  isis network point-to-point\n   isis authentication mode md5\n   isis authentication
-    key 7 $1c$sTNAlR6rKSw=\n!\ninterface Ethernet6\n   description P2P_LINK_TO_s2-core1_Ethernet6\n
-    \  no shutdown\n   mtu 9214\n   no switchport\n   ip address 10.255.0.11/31\n
-    \  mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n   isis metric
-    50\n   isis hello padding\n   isis network point-to-point\n   isis authentication
-    mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface Loopback0\n
-    \  description MPLS_Overlay_peering\n   no shutdown\n   ip address 10.200.10.4/32\n
-    \  isis enable CORE\n   isis passive\n   node-segment ipv4 index 4\n!\ninterface
+    9214\n   no switchport\n   ip address 10.255.0.7/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Ethernet6\n   description P2P_LINK_TO_s2-core1_Ethernet6\n   no shutdown\n   mtu
+    9214\n   no switchport\n   ip address 10.255.0.11/31\n   mpls ldp igp sync\n   mpls
+    ldp interface\n   mpls ip\n   isis enable CORE\n   isis circuit-type level-2\n
+    \  isis metric 50\n   isis hello padding\n   isis network point-to-point\n   isis
+    authentication mode md5\n   isis authentication key 7 $1c$sTNAlR6rKSw=\n!\ninterface
+    Loopback0\n   description MPLS_Overlay_peering\n   no shutdown\n   ip address
+    10.200.10.4/32\n   isis enable CORE\n   isis passive\n   mpls ldp interface\n!\ninterface
     Management0\n   description oob_management\n   no shutdown\n   ip address 192.168.0.203/24\n!\nip
     virtual-router mac-address 00:1c:73:00:cc:00\n!\nip routing\n!\nip route 0.0.0.0/0
     192.168.0.1\n!\nrouter bfd\n   multihop interval 1200 min-rx 1200 multiplier 3\n!\nrouter
@@ -1037,14 +1037,16 @@ cvp_configlets:
     activate\n      neighbor RR-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n
     \     no neighbor MPLS-OVERLAY-PEERS activate\n      no neighbor RR-OVERLAY-PEERS
     activate\n!\nrouter isis CORE\n   net 49.0001.0000.0001.0004.00\n   is-type level-2\n
-    \  router-id ipv4 10.200.10.4\n   log-adjacency-changes\n   !\n   address-family
-    ipv4 unicast\n      maximum-paths 4\n   !\n   segment-routing mpls\n      no shutdown\n!\nmpls
-    ip\n!\npatch panel\n   patch CIRCUIT_3\n      connector 1 interface Ethernet3\n
-    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_3\n   !\n
-    \  patch CIRCUIT_4\n      connector 1 interface Ethernet2\n      connector 2 pseudowire
-    bgp vpws VPN_SERVICE pseudowire CIRCUIT_4\n   !\n!\nmanagement api http-commands\n
-    \  protocol https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nmanagement
-    security\n   password encryption-key common\n!\nplatform tfa personality arfa\n!\nend\n"
+    \  router-id ipv4 10.200.10.4\n   log-adjacency-changes\n   mpls ldp sync default\n
+    \  !\n   address-family ipv4 unicast\n      maximum-paths 4\n   !\n!\nmpls ip\n!\nmpls
+    ldp\n   interface disabled default\n   router-id 10.200.10.4\n   no shutdown\n
+    \  transport-address interface Loopback0\n!\npatch panel\n   patch CIRCUIT_3\n
+    \     connector 1 interface Ethernet3\n      connector 2 pseudowire bgp vpws VPN_SERVICE
+    pseudowire CIRCUIT_3\n   !\n   patch CIRCUIT_4\n      connector 1 interface Ethernet2\n
+    \     connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_4\n   !\n!\nmanagement
+    api http-commands\n   protocol https\n   no shutdown\n   !\n   vrf default\n      no
+    shutdown\n!\nmanagement security\n   password encryption-key common\n!\nplatform
+    tfa personality arfa\n!\nend\n"
   AVD_s2-leaf1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-leaf1\nip name-server vrf default 8.8.8.8\nip
@@ -1101,7 +1103,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -1130,7 +1132,8 @@ cvp_configlets:
     evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.3\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65201\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-leaf2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-leaf2\nip name-server vrf default 8.8.8.8\nip
@@ -1187,7 +1190,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -1216,7 +1219,8 @@ cvp_configlets:
     evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.4\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65201\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-leaf3: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-leaf3\nip name-server vrf default 8.8.8.8\nip
@@ -1273,7 +1277,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -1302,7 +1306,8 @@ cvp_configlets:
     evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.5\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65202\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-leaf4: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-leaf4\nip name-server vrf default 8.8.8.8\nip
@@ -1359,7 +1364,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     update-source Loopback0\n   neighbor EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS
-    ebgp-multihop 3\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
+    ebgp-multihop 8\n   neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n
     \  neighbor EVPN-OVERLAY-PEERS send-community\n   neighbor EVPN-OVERLAY-PEERS
     maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS peer group\n   neighbor IPv4-UNDERLAY-PEERS
     password 7 AQQvKeimxJu+uGQ/yYvv9w==\n   neighbor IPv4-UNDERLAY-PEERS send-community\n
@@ -1388,7 +1393,8 @@ cvp_configlets:
     evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.2.255.6\n
     \     neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as
     65202\n      redistribute connected\n!\nmanagement api http-commands\n   protocol
-    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nend\n"
+    https\n   no shutdown\n   !\n   vrf default\n      no shutdown\n!\nplatform tfa
+    personality arfa\n!\nend\n"
   AVD_s2-spine1: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-spine1\nip name-server vrf default 8.8.8.8\nip
@@ -1413,7 +1419,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
+    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8\n   neighbor
     EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
     send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS
     peer group\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n
@@ -1424,12 +1430,22 @@ cvp_configlets:
     remote-as 65202\n   neighbor interface Ethernet5 peer-group IPv4-UNDERLAY-PEERS
     remote-as 65202\n   neighbor interface Ethernet7 peer-group IPv4-UNDERLAY-PEERS
     remote-as 65203\n   neighbor interface Ethernet8 peer-group IPv4-UNDERLAY-PEERS
-    remote-as 65203\n   neighbor 192.2.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor
-    192.2.255.3 remote-as 65201\n   neighbor 192.2.255.3 description s2-leaf1\n   neighbor
-    192.2.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.4 remote-as 65201\n
-    \  neighbor 192.2.255.4 description s2-leaf2\n   neighbor 192.2.255.5 peer group
-    EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.5 remote-as 65202\n   neighbor 192.2.255.5
-    description s2-leaf3\n   neighbor 192.2.255.6 peer group EVPN-OVERLAY-PEERS\n
+    remote-as 65203\n   neighbor 192.0.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor
+    192.0.255.3 remote-as 65101\n   neighbor 192.0.255.3 description s1-leaf1\n   neighbor
+    192.0.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.4 remote-as 65101\n
+    \  neighbor 192.0.255.4 description s1-leaf2\n   neighbor 192.0.255.5 peer group
+    EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.5 remote-as 65102\n   neighbor 192.0.255.5
+    description s1-leaf3\n   neighbor 192.0.255.6 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.0.255.6 remote-as 65102\n   neighbor 192.0.255.6 description s1-leaf4\n
+    \  neighbor 192.0.255.7 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.7
+    remote-as 65103\n   neighbor 192.0.255.7 description s1-brdr1\n   neighbor 192.0.255.8
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.8 remote-as 65103\n   neighbor
+    192.0.255.8 description s1-brdr2\n   neighbor 192.2.255.3 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.2.255.3 remote-as 65201\n   neighbor 192.2.255.3 description s2-leaf1\n
+    \  neighbor 192.2.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.4
+    remote-as 65201\n   neighbor 192.2.255.4 description s2-leaf2\n   neighbor 192.2.255.5
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.5 remote-as 65202\n   neighbor
+    192.2.255.5 description s2-leaf3\n   neighbor 192.2.255.6 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.2.255.6 remote-as 65202\n   neighbor 192.2.255.6 description s2-leaf4\n
     \  neighbor 192.2.255.7 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.7
     remote-as 65203\n   neighbor 192.2.255.7 description s2-brdr1\n   neighbor 192.2.255.8
@@ -1439,7 +1455,7 @@ cvp_configlets:
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
     activate\n!\nmanagement api http-commands\n   protocol https\n   no shutdown\n
-    \  !\n   vrf default\n      no shutdown\n!\nend\n"
+    \  !\n   vrf default\n      no shutdown\n!\nplatform tfa personality arfa\n!\nend\n"
   AVD_s2-spine2: "!RANCID-CONTENT-TYPE: arista\n!\nvlan internal order ascending range
     1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing protocols
     model multi-agent\n!\nhostname s2-spine2\nip name-server vrf default 8.8.8.8\nip
@@ -1464,7 +1480,7 @@ cvp_configlets:
     200\n   graceful-restart restart-time 300\n   graceful-restart\n   maximum-paths
     4 ecmp 4\n   neighbor EVPN-OVERLAY-PEERS peer group\n   neighbor EVPN-OVERLAY-PEERS
     next-hop-unchanged\n   neighbor EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor
-    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3\n   neighbor
+    EVPN-OVERLAY-PEERS bfd\n   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8\n   neighbor
     EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==\n   neighbor EVPN-OVERLAY-PEERS
     send-community\n   neighbor EVPN-OVERLAY-PEERS maximum-routes 0\n   neighbor IPv4-UNDERLAY-PEERS
     peer group\n   neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==\n
@@ -1475,12 +1491,22 @@ cvp_configlets:
     remote-as 65202\n   neighbor interface Ethernet5 peer-group IPv4-UNDERLAY-PEERS
     remote-as 65202\n   neighbor interface Ethernet7 peer-group IPv4-UNDERLAY-PEERS
     remote-as 65203\n   neighbor interface Ethernet8 peer-group IPv4-UNDERLAY-PEERS
-    remote-as 65203\n   neighbor 192.2.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor
-    192.2.255.3 remote-as 65201\n   neighbor 192.2.255.3 description s2-leaf1\n   neighbor
-    192.2.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.4 remote-as 65201\n
-    \  neighbor 192.2.255.4 description s2-leaf2\n   neighbor 192.2.255.5 peer group
-    EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.5 remote-as 65202\n   neighbor 192.2.255.5
-    description s2-leaf3\n   neighbor 192.2.255.6 peer group EVPN-OVERLAY-PEERS\n
+    remote-as 65203\n   neighbor 192.0.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor
+    192.0.255.3 remote-as 65101\n   neighbor 192.0.255.3 description s1-leaf1\n   neighbor
+    192.0.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.4 remote-as 65101\n
+    \  neighbor 192.0.255.4 description s1-leaf2\n   neighbor 192.0.255.5 peer group
+    EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.5 remote-as 65102\n   neighbor 192.0.255.5
+    description s1-leaf3\n   neighbor 192.0.255.6 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.0.255.6 remote-as 65102\n   neighbor 192.0.255.6 description s1-leaf4\n
+    \  neighbor 192.0.255.7 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.7
+    remote-as 65103\n   neighbor 192.0.255.7 description s1-brdr1\n   neighbor 192.0.255.8
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.0.255.8 remote-as 65103\n   neighbor
+    192.0.255.8 description s1-brdr2\n   neighbor 192.2.255.3 peer group EVPN-OVERLAY-PEERS\n
+    \  neighbor 192.2.255.3 remote-as 65201\n   neighbor 192.2.255.3 description s2-leaf1\n
+    \  neighbor 192.2.255.4 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.4
+    remote-as 65201\n   neighbor 192.2.255.4 description s2-leaf2\n   neighbor 192.2.255.5
+    peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.5 remote-as 65202\n   neighbor
+    192.2.255.5 description s2-leaf3\n   neighbor 192.2.255.6 peer group EVPN-OVERLAY-PEERS\n
     \  neighbor 192.2.255.6 remote-as 65202\n   neighbor 192.2.255.6 description s2-leaf4\n
     \  neighbor 192.2.255.7 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.2.255.7
     remote-as 65203\n   neighbor 192.2.255.7 description s2-brdr1\n   neighbor 192.2.255.8
@@ -1490,7 +1516,7 @@ cvp_configlets:
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate\n      neighbor IPv4-UNDERLAY-PEERS
     activate\n!\nmanagement api http-commands\n   protocol https\n   no shutdown\n
-    \  !\n   vrf default\n      no shutdown\n!\nend\n"
+    \  !\n   vrf default\n      no shutdown\n!\nplatform tfa personality arfa\n!\nend\n"
 cvp_topology:
   ATD_BORDER_DC1:
     devices:

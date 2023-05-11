@@ -29,14 +29,7 @@ router_bgp:
     password: q+VNViP5i4rVjW1cxFv2wA==
     send_community: all
     maximum_routes: 0
-    ebgp_multihop: 3
-  - name: EVPN-OVERLAY-CORE
-    type: evpn
-    update_source: Loopback0
-    bfd: true
-    send_community: all
-    maximum_routes: 0
-    ebgp_multihop: 15
+    ebgp_multihop: 8
   address_family_ipv4:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
@@ -48,8 +41,6 @@ router_bgp:
       next_hop:
         address_family_ipv6_originate: true
     - name: EVPN-OVERLAY-PEERS
-      activate: false
-    - name: EVPN-OVERLAY-CORE
       activate: false
   neighbor_interfaces:
   - name: Vlan4093
@@ -76,15 +67,8 @@ router_bgp:
   - source_protocol: connected
     route_map: RM-CONN-2-BGP
   address_family_evpn:
-    neighbor_default:
-      next_hop_self_received_evpn_routes:
-        enable: true
-        inter_domain: true
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
-      activate: true
-    - name: EVPN-OVERLAY-CORE
-      domain_remote: true
       activate: true
   neighbors:
   - ip_address: 192.2.255.1
@@ -95,10 +79,6 @@ router_bgp:
     peer_group: EVPN-OVERLAY-PEERS
     description: s2-spine2
     remote_as: '65002'
-  - ip_address: 192.0.255.8
-    peer_group: EVPN-OVERLAY-CORE
-    description: s1-brdr2
-    remote_as: '65103'
   vrfs:
   - name: Tenant_A_OP_Zone
     router_id: 192.2.255.8
@@ -125,29 +105,17 @@ router_bgp:
     route_targets:
       both:
       - '10:10'
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: '10:10'
     redistribute_routes:
     - learned
     vlan: 100,200,210
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.2.255.8:10
   - name: Extend
     tenant: Tenant_A
     rd: 192.2.255.8:10110
     route_targets:
       both:
       - 10110:10110
-      import_export_evpn_domains:
-      - domain: remote
-        route_target: 10110:10110
     redistribute_routes:
     - learned
-    rd_evpn_domain:
-      domain: remote
-      rd: 192.2.255.8:10110
     vlan: '110'
 static_routes:
 - vrf: default
@@ -403,3 +371,4 @@ vxlan_interface:
 virtual_source_nat_vrfs:
 - name: Tenant_A_OP_Zone
   ip_address: 10.255.1.8
+eos_cli: platform tfa personality arfa

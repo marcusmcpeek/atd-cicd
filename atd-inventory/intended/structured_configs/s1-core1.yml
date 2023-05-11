@@ -98,10 +98,11 @@ loopback_interfaces:
   description: MPLS_Overlay_peering
   shutdown: false
   ip_address: 10.200.10.1/32
+  mpls:
+    ldp:
+      interface: true
   isis_enable: CORE
   isis_passive: true
-  node_segment:
-    ipv4_index: 1
 router_isis:
   instance: CORE
   log_adjacency_changes: true
@@ -111,13 +112,14 @@ router_isis:
   address_family_ipv4:
     enabled: true
     maximum_paths: 4
-  advertise:
-    passive_only: false
-  segment_routing_mpls:
-    router_id: 10.200.10.1
-    enabled: true
+  mpls_ldp_sync_default: true
 mpls:
   ip: true
+  ldp:
+    interface_disabled_default: true
+    router_id: 10.200.10.1
+    shutdown: false
+    transport_address_interface: Loopback0
 ethernet_interfaces:
 - name: Ethernet1
   peer: s1-core2
@@ -137,6 +139,9 @@ ethernet_interfaces:
   isis_authentication_key: $1c$sTNAlR6rKSw=
   mpls:
     ip: true
+    ldp:
+      interface: true
+      igp_sync: true
 - name: Ethernet6
   peer: s1-core2
   peer_interface: Ethernet6
@@ -155,6 +160,9 @@ ethernet_interfaces:
   isis_authentication_key: $1c$sTNAlR6rKSw=
   mpls:
     ip: true
+    ldp:
+      interface: true
+      igp_sync: true
 - name: Ethernet4
   peer: s2-core1
   peer_interface: Ethernet4
@@ -173,6 +181,9 @@ ethernet_interfaces:
   isis_authentication_key: $1c$sTNAlR6rKSw=
   mpls:
     ip: true
+    ldp:
+      interface: true
+      igp_sync: true
 - name: Ethernet2
   type: routed
   peer_type: l3_interface

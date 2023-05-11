@@ -30,6 +30,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [EOS CLI](#eos-cli)
 
 ## Management
 
@@ -321,7 +322,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | Next-hop unchanged | True |
 | Source | Loopback0 |
 | BFD | True |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 8 |
 | Send community | all |
 | Maximum routes | 0 (no limit) |
 
@@ -378,7 +379,7 @@ router bgp 65001
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 8
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -487,4 +488,11 @@ route-map RM-CONN-2-BGP permit 10
 ### VRF Instances Device Configuration
 
 ```eos
+```
+
+## EOS CLI
+
+```eos
+!
+platform tfa personality arfa
 ```
