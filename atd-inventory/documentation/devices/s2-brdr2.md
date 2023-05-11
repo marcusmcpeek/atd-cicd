@@ -550,6 +550,17 @@ ip route 0.0.0.0/0 192.168.0.1
 
 #### Router BGP Peer Groups
 
+##### EVPN-OVERLAY-CORE
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | evpn |
+| Source | Loopback0 |
+| BFD | True |
+| Ebgp multihop | 15 |
+| Send community | all |
+| Maximum routes | 0 (no limit) |
+
 ##### EVPN-OVERLAY-PEERS
 
 | Settings | Value |
@@ -587,6 +598,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | 172.16.200.2 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.30.12.20 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 172.30.12.22 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
+| 192.0.255.7 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - | - |
 | 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_OP_Zone | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
@@ -597,14 +609,23 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
+| EVPN-OVERLAY-CORE | True | default |
 | EVPN-OVERLAY-PEERS | True | default |
+
+##### EVPN DCI Gateway Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Remote Domain Peer Groups | EVPN-OVERLAY-CORE |
+| L3 Gateway Configured | True |
+| L3 Gateway Inter-domain | True |
 
 #### Router BGP VLAN Aware Bundles
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Extend | 192.2.255.8:10110 | 10110:10110 | - | - | learned | 110 |
-| Tenant_A_OP_Zone | 192.2.255.8:10 | 10:10 | - | - | learned | 100,200,210 |
+| Extend | 192.2.255.8:10110 | 10110:10110<br>remote 10110:10110 | - | - | learned | 110 |
+| Tenant_A_OP_Zone | 192.2.255.8:10 | 10:10<br>remote 10:10 | - | - | learned | 100,200,210 |
 
 #### Router BGP VRFs
 
@@ -623,6 +644,12 @@ router bgp 65203
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 4 ecmp 4
+   neighbor EVPN-OVERLAY-CORE peer group
+   neighbor EVPN-OVERLAY-CORE update-source Loopback0
+   neighbor EVPN-OVERLAY-CORE bfd
+   neighbor EVPN-OVERLAY-CORE ebgp-multihop 15
+   neighbor EVPN-OVERLAY-CORE send-community
+   neighbor EVPN-OVERLAY-CORE maximum-routes 0
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
@@ -653,6 +680,9 @@ router bgp 65203
    neighbor 172.30.12.22 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.30.12.22 remote-as 65002
    neighbor 172.30.12.22 description s2-spine2_Ethernet8
+   neighbor 192.0.255.7 peer group EVPN-OVERLAY-CORE
+   neighbor 192.0.255.7 remote-as 65103
+   neighbor 192.0.255.7 description s1-brdr1
    neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.2.255.1 remote-as 65002
    neighbor 192.2.255.1 description s2-spine1
@@ -663,20 +693,28 @@ router bgp 65203
    !
    vlan-aware-bundle Extend
       rd 192.2.255.8:10110
+      rd evpn domain remote 192.2.255.8:10110
       route-target both 10110:10110
+      route-target import export evpn domain remote 10110:10110
       redistribute learned
       vlan 110
    !
    vlan-aware-bundle Tenant_A_OP_Zone
       rd 192.2.255.8:10
+      rd evpn domain remote 192.2.255.8:10
       route-target both 10:10
+      route-target import export evpn domain remote 10:10
       redistribute learned
       vlan 100,200,210
    !
    address-family evpn
+      neighbor EVPN-OVERLAY-CORE activate
+      neighbor EVPN-OVERLAY-CORE domain remote
       neighbor EVPN-OVERLAY-PEERS activate
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
    !
    address-family ipv4
+      no neighbor EVPN-OVERLAY-CORE activate
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate

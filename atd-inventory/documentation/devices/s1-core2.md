@@ -217,6 +217,8 @@ interface Ethernet1
 interface Ethernet3
    no shutdown
    no switchport
+   no lldp transmit
+   no lldp receive
 !
 interface Ethernet4
    description P2P_LINK_TO_s2-core2_Ethernet4
@@ -407,10 +409,6 @@ router isis CORE
 | ------ | --------- |
 | 65555|  10.200.10.2 |
 
-| BGP AS | Cluster ID |
-| ------ | --------- |
-| 65555|  10.200.10.2 |
-
 | BGP Tuning |
 | ---------- |
 | no bgp default ipv4-unicast |
@@ -432,20 +430,32 @@ router isis CORE
 | Send community | all |
 | Maximum routes | 0 (no limit) |
 
+#### BGP Neighbors
+
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
+| 10.200.10.1 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | - | - |
+| 10.200.10.4 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | - | - |
+
 #### Router BGP EVPN Address Family
 
 ##### EVPN Peer Groups
 
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
+| MPLS-OVERLAY-PEERS | True | default |
 
-#### Router BGP VPN-IPv4 Address Family
+##### EVPN Neighbor Default Encapsulation
 
-##### VPN-IPv4 Peer Groups
+| Neighbor Default Encapsulation | Next-hop-self Source Interface |
+| ------------------------------ | ------------------------------ |
+| mpls | Loopback0 |
 
-| Peer Group | Activate | Route-map In | Route-map Out |
-| ---------- | -------- | ------------ | ------------- |
-| MPLS-OVERLAY-PEERS | True | - | - |
+#### Router BGP VPWS Instances
+
+| Instance | Route-Distinguisher | Both Route-Target | MPLS Control Word | Label Flow | MTU | Pseudowire | Local ID | Remote ID |
+| -------- | ------------------- | ----------------- | ----------------- | -----------| --- | ---------- | -------- | --------- |
+| VPN_SERVICE | 10.200.10.2:10000 | 10000:10000 | False | False | - | CIRCUIT_2 | 102 | 202 |
 
 #### Router BGP Device Configuration
 
@@ -453,7 +463,6 @@ router isis CORE
 !
 router bgp 65555
    router-id 10.200.10.2
-   bgp cluster-id 10.200.10.2
    no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
@@ -466,15 +475,24 @@ router bgp 65555
    neighbor MPLS-OVERLAY-PEERS password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.200.10.1 peer group MPLS-OVERLAY-PEERS
+   neighbor 10.200.10.1 description s1-core1
+   neighbor 10.200.10.4 peer group MPLS-OVERLAY-PEERS
+   neighbor 10.200.10.4 description s2-core2
+   !
+   vpws VPN_SERVICE
+      rd 10.200.10.2:10000
+      route-target import export evpn 10000:10000
+      !
+      pseudowire CIRCUIT_2
+         evpn vpws id local 102 remote 202
    !
    address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor MPLS-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor MPLS-OVERLAY-PEERS activate
-   !
-   address-family vpn-ipv4
-      neighbor MPLS-OVERLAY-PEERS activate
-      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
 ```
 
 ## BFD

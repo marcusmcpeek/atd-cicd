@@ -26,6 +26,7 @@ underlay_routing_protocol: isis-sr
 overlay_routing_protocol: ibgp
 
 bgp_as: 65555
+# bgp_mesh_pes: true
 
 bgp_peer_groups:
   # all passwords set to "arista"
@@ -44,9 +45,6 @@ management_security:
 # which is not supported in vEOS-LAB.
 # Refer to design guide
 
-# Update p2p mtu 9000 -> 1500
-p2p_uplinks_mtu: 1500
-
 # Adjust default bfd values
 bfd_multihop:
   interval: 1200
@@ -57,13 +55,12 @@ bfd_multihop:
 pe:
   defaults:
     platform: CEOS-LAB
-    evpn_role: server
     loopback_ipv4_pool: 10.200.10.0/24
     vtep_loopback_ipv4_pool: 10.200.20.0/24
     uplink_ipv4_pool: 10.255.0.0/24
     virtual_router_mac_address: 00:1c:73:00:cc:00
-    mpls_route_reflectors: [ s1-core1, s1-core2, s2-core1, s2-core2]
     isis_system_id_prefix: '0000.0001'
+    overlay_address_families: [ evpn ]
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -74,28 +71,23 @@ pe:
     s1-core1:
       id: 1
       mgmt_ip: 192.168.0.102/24
-      uplink_switch_interfaces: [ Ethernet1, Ethernet4]
-      uplink_interfaces: [Ethernet1, Ethernet4]
-      uplink_switches: [s1-core2, s2-core1]
-      evpn_route_servers: [s1-core2, s2-core1]
+      mpls_overlay_role: server
     s1-core2:
       id: 2
       mgmt_ip: 192.168.0.103/24
-      uplink_switch_interfaces: [ Ethernet6, Ethernet4]
-      uplink_interfaces: [Ethernet6, Ethernet4]
-      uplink_switches: [s1-core1, s2-core2 ]
-      evpn_route_servers: [s1-core1, s2-core2]
+      mpls_overlay_role: client
+      mpls_route_reflectors: [ s1-core1, s2-core2]
     s2-core1:
       id: 3
       mgmt_ip: 192.168.0.202/24
-      uplink_switch_interfaces: [Ethernet1]
-      uplink_interfaces: [Ethernet1]
-      uplink_switches: [s2-core2]
-      evpn_route_servers: [s1-core1, s2-core2]
+      mpls_overlay_role: client
+      mpls_route_reflectors: [ s1-core1, s2-core2]
     s2-core2:
       id: 4
       bgp_as: 65505
       mgmt_ip: 192.168.0.203/24
+      mpls_overlay_role: server
+
 
 
 core_interfaces:
@@ -149,7 +141,7 @@ tenants:
     point_to_point_services:
       - name: CIRCUIT_1
         type: vpws-pseudowire
-        lldp_disable: false
+        lldp_disable: true
         endpoints:
           - id: 101
             nodes: [ s1-core1 ]
@@ -159,7 +151,7 @@ tenants:
             interfaces: [ Ethernet2 ]
       - name: CIRCUIT_2
         type: vpws-pseudowire
-        lldp_disable: false
+        lldp_disable: true
         endpoints:
           - id: 102
             nodes: [ s1-core2 ]
