@@ -54,9 +54,12 @@ router_bgp:
     route_targets:
       import_export: 10000:10000
     pseudowires:
-    - name: CIRCUIT_2
-      id_local: 202
-      id_remote: 102
+    - name: CIRCUIT_3
+      id_local: 203
+      id_remote: 103
+    - name: CIRCUIT_4
+      id_local: 204
+      id_remote: 104
 static_routes:
 - vrf: default
   destination_address_prefix: 0.0.0.0/0
@@ -177,6 +180,13 @@ ethernet_interfaces:
   lldp:
     transmit: false
     receive: false
+- name: Ethernet2
+  type: routed
+  peer_type: l3_interface
+  shutdown: false
+  lldp:
+    transmit: false
+    receive: false
 router_bfd:
   multihop:
     interval: 1200
@@ -184,7 +194,7 @@ router_bfd:
     multiplier: 3
 patch_panel:
   patches:
-  - name: CIRCUIT_2
+  - name: CIRCUIT_3
     enabled: true
     connectors:
     - id: '1'
@@ -192,7 +202,17 @@ patch_panel:
       endpoint: Ethernet3
     - id: '2'
       type: pseudowire
-      endpoint: bgp vpws VPN_SERVICE pseudowire CIRCUIT_2
+      endpoint: bgp vpws VPN_SERVICE pseudowire CIRCUIT_3
+  - name: CIRCUIT_4
+    enabled: true
+    connectors:
+    - id: '1'
+      type: interface
+      endpoint: Ethernet2
+    - id: '2'
+      type: pseudowire
+      endpoint: bgp vpws VPN_SERVICE pseudowire CIRCUIT_4
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:cc:00
+eos_cli: platform tfa personality arfa

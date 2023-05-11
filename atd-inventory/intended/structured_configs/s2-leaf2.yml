@@ -34,22 +34,35 @@ router_bgp:
     peer_groups:
     - name: MLAG-IPv4-UNDERLAY-PEER
       activate: true
+      next_hop:
+        address_family_ipv6_originate: true
     - name: IPv4-UNDERLAY-PEERS
       activate: true
+      next_hop:
+        address_family_ipv6_originate: true
     - name: EVPN-OVERLAY-PEERS
       activate: false
-  neighbors:
-  - ip_address: 10.255.251.0
+  neighbor_interfaces:
+  - name: Vlan4093
     peer_group: MLAG-IPv4-UNDERLAY-PEER
+    remote_as: '65201'
     description: s2-leaf1
-  - ip_address: 172.30.12.4
+  - name: Ethernet2
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65002'
     description: s2-spine1_Ethernet3
-  - ip_address: 172.30.12.6
+  - name: Ethernet3
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65002'
     description: s2-spine2_Ethernet3
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  neighbors:
   - ip_address: 192.2.255.1
     peer_group: EVPN-OVERLAY-PEERS
     description: s2-spine1
@@ -58,13 +71,6 @@ router_bgp:
     peer_group: EVPN-OVERLAY-PEERS
     description: s2-spine2
     remote_as: '65002'
-  redistribute_routes:
-  - source_protocol: connected
-    route_map: RM-CONN-2-BGP
-  address_family_evpn:
-    peer_groups:
-    - name: EVPN-OVERLAY-PEERS
-      activate: true
   vrfs:
   - name: Tenant_A_OP_Zone
     router_id: 192.2.255.4
@@ -80,9 +86,11 @@ router_bgp:
         - '10:10'
     redistribute_routes:
     - source_protocol: connected
-    neighbors:
-    - ip_address: 10.255.251.0
+    neighbor_interfaces:
+    - name: Vlan3009
       peer_group: MLAG-IPv4-UNDERLAY-PEER
+      remote_as: '65201'
+      description: s2-leaf1
   vlan_aware_bundles:
   - name: Tenant_A_OP_Zone
     rd: 192.2.255.4:10
@@ -106,7 +114,8 @@ static_routes:
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.0.1
 service_routing_protocols_model: multi-agent
-ip_routing: true
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -128,7 +137,7 @@ vrfs:
   ip_routing: false
 - name: Tenant_A_OP_Zone
   tenant: Tenant_A
-  ip_routing: true
+  ip_routing_ipv6_interfaces: true
 management_interfaces:
 - name: Management0
   description: oob_management
@@ -173,14 +182,14 @@ vlan_interfaces:
 - name: Vlan4093
   description: MLAG_PEER_L3_PEERING
   shutdown: false
-  mtu: 1500
-  ip_address: 10.255.251.1/31
+  mtu: 9214
+  ipv6_enable: true
 - name: Vlan4094
   description: MLAG_PEER
   shutdown: false
   ip_address: 10.255.252.1/31
   no_autostate: true
-  mtu: 1500
+  mtu: 9214
 - name: Vlan100
   tenant: Tenant_A
   tags:
@@ -211,8 +220,8 @@ vlan_interfaces:
   shutdown: false
   description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
   vrf: Tenant_A_OP_Zone
-  mtu: 1500
-  ip_address: 10.255.251.1/31
+  mtu: 9214
+  ipv6_enable: true
 port_channel_interfaces:
 - name: Port-Channel1
   description: MLAG_PEER_s2-leaf1_Po1
@@ -257,18 +266,18 @@ ethernet_interfaces:
   peer_type: spine
   description: P2P_LINK_TO_S2-SPINE1_Ethernet3
   shutdown: false
-  mtu: 1500
+  mtu: 9214
   type: routed
-  ip_address: 172.30.12.5/31
+  ipv6_enable: true
 - name: Ethernet3
   peer: s2-spine2
   peer_interface: Ethernet3
   peer_type: spine
   description: P2P_LINK_TO_S2-SPINE2_Ethernet3
   shutdown: false
-  mtu: 1500
+  mtu: 9214
   type: routed
-  ip_address: 172.30.12.7/31
+  ipv6_enable: true
 - name: Ethernet4
   peer: s2-Host1
   peer_interface: E2

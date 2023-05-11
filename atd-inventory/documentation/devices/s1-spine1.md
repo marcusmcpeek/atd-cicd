@@ -153,16 +153,16 @@ vlan internal order ascending range 1006 1199
 
 *Inherited from Port-Channel Interface
 
-##### IPv4
+##### IPv6
 
-| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
-| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet2 | P2P_LINK_TO_S1-LEAF1_Ethernet2 | routed | - | 172.30.11.0/31 | default | 1500 | False | - | - |
-| Ethernet3 | P2P_LINK_TO_S1-LEAF2_Ethernet2 | routed | - | 172.30.11.4/31 | default | 1500 | False | - | - |
-| Ethernet4 | P2P_LINK_TO_S1-LEAF3_Ethernet2 | routed | - | 172.30.11.8/31 | default | 1500 | False | - | - |
-| Ethernet5 | P2P_LINK_TO_S1-LEAF4_Ethernet2 | routed | - | 172.30.11.12/31 | default | 1500 | False | - | - |
-| Ethernet7 | P2P_LINK_TO_S1-BRDR1_Ethernet2 | routed | - | 172.30.11.16/31 | default | 1500 | False | - | - |
-| Ethernet8 | P2P_LINK_TO_S1-BRDR2_Ethernet2 | routed | - | 172.30.11.20/31 | default | 1500 | False | - | - |
+| Interface | Description | Type | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
+| --------- | ----------- | ---- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
+| Ethernet2 | P2P_LINK_TO_S1-LEAF1_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet3 | P2P_LINK_TO_S1-LEAF2_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet4 | P2P_LINK_TO_S1-LEAF3_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet5 | P2P_LINK_TO_S1-LEAF4_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet7 | P2P_LINK_TO_S1-BRDR1_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Ethernet8 | P2P_LINK_TO_S1-BRDR2_Ethernet2 | routed | - | - | default | 9214 | False | - | - | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -171,44 +171,44 @@ vlan internal order ascending range 1006 1199
 interface Ethernet2
    description P2P_LINK_TO_S1-LEAF1_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.0/31
+   ipv6 enable
 !
 interface Ethernet3
    description P2P_LINK_TO_S1-LEAF2_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.4/31
+   ipv6 enable
 !
 interface Ethernet4
    description P2P_LINK_TO_S1-LEAF3_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.8/31
+   ipv6 enable
 !
 interface Ethernet5
    description P2P_LINK_TO_S1-LEAF4_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.12/31
+   ipv6 enable
 !
 interface Ethernet7
    description P2P_LINK_TO_S1-BRDR1_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.16/31
+   ipv6 enable
 !
 interface Ethernet8
    description P2P_LINK_TO_S1-BRDR2_Ethernet2
    no shutdown
-   mtu 1500
+   mtu 9214
    no switchport
-   ip address 172.30.11.20/31
+   ipv6 enable
 ```
 
 ### Loopback Interfaces
@@ -255,13 +255,13 @@ service routing protocols model multi-agent
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | True |
+| default | True (ipv6 interfaces) |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
-ip routing
+ip routing ipv6 interfaces
 ```
 
 ### IPv6 Routing
@@ -270,8 +270,15 @@ ip routing
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | False |
+| default | True |
 | default | false |
+
+#### IPv6 Routing Device Configuration
+
+```eos
+!
+ipv6 unicast-routing
+```
 
 ### Static Routes
 
@@ -330,18 +337,23 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
-| 172.30.11.1 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.30.11.5 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.30.11.9 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.30.11.13 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.30.11.17 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 172.30.11.21 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 192.0.255.3 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.4 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.5 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.6 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.7 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.8 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
+
+#### BGP Neighbor Interfaces
+
+| Neighbor Interface | VRF | Peer Group | Remote AS | Peer Filter |
+| ------------------ | --- | ---------- | --------- | ----------- |
+| Ethernet2 | default | IPv4-UNDERLAY-PEERS | 65101 | - |
+| Ethernet3 | default | IPv4-UNDERLAY-PEERS | 65101 | - |
+| Ethernet4 | default | IPv4-UNDERLAY-PEERS | 65102 | - |
+| Ethernet5 | default | IPv4-UNDERLAY-PEERS | 65102 | - |
+| Ethernet7 | default | IPv4-UNDERLAY-PEERS | 65103 | - |
+| Ethernet8 | default | IPv4-UNDERLAY-PEERS | 65103 | - |
 
 #### Router BGP EVPN Address Family
 
@@ -374,24 +386,12 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
-   neighbor 172.30.11.1 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.1 remote-as 65101
-   neighbor 172.30.11.1 description s1-leaf1_Ethernet2
-   neighbor 172.30.11.5 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.5 remote-as 65101
-   neighbor 172.30.11.5 description s1-leaf2_Ethernet2
-   neighbor 172.30.11.9 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.9 remote-as 65102
-   neighbor 172.30.11.9 description s1-leaf3_Ethernet2
-   neighbor 172.30.11.13 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.13 remote-as 65102
-   neighbor 172.30.11.13 description s1-leaf4_Ethernet2
-   neighbor 172.30.11.17 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.17 remote-as 65103
-   neighbor 172.30.11.17 description s1-brdr1_Ethernet2
-   neighbor 172.30.11.21 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.30.11.21 remote-as 65103
-   neighbor 172.30.11.21 description s1-brdr2_Ethernet2
+   neighbor interface Ethernet2 peer-group IPv4-UNDERLAY-PEERS remote-as 65101
+   neighbor interface Ethernet3 peer-group IPv4-UNDERLAY-PEERS remote-as 65101
+   neighbor interface Ethernet4 peer-group IPv4-UNDERLAY-PEERS remote-as 65102
+   neighbor interface Ethernet5 peer-group IPv4-UNDERLAY-PEERS remote-as 65102
+   neighbor interface Ethernet7 peer-group IPv4-UNDERLAY-PEERS remote-as 65103
+   neighbor interface Ethernet8 peer-group IPv4-UNDERLAY-PEERS remote-as 65103
    neighbor 192.0.255.3 peer group EVPN-OVERLAY-PEERS
    neighbor 192.0.255.3 remote-as 65101
    neighbor 192.0.255.3 description s1-leaf1
@@ -417,6 +417,7 @@ router bgp 65001
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
+      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate
       neighbor IPv4-UNDERLAY-PEERS activate
 ```
 

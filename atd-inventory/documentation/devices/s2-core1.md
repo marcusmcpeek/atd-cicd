@@ -40,6 +40,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [EOS CLI](#eos-cli)
 
 ## Management
 
@@ -215,6 +216,12 @@ interface Ethernet1
    isis authentication key 7 $1c$sTNAlR6rKSw=
 !
 interface Ethernet2
+   no shutdown
+   no switchport
+   no lldp transmit
+   no lldp receive
+!
+interface Ethernet3
    no shutdown
    no switchport
    no lldp transmit
@@ -456,6 +463,7 @@ router isis CORE
 | Instance | Route-Distinguisher | Both Route-Target | MPLS Control Word | Label Flow | MTU | Pseudowire | Local ID | Remote ID |
 | -------- | ------------------- | ----------------- | ----------------- | -----------| --- | ---------- | -------- | --------- |
 | VPN_SERVICE | 10.200.10.3:10000 | 10000:10000 | False | False | - | CIRCUIT_1 | 201 | 101 |
+| VPN_SERVICE | 10.200.10.3:10000 | 10000:10000 | False | False | - | CIRCUIT_2 | 202 | 102 |
 
 #### Router BGP Device Configuration
 
@@ -486,6 +494,9 @@ router bgp 65555
       !
       pseudowire CIRCUIT_1
          evpn vpws id local 201 remote 101
+      !
+      pseudowire CIRCUIT_2
+         evpn vpws id local 202 remote 102
    !
    address-family evpn
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
@@ -549,6 +560,7 @@ mpls ip
 | Patch Name | Enabled | Connector A Type | Connector A Endpoint | Connector B Type | Connector B Endpoint |
 | ---------- | ------- | ---------------- | -------------------- | ---------------- | -------------------- |
 | CIRCUIT_1 | True | Interface | Ethernet2 | Pseudowire | bgp vpws VPN_SERVICE pseudowire CIRCUIT_1 |
+| CIRCUIT_2 | True | Interface | Ethernet3 | Pseudowire | bgp vpws VPN_SERVICE pseudowire CIRCUIT_2 |
 
 ### Patch Panel Configuration
 
@@ -558,6 +570,10 @@ patch panel
    patch CIRCUIT_1
       connector 1 interface Ethernet2
       connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_1
+   !
+   patch CIRCUIT_2
+      connector 1 interface Ethernet3
+      connector 2 pseudowire bgp vpws VPN_SERVICE pseudowire CIRCUIT_2
    !
 ```
 
@@ -586,4 +602,11 @@ patch panel
 ### VRF Instances Device Configuration
 
 ```eos
+```
+
+## EOS CLI
+
+```eos
+!
+platform tfa personality arfa
 ```
