@@ -250,12 +250,12 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-##### IPv6
+##### IPv4
 
-| Interface | Description | Type | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
-| --------- | ----------- | ---- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet2 | P2P_LINK_TO_S2-SPINE1_Ethernet5 | routed | - | - | default | 9214 | False | - | - | - | - |
-| Ethernet3 | P2P_LINK_TO_S2-SPINE2_Ethernet5 | routed | - | - | default | 9214 | False | - | - | - | - |
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet2 | P2P_LINK_TO_S2-SPINE1_Ethernet5 | routed | - | 172.30.12.13/31 | default | 9214 | False | - | - |
+| Ethernet3 | P2P_LINK_TO_S2-SPINE2_Ethernet5 | routed | - | 172.30.12.15/31 | default | 9214 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -271,14 +271,14 @@ interface Ethernet2
    no shutdown
    mtu 9214
    no switchport
-   ipv6 enable
+   ip address 172.30.12.13/31
 !
 interface Ethernet3
    description P2P_LINK_TO_S2-SPINE2_Ethernet5
    no shutdown
    mtu 9214
    no switchport
-   ipv6 enable
+   ip address 172.30.12.15/31
 !
 interface Ethernet4
    description s2-Host2_E2
@@ -386,8 +386,8 @@ interface Loopback100
 | Vlan100 |  Tenant_A_OP_Zone  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
 | Vlan200 |  Tenant_A_OP_Zone  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
 | Vlan210 |  Tenant_A_OP_Zone  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  Tenant_A_OP_Zone  |  -  |  -  |  -  |  -  |  -  |  -  |
-| Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  Tenant_A_OP_Zone  |  10.255.251.5/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.255.251.5/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.5/31  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
@@ -417,13 +417,13 @@ interface Vlan3009
    no shutdown
    mtu 9214
    vrf Tenant_A_OP_Zone
-   ipv6 enable
+   ip address 10.255.251.5/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
    no shutdown
    mtu 9214
-   ipv6 enable
+   ip address 10.255.251.5/31
 !
 interface Vlan4094
    description MLAG_PEER
@@ -504,15 +504,15 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | True (ipv6 interfaces) |
-| Tenant_A_OP_Zone | True (ipv6 interfaces) |
+| default | True |
+| Tenant_A_OP_Zone | True |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
-ip routing ipv6 interfaces
-ip routing ipv6 interfaces vrf Tenant_A_OP_Zone
+ip routing
+ip routing vrf Tenant_A_OP_Zone
 ```
 
 ### IPv6 Routing
@@ -521,16 +521,9 @@ ip routing ipv6 interfaces vrf Tenant_A_OP_Zone
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | True |
+| default | False |
 | default | false |
 | Tenant_A_OP_Zone | false |
-
-#### IPv6 Routing Device Configuration
-
-```eos
-!
-ipv6 unicast-routing
-```
 
 ### Static Routes
 
@@ -598,17 +591,12 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
+| 10.255.251.4 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
+| 172.30.12.12 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
+| 172.30.12.14 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
 | 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
-
-#### BGP Neighbor Interfaces
-
-| Neighbor Interface | VRF | Peer Group | Remote AS | Peer Filter |
-| ------------------ | --- | ---------- | --------- | ----------- |
-| Ethernet2 | default | IPv4-UNDERLAY-PEERS | 65002 | - |
-| Ethernet3 | default | IPv4-UNDERLAY-PEERS | 65002 | - |
-| Vlan4093 | default | MLAG-IPv4-UNDERLAY-PEER | 65202 | - |
-| Vlan3009 | Tenant_A_OP_Zone | MLAG-IPv4-UNDERLAY-PEER | 65202 | - |
+| 10.255.251.4 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_OP_Zone | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -661,9 +649,14 @@ router bgp 65202
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor interface Ethernet2 peer-group IPv4-UNDERLAY-PEERS remote-as 65002
-   neighbor interface Ethernet3 peer-group IPv4-UNDERLAY-PEERS remote-as 65002
-   neighbor interface Vlan4093 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65202
+   neighbor 10.255.251.4 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.4 description s2-leaf3
+   neighbor 172.30.12.12 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.30.12.12 remote-as 65002
+   neighbor 172.30.12.12 description s2-spine1_Ethernet5
+   neighbor 172.30.12.14 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.30.12.14 remote-as 65002
+   neighbor 172.30.12.14 description s2-spine2_Ethernet5
    neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.2.255.1 remote-as 65002
    neighbor 192.2.255.1 description s2-spine1
@@ -689,9 +682,7 @@ router bgp 65202
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate
       neighbor IPv4-UNDERLAY-PEERS activate
-      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6 originate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    vrf Tenant_A_OP_Zone
@@ -699,7 +690,7 @@ router bgp 65202
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.2.255.6
-      neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65202
+      neighbor 10.255.251.4 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
 ```
 
@@ -792,7 +783,7 @@ route-map RM-MLAG-PEER-IN permit 10
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
-| Tenant_A_OP_Zone | enabled (ipv6 interface) |
+| Tenant_A_OP_Zone | enabled |
 
 ### VRF Instances Device Configuration
 
