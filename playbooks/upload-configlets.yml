@@ -1,6 +1,7 @@
 ---
 - name: Configlet upload management
-  hosts: cv_servers
+  # hosts: cv_servers
+  hosts: cv_atd1
   connection: local
   gather_facts: false
   collections:

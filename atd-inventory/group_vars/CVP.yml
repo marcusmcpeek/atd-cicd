@@ -1,0 +1,80 @@
+---
+ztp:
+  default:
+    registration: 'http://192.168.0.5/ztp/bootstrap'
+    gateway: 192.168.0.5
+    nameservers:
+      - '192.168.0.5'
+    use_system_mac: true
+  general:
+    subnets:
+      - registration: 'http://192.168.0.5/ztp/bootstrap'
+        network: 192.168.0.0
+        netmask: 255.255.255.0
+        gateway: 192.168.0.5
+        nameservers:
+          - '192.168.0.5'
+        start: 192.168.0.150
+        end: 192.168.0.199
+        lease_time: 300
+  clients:
+    - name: s1-spine1
+      mac: 'b4:6f:8f:9c:ee:67'
+      ip4: 192.168.0.10
+    - name: s1-spine2
+      mac: 'b4:4b:10:66:2d:90'
+      ip4: 192.168.0.11
+    - name: s1-leaf1
+      mac: 'b4:ee:38:63:e7:06'
+      ip4: 192.168.0.12
+    - name: s1-leaf2
+      mac: 'b4:ee:4f:9d:6c:55'
+      ip4: 192.168.0.13
+    - name: s1-leaf3
+      mac: 'b4:98:7a:c4:d7:ed'
+      ip4: 192.168.0.14
+    - name: s1-leaf4
+      mac: 'b4:55:93:03:4f:ab'
+      ip4: 192.168.0.15
+    - name: s1-brdr1
+      mac: 'b4:0c:2b:40:22:35'
+      ip4: 192.168.0.100
+    - name: s1-brdr2
+      mac: 'b4:52:87:85:cb:77'
+      ip4: 192.168.0.101
+    # - name: s1-host1
+    #   mac: '84:66:b4:21:ad:1c'
+    #   ip4: 192.168.0.16
+    # - name: s1-host2
+    #   mac: '84:af:61:52:73:33'
+    #   ip4: 192.168.0.17
+    - name: s2-spine1
+      mac: 'b4:29:fa:f3:ef:11'
+      ip4: 192.168.0.20
+    - name: s2-spine2
+      mac: 'b4:2e:ed:b5:6d:73'
+      ip4: 192.168.0.21
+    - name: s2-leaf1
+      mac: 'b4:8f:00:f8:3d:6b'
+      ip4: 192.168.0.22
+    - name: s2-leaf2
+      mac: 'b4:a3:b6:bf:b4:7a'
+      ip4: 192.168.0.23
+    - name: s2-leaf3
+      mac: 'b4:a3:89:e6:82:41'
+      ip4: 192.168.0.24
+    - name: s2-leaf4
+      mac: 'b4:34:7b:21:f5:1c'
+      ip4: 192.168.0.25
+    - name: s2-brdr1
+      mac: 'b4:34:1f:a0:2e:3c'
+      ip4: 192.168.0.200
+    - name: s2-brdr2
+      mac: 'b4:86:3a:bb:80:27'
+      ip4: 192.168.0.201
+    # - name: s2-host1
+    #   mac: '84:bf:3d:52:26:ab'
+    #   ip4: 192.168.15.26
+    # - name: s2-host2
+    #   mac: '84:bf:3d:52:26:ab'
+    #   ip4: 192.168.15.27
