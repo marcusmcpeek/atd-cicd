@@ -1,0 +1,405 @@
+{
+  "dashboards": [
+    {
+      "key": "22693a78-8d3d-4f8a-bf02-6c2560f38636",
+      "createdAt": [
+        700882585,
+        1568
+      ],
+      "createdBy": "arista",
+      "metaData": {
+        "schemaVersion": "3",
+        "legacyKey": "",
+        "legacyVersion": ""
+      },
+      "name": "Host Connectivity",
+      "description": "",
+      "widgets": [
+        {
+          "id": "94c46ddb-5f20-4217-b7ab-0692a56abc95",
+          "name": "s1-Host1 Packet Loss to other hosts",
+          "position": {
+            "x": 0,
+            "y": 2
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s1-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s2-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s2-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "17e04f00-32ba-4dbf-86d3-acc0862ac51b",
+          "name": "s1-Host2 Packet Loss to other hosts",
+          "position": {
+            "x": 6,
+            "y": 2
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s1-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s2-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s2-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "36ee1a93-8fcc-42c8-ab2e-18e1377a5bd7",
+          "name": "s2-Host1 Packet Loss to other hosts",
+          "position": {
+            "x": 12,
+            "y": 2
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s1-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s1-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s2-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "1282ff27-c261-4216-b21c-b2174b614356",
+          "name": "s2-Host2 Packet Loss to other hosts",
+          "position": {
+            "x": 18,
+            "y": 2
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s1-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s1-host2-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s2-host1-vlan100",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "7e62fc92-b367-4b5e-bdaf-4d063f176aa1",
+          "name": "VLAN100",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "dimensions": {
+            "width": 24,
+            "height": 2
+          },
+          "type": "text-widget",
+          "inputs": {},
+          "location": "main"
+        },
+        {
+          "id": "a0d544c2-c6b8-4a5a-b112-639cff862c08",
+          "name": "VLAN200",
+          "position": {
+            "x": 0,
+            "y": 8
+          },
+          "dimensions": {
+            "width": 24,
+            "height": 2
+          },
+          "type": "text-widget",
+          "inputs": {},
+          "location": "main"
+        },
+        {
+          "id": "f602bdbc-7cd6-413e-bce2-e6e47720d684",
+          "name": "s1-Host1 Packet Loss to other hosts",
+          "position": {
+            "x": 0,
+            "y": 10
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s1-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s2-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host1",
+                "hostname": "s2-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "302e8230-bd77-424a-817d-dfaf7674617f",
+          "name": "s1-Host2 Packet Loss to other hosts",
+          "position": {
+            "x": 6,
+            "y": 10
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s1-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s2-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s1-host2",
+                "hostname": "s2-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "4a38e907-dbaf-4647-9243-7ee9b274de98",
+          "name": "s2-Host1 Packet Loss to other hosts",
+          "position": {
+            "x": 12,
+            "y": 10
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s1-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s1-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host1",
+                "hostname": "s2-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "af11f49a-11a6-4efc-864b-993fa09970ef",
+          "name": "s2-Host2 Packet Loss to other hosts",
+          "position": {
+            "x": 18,
+            "y": 10
+          },
+          "dimensions": {
+            "width": 6,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s1-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s1-host2-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              },
+              {
+                "deviceId": "s2-host2",
+                "hostname": "s2-host1-vlan200",
+                "vrfName": "default",
+                "interfaceName": "default"
+              }
+            ],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "PACKET_LOSS_VRF"
+            ],
+            "metricSource": "connectivity",
+            "selectedCustomTags": [],
+            "tags": "",
+            "viewType": "metric"
+          },
+          "location": "main"
+        }
+      ],
+      "lastUpdated": 1684328062617,
+      "lastUpdatedBy": "arista"
+    }
+  ]
+}
