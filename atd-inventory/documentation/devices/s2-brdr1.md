@@ -590,9 +590,9 @@ ip route 0.0.0.0/0 192.168.0.1
 | 172.16.200.0 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
 | 172.31.255.16 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
 | 172.31.255.18 | 65002 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - |
+| 192.0.255.7 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - |
 | 192.2.255.1 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
 | 192.2.255.2 | 65002 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - |
-| 192.2.255.7 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - |
 | 10.255.251.9 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | customerA | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - |
 
 ### Router BGP EVPN Address Family
@@ -672,15 +672,15 @@ router bgp 65203
    neighbor 172.31.255.18 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.18 remote-as 65002
    neighbor 172.31.255.18 description s2-spine2_Ethernet7
+   neighbor 192.0.255.7 peer group EVPN-OVERLAY-CORE
+   neighbor 192.0.255.7 remote-as 65103
+   neighbor 192.0.255.7 description s1-brdr1
    neighbor 192.2.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.2.255.1 remote-as 65002
    neighbor 192.2.255.1 description s2-spine1
    neighbor 192.2.255.2 peer group EVPN-OVERLAY-PEERS
    neighbor 192.2.255.2 remote-as 65002
    neighbor 192.2.255.2 description s2-spine2
-   neighbor 192.2.255.7 peer group EVPN-OVERLAY-CORE
-   neighbor 192.2.255.7 remote-as 65203
-   neighbor 192.2.255.7 description s2-brdr1
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle customerA
