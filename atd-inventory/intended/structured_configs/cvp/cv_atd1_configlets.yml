@@ -5,7 +5,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -32,10 +32,10 @@ cvp_configlets:
     \  vrf Tenant_A_OP_Zone\n   ip address 10.255.1.7/32\n!\ninterface Management0\n
     \  description oob_management\n   no shutdown\n   ip address 192.168.0.100/24\n!\ninterface
     Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 10.10.10.1/24\n!\ninterface Vlan200\n   description VLAN200\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 20.20.20.1/24\n!\ninterface
-    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
-    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
+    address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan300\n   description VLAN300\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
+    address virtual 30.20.20.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
     vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip
     address 10.255.251.8/31\n!\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n
     \  no shutdown\n   mtu 9214\n   ip address 10.255.251.8/31\n   ip ospf network
@@ -43,8 +43,8 @@ cvp_configlets:
     MLAG_PEER\n   no shutdown\n   mtu 9214\n   no autostate\n   ip address 10.255.252.8/31\n!\ninterface
     Vxlan1\n   description s1-brdr1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
     virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n
-    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 200 vni
-    10200\n   vxlan vlan 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
+    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni
+    10210\n   vxlan vlan 300 vni 10300\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
     virtual-router mac-address 00:1c:73:00:dc:01\n!\nip address virtual source-nat
     vrf Tenant_A_OP_Zone address 10.255.1.7\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nmlag
     configuration\n   domain-id ATD_BORDER-DC1\n   local-interface Vlan4094\n   peer-address
@@ -74,7 +74,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.7:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.0.255.7:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.0.255.7:10\n      route-target import evpn 10:10\n      route-target
@@ -91,7 +91,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -118,10 +118,10 @@ cvp_configlets:
     \  vrf Tenant_A_OP_Zone\n   ip address 10.255.1.8/32\n!\ninterface Management0\n
     \  description oob_management\n   no shutdown\n   ip address 192.168.0.101/24\n!\ninterface
     Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 10.10.10.1/24\n!\ninterface Vlan200\n   description VLAN200\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 20.20.20.1/24\n!\ninterface
-    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
-    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
+    address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan300\n   description VLAN300\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
+    address virtual 30.20.20.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
     vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip
     address 10.255.251.9/31\n!\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n
     \  no shutdown\n   mtu 9214\n   ip address 10.255.251.9/31\n   ip ospf network
@@ -129,8 +129,8 @@ cvp_configlets:
     MLAG_PEER\n   no shutdown\n   mtu 9214\n   no autostate\n   ip address 10.255.252.9/31\n!\ninterface
     Vxlan1\n   description s1-brdr2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
     virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n
-    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 200 vni
-    10200\n   vxlan vlan 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
+    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni
+    10210\n   vxlan vlan 300 vni 10300\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
     virtual-router mac-address 00:1c:73:00:dc:01\n!\nip address virtual source-nat
     vrf Tenant_A_OP_Zone address 10.255.1.8\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nmlag
     configuration\n   domain-id ATD_BORDER-DC1\n   local-interface Vlan4094\n   peer-address
@@ -160,7 +160,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.0.255.8:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.0.255.8:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.0.255.8:10\n      route-target import evpn 10:10\n      route-target
@@ -289,7 +289,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -315,9 +315,9 @@ cvp_configlets:
     address 10.255.1.3/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.12/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.0/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -326,7 +326,7 @@ cvp_configlets:
     \  ip address 10.255.252.0/31\n!\ninterface Vxlan1\n   description s1-leaf1_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.3\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF1-DC1\n
@@ -356,7 +356,7 @@ cvp_configlets:
     192.2.255.2 description s2-spine2\n   !\n   vlan-aware-bundle Extend\n      rd
     192.0.255.3:10110\n      route-target both 10110:10110\n      redistribute learned\n
     \     vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.0.255.3:10\n
-    \     route-target both 10:10\n      redistribute learned\n      vlan 100,200,210\n
+    \     route-target both 10:10\n      redistribute learned\n      vlan 100,210,300\n
     \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.3:10\n
@@ -373,7 +373,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -399,9 +399,9 @@ cvp_configlets:
     address 10.255.1.4/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.13/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.1/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -410,7 +410,7 @@ cvp_configlets:
     \  ip address 10.255.252.1/31\n!\ninterface Vxlan1\n   description s1-leaf2_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.4\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF1-DC1\n
@@ -440,7 +440,7 @@ cvp_configlets:
     192.2.255.2 description s2-spine2\n   !\n   vlan-aware-bundle Extend\n      rd
     192.0.255.4:10110\n      route-target both 10110:10110\n      redistribute learned\n
     \     vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.0.255.4:10\n
-    \     route-target both 10:10\n      redistribute learned\n      vlan 100,200,210\n
+    \     route-target both 10:10\n      redistribute learned\n      vlan 100,210,300\n
     \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.4:10\n
@@ -457,7 +457,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -483,9 +483,9 @@ cvp_configlets:
     address 10.255.1.5/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.14/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.4/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -494,7 +494,7 @@ cvp_configlets:
     \  ip address 10.255.252.4/31\n!\ninterface Vxlan1\n   description s1-leaf3_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.5\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF2-DC1\n
@@ -524,7 +524,7 @@ cvp_configlets:
     192.2.255.2 description s2-spine2\n   !\n   vlan-aware-bundle Extend\n      rd
     192.0.255.5:10110\n      route-target both 10110:10110\n      redistribute learned\n
     \     vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.0.255.5:10\n
-    \     route-target both 10:10\n      redistribute learned\n      vlan 100,200,210\n
+    \     route-target both 10:10\n      redistribute learned\n      vlan 100,210,300\n
     \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.5:10\n
@@ -541,7 +541,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -567,9 +567,9 @@ cvp_configlets:
     address 10.255.1.6/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.15/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.5/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -578,7 +578,7 @@ cvp_configlets:
     \  ip address 10.255.252.5/31\n!\ninterface Vxlan1\n   description s1-leaf4_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.6\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF2-DC1\n
@@ -608,7 +608,7 @@ cvp_configlets:
     192.2.255.2 description s2-spine2\n   !\n   vlan-aware-bundle Extend\n      rd
     192.0.255.6:10110\n      route-target both 10110:10110\n      redistribute learned\n
     \     vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.0.255.6:10\n
-    \     route-target both 10:10\n      redistribute learned\n      vlan 100,200,210\n
+    \     route-target both 10:10\n      redistribute learned\n      vlan 100,210,300\n
     \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   !\n
     \  address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor
     MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.0.255.6:10\n
@@ -721,7 +721,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -748,10 +748,10 @@ cvp_configlets:
     \  vrf Tenant_A_OP_Zone\n   ip address 10.255.1.7/32\n!\ninterface Management0\n
     \  description oob_management\n   no shutdown\n   ip address 192.168.0.200/24\n!\ninterface
     Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 10.10.10.1/24\n!\ninterface Vlan200\n   description VLAN200\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 20.20.20.1/24\n!\ninterface
-    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
-    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
+    address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan300\n   description VLAN300\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
+    address virtual 30.20.20.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
     vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip
     address 10.255.251.8/31\n!\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n
     \  no shutdown\n   mtu 9214\n   ip address 10.255.251.8/31\n   ip ospf network
@@ -759,8 +759,8 @@ cvp_configlets:
     MLAG_PEER\n   no shutdown\n   mtu 9214\n   no autostate\n   ip address 10.255.252.8/31\n!\ninterface
     Vxlan1\n   description s2-brdr1_VTEP\n   vxlan source-interface Loopback1\n   vxlan
     virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n
-    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 200 vni
-    10200\n   vxlan vlan 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
+    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni
+    10210\n   vxlan vlan 300 vni 10300\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
     virtual-router mac-address 00:1c:73:00:dc:01\n!\nip address virtual source-nat
     vrf Tenant_A_OP_Zone address 10.255.1.7\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nmlag
     configuration\n   domain-id ATD_BORDER-DC2\n   local-interface Vlan4094\n   peer-address
@@ -787,7 +787,7 @@ cvp_configlets:
     Extend\n      rd 192.2.255.7:10110\n      route-target both 10110:10110\n      redistribute
     learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
     192.2.255.7:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
+    100,210,300\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
     \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
     \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.7:10\n      route-target import evpn 10:10\n      route-target
@@ -804,7 +804,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -831,10 +831,10 @@ cvp_configlets:
     \  vrf Tenant_A_OP_Zone\n   ip address 10.255.1.8/32\n!\ninterface Management0\n
     \  description oob_management\n   no shutdown\n   ip address 192.168.0.201/24\n!\ninterface
     Vlan100\n   description VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 10.10.10.1/24\n!\ninterface Vlan200\n   description VLAN200\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 20.20.20.1/24\n!\ninterface
-    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
-    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
+    address virtual 10.10.10.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan300\n   description VLAN300\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
+    address virtual 30.20.20.1/24\n!\ninterface Vlan3009\n   description MLAG_PEER_L3_iBGP:
     vrf Tenant_A_OP_Zone\n   no shutdown\n   mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip
     address 10.255.251.9/31\n!\ninterface Vlan4093\n   description MLAG_PEER_L3_PEERING\n
     \  no shutdown\n   mtu 9214\n   ip address 10.255.251.9/31\n   ip ospf network
@@ -842,8 +842,8 @@ cvp_configlets:
     MLAG_PEER\n   no shutdown\n   mtu 9214\n   no autostate\n   ip address 10.255.252.9/31\n!\ninterface
     Vxlan1\n   description s2-brdr2_VTEP\n   vxlan source-interface Loopback1\n   vxlan
     virtual-router encapsulation mac-address mlag-system-id\n   vxlan udp-port 4789\n
-    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 200 vni
-    10200\n   vxlan vlan 210 vni 10210\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
+    \  vxlan vlan 100 vni 10100\n   vxlan vlan 110 vni 10110\n   vxlan vlan 210 vni
+    10210\n   vxlan vlan 300 vni 10300\n   vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip
     virtual-router mac-address 00:1c:73:00:dc:01\n!\nip address virtual source-nat
     vrf Tenant_A_OP_Zone address 10.255.1.8\n!\nip routing\nip routing vrf Tenant_A_OP_Zone\n!\nmlag
     configuration\n   domain-id ATD_BORDER-DC2\n   local-interface Vlan4094\n   peer-address
@@ -870,7 +870,7 @@ cvp_configlets:
     Extend\n      rd 192.2.255.8:10110\n      route-target both 10110:10110\n      redistribute
     learned\n      vlan 110\n   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd
     192.2.255.8:10\n      route-target both 10:10\n      redistribute learned\n      vlan
-    100,200,210\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
+    100,210,300\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n
     \  !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n
     \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.8:10\n      route-target import evpn 10:10\n      route-target
@@ -999,7 +999,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -1025,9 +1025,9 @@ cvp_configlets:
     address 10.255.1.3/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.22/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.0/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -1036,7 +1036,7 @@ cvp_configlets:
     \  ip address 10.255.252.0/31\n!\ninterface Vxlan1\n   description s2-leaf1_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.3\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF1-DC2\n
@@ -1063,7 +1063,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.2.255.3:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.2.255.3:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.3:10\n      route-target import evpn 10:10\n      route-target
@@ -1079,7 +1079,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -1105,9 +1105,9 @@ cvp_configlets:
     address 10.255.1.4/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.23/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.1/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -1116,7 +1116,7 @@ cvp_configlets:
     \  ip address 10.255.252.1/31\n!\ninterface Vxlan1\n   description s2-leaf2_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.4\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF1-DC2\n
@@ -1143,7 +1143,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.2.255.4:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.2.255.4:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.4:10\n      route-target import evpn 10:10\n      route-target
@@ -1159,7 +1159,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -1185,9 +1185,9 @@ cvp_configlets:
     address 10.255.1.5/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.24/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.4/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -1196,7 +1196,7 @@ cvp_configlets:
     \  ip address 10.255.252.4/31\n!\ninterface Vxlan1\n   description s2-leaf3_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.5\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF2-DC2\n
@@ -1223,7 +1223,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.2.255.5:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.2.255.5:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.5:10\n      route-target import evpn 10:10\n      route-target
@@ -1239,7 +1239,7 @@ cvp_configlets:
     name-server vrf default 192.168.2.1\ndns domain atd.lab\n!\nspanning-tree mode
     mstp\nno spanning-tree vlan-id 4093-4094\nspanning-tree mst 0 priority 16384\n!\nno
     enable password\nno aaa root\n!\nvlan 100\n   name VLAN100\n!\nvlan 110\n   name
-    Extend\n!\nvlan 200\n   name VLAN200\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan
+    Extend\n!\nvlan 210\n   name Tenant_A_OP_Zone_1\n!\nvlan 300\n   name VLAN300\n!\nvlan
     3009\n   name MLAG_iBGP_Tenant_A_OP_Zone\n   trunk group LEAF_PEER_L3\n!\nvlan
     4093\n   name LEAF_PEER_L3\n   trunk group LEAF_PEER_L3\n!\nvlan 4094\n   name
     MLAG_PEER\n   trunk group MLAG\n!\nvrf instance Tenant_A_OP_Zone\n!\ninterface
@@ -1265,9 +1265,9 @@ cvp_configlets:
     address 10.255.1.6/32\n!\ninterface Management0\n   description oob_management\n
     \  no shutdown\n   ip address 192.168.0.25/24\n!\ninterface Vlan100\n   description
     VLAN100\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.10.10.1/24\n!\ninterface
-    Vlan200\n   description VLAN200\n   no shutdown\n   vrf Tenant_A_OP_Zone\n   ip
-    address virtual 20.20.20.1/24\n!\ninterface Vlan210\n   description Tenant_A_OP_Zone_1\n
-    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 10.1.10.1/24\n!\ninterface
+    Vlan210\n   description Tenant_A_OP_Zone_1\n   no shutdown\n   vrf Tenant_A_OP_Zone\n
+    \  ip address virtual 10.1.10.1/24\n!\ninterface Vlan300\n   description VLAN300\n
+    \  no shutdown\n   vrf Tenant_A_OP_Zone\n   ip address virtual 30.20.20.1/24\n!\ninterface
     Vlan3009\n   description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone\n   no shutdown\n
     \  mtu 9214\n   vrf Tenant_A_OP_Zone\n   ip address 10.255.251.5/31\n!\ninterface
     Vlan4093\n   description MLAG_PEER_L3_PEERING\n   no shutdown\n   mtu 9214\n   ip
@@ -1276,7 +1276,7 @@ cvp_configlets:
     \  ip address 10.255.252.5/31\n!\ninterface Vxlan1\n   description s2-leaf4_VTEP\n
     \  vxlan source-interface Loopback1\n   vxlan virtual-router encapsulation mac-address
     mlag-system-id\n   vxlan udp-port 4789\n   vxlan vlan 100 vni 10100\n   vxlan
-    vlan 110 vni 10110\n   vxlan vlan 200 vni 10200\n   vxlan vlan 210 vni 10210\n
+    vlan 110 vni 10110\n   vxlan vlan 210 vni 10210\n   vxlan vlan 300 vni 10300\n
     \  vxlan vrf Tenant_A_OP_Zone vni 10\n!\nip virtual-router mac-address 00:1c:73:00:dc:01\n!\nip
     address virtual source-nat vrf Tenant_A_OP_Zone address 10.255.1.6\n!\nip routing\nip
     routing vrf Tenant_A_OP_Zone\n!\nmlag configuration\n   domain-id ATD_LEAF2-DC2\n
@@ -1303,7 +1303,7 @@ cvp_configlets:
     \  !\n   vlan-aware-bundle Extend\n      rd 192.2.255.6:10110\n      route-target
     both 10110:10110\n      redistribute learned\n      vlan 110\n   !\n   vlan-aware-bundle
     Tenant_A_OP_Zone\n      rd 192.2.255.6:10\n      route-target both 10:10\n      redistribute
-    learned\n      vlan 100,200,210\n   !\n   address-family evpn\n      neighbor
+    learned\n      vlan 100,210,300\n   !\n   address-family evpn\n      neighbor
     EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS
     activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n
     \     rd 192.2.255.6:10\n      route-target import evpn 10:10\n      route-target
