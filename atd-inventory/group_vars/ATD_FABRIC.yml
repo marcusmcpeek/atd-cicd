@@ -25,7 +25,7 @@ vxlan_vlan_aware_bundles: true
 
 evpn_ebgp_multihop: 8
 
-underlay_routing_protocol: ebgp
+underlay_routing_protocol: ospf
 
 # Optional, enable multicast features
 # underlay_multicast: true
