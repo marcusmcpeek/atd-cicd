@@ -1,0 +1,21 @@
+hostname s1-core1
+!
+interface Ethernet1
+   shutdown
+!
+interface Ethernet2
+   no shutdown
+   switchport
+!
+interface Ethernet3
+   shutdown
+!
+interface Ethernet4
+   no shutdown
+   switchport
+!
+interface Ethernet6
+   shutdown
+!
+interface Management1
+   ip address 192.168.0.102/24

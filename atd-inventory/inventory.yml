@@ -10,20 +10,17 @@ all:
           cv_collection: v3
           execute_tasks: true
         cv_act:
-          ansible_host: 10.255.40.223
+          ansible_host: 10.255.59.106
           cv_collection: v3
           execute_tasks: true
           ansible_user: cvpadmin
           ansible_password: "cvp123!"
+    CVP_ZTP:
+      hosts:
         cv_ztp:
-          ansible_host: 10.255.40.223
+          ansible_host: 10.255.59.106
           ansible_user: root
           ansible_password: cvproot
-          ansible_connection: ansible.netcommon.httpapi
-          ansible_become: true
-          ansible_become_method: enable
-          ansible_httpapi_use_ssl: true
-          ansible_httpapi_validate_certs: false
     ATD_LAB:
       children:
         ATD_FABRIC:
@@ -108,8 +105,6 @@ all:
           children:
             ATD_LEAFS_DC1:
             ATD_LEAFS_DC2:
-
-
   vars:
     ansible_user: arista
     # ansible_password: "{{ lookup('env', 'PASS') }}"

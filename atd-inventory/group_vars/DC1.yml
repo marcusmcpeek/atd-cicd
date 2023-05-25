@@ -2,6 +2,7 @@
 spine:
   defaults:
     platform: CEOS-LAB
+    # platform: vEOS-LAB  # placeholder for when deploying to act
     bgp_as: 65001
     loopback_ipv4_pool: 192.0.255.0/24
     bgp_defaults:
@@ -22,6 +23,7 @@ spine:
 l3leaf:
   defaults:
     platform: CEOS-LAB
+    # platform: vEOS-LAB  # placeholder for when deploying to act
     loopback_ipv4_pool: 192.0.255.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 192.0.254.0/24

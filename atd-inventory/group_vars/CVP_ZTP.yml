@@ -17,64 +17,78 @@ ztp:
         start: 192.168.0.150
         end: 192.168.0.199
         lease_time: 300
+
   clients:
     - name: s1-spine1
-      mac: 'b4:6f:8f:9c:ee:67'
+      mac: '24:7b:ee:96:af:d8'
       ip4: 192.168.0.10
     - name: s1-spine2
-      mac: 'b4:4b:10:66:2d:90'
+      mac: '24:f0:d6:77:c2:bc'
       ip4: 192.168.0.11
     - name: s1-leaf1
-      mac: 'b4:ee:38:63:e7:06'
+      mac: '24:e7:88:e3:6f:28'
       ip4: 192.168.0.12
     - name: s1-leaf2
-      mac: 'b4:ee:4f:9d:6c:55'
+      mac: '24:c0:41:81:ea:76'
       ip4: 192.168.0.13
     - name: s1-leaf3
-      mac: 'b4:98:7a:c4:d7:ed'
+      mac: '24:78:7d:bf:46:ca'
       ip4: 192.168.0.14
     - name: s1-leaf4
-      mac: 'b4:55:93:03:4f:ab'
+      mac: '24:22:8e:ed:f8:e9'
       ip4: 192.168.0.15
     - name: s1-brdr1
-      mac: 'b4:0c:2b:40:22:35'
+      mac: '24:10:33:54:56:2c'
       ip4: 192.168.0.100
     - name: s1-brdr2
-      mac: 'b4:52:87:85:cb:77'
+      mac: '24:1f:b3:06:f9:56'
       ip4: 192.168.0.101
-    # - name: s1-host1
-    #   mac: '84:66:b4:21:ad:1c'
-    #   ip4: 192.168.0.16
-    # - name: s1-host2
-    #   mac: '84:af:61:52:73:33'
-    #   ip4: 192.168.0.17
+    - name: s1-core1
+      mac: '24:60:b7:9b:bd:e5'
+      ip4: 192.168.0.102
+    - name: s1-core2
+      mac: '24:3f:5f:67:f6:16'
+      ip4: 192.168.0.103
+    - name: s1-host1
+      mac: '24:7d:fb:a5:bc:d8'
+      ip4: 192.168.0.16
+    - name: s1-host2
+      mac: '24:b0:e1:3a:a7:d6'
+      ip4: 192.168.0.17
     - name: s2-spine1
-      mac: 'b4:29:fa:f3:ef:11'
+      mac: '24:aa:7f:f5:ea:8a'
       ip4: 192.168.0.20
     - name: s2-spine2
-      mac: 'b4:2e:ed:b5:6d:73'
+      mac: '24:67:c7:c5:38:90'
       ip4: 192.168.0.21
     - name: s2-leaf1
-      mac: 'b4:8f:00:f8:3d:6b'
+      mac: '24:a0:f8:4c:6d:94'
       ip4: 192.168.0.22
     - name: s2-leaf2
-      mac: 'b4:a3:b6:bf:b4:7a'
+      mac: '24:73:b0:89:cd:48'
       ip4: 192.168.0.23
     - name: s2-leaf3
-      mac: 'b4:a3:89:e6:82:41'
+      mac: '24:11:9a:85:ab:ee'
       ip4: 192.168.0.24
     - name: s2-leaf4
-      mac: 'b4:34:7b:21:f5:1c'
+      mac: '24:46:0e:24:e1:2b'
       ip4: 192.168.0.25
     - name: s2-brdr1
-      mac: 'b4:34:1f:a0:2e:3c'
+      mac: '24:e2:02:c3:a9:b5'
       ip4: 192.168.0.200
     - name: s2-brdr2
-      mac: 'b4:86:3a:bb:80:27'
+      mac: '24:5f:9b:ae:81:1b'
       ip4: 192.168.0.201
-    # - name: s2-host1
-    #   mac: '84:bf:3d:52:26:ab'
-    #   ip4: 192.168.15.26
-    # - name: s2-host2
-    #   mac: '84:bf:3d:52:26:ab'
-    #   ip4: 192.168.15.27
+    - name: s2-core1
+      mac: '24:75:35:0c:d2:60'
+      ip4: 192.168.0.202
+    - name: s2-core2
+      mac: '24:77:e2:26:a9:d1'
+      ip4: 192.168.0.203
+    - name: s2-host1
+      mac: '24:2d:09:d9:8c:35'
+      ip4: 192.168.15.26
+    - name: s2-host2
+      mac: '24:31:95:81:03:34'
+      ip4: 192.168.15.27
+

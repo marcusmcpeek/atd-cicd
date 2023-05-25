@@ -1,7 +1,8 @@
 # Spine Switches
 spine:
   defaults:
-    platform: CEOS-LAB
+    # platform: CEOS-LAB
+    platform: vEOS-LAB
     bgp_as: 65002
     loopback_ipv4_pool: 192.2.255.0/24
     bgp_defaults:
@@ -21,7 +22,8 @@ spine:
 # Leaf switch groups
 l3leaf:
   defaults:
-    platform: CEOS-LAB
+    # platform: CEOS-LAB
+    platform: vEOS-LAB
     loopback_ipv4_pool: 192.2.255.0/24
     loopback_ipv4_offset: 2
     vtep_loopback_ipv4_pool: 192.2.254.0/24
