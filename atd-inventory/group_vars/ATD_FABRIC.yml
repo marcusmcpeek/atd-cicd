@@ -26,24 +26,24 @@ bgp_peer_groups:
   MLAG_IPv4_UNDERLAY_PEER:
     password: "vnEaG8gMeQf3d3cN6PktXQ=="
 
-l3_edge:
-  p2p_links_ip_pools:
-    BORDER_IP: 172.16.200.0/24
-  p2p_links:
-    - id: 1
-      ip_pool: BORDER_IP
-      nodes: [s1-brdr1, s2-brdr1]
-      interfaces: [Ethernet4, Ethernet4]
-      as: [65103, 65203]
-      descriptions: ["s1 Border Leaf 1", "s2 Border Leaf 1"]
-      include_in_underlay_protocol: true
-    - id: 2
-      ip_pool: BORDER_IP
-      nodes: [s1-brdr2, s2-brdr2]
-      interfaces: [Ethernet4, Ethernet4]
-      as: [65103, 65203]
-      descriptions: ["s1 Border Leaf 1", "s2 Border Leaf 1"]
-      include_in_underlay_protocol: true
+# l3_edge:
+#   p2p_links_ip_pools:
+#     BORDER_IP: 172.16.200.0/24
+#   p2p_links:
+#     - id: 1
+#       ip_pool: BORDER_IP
+#       nodes: [s1-brdr1, s2-brdr1]
+#       interfaces: [Ethernet4, Ethernet4]
+#       as: [65103, 65203]
+#       descriptions: ["s1 Border Leaf 1", "s2 Border Leaf 1"]
+#       include_in_underlay_protocol: true
+#     - id: 2
+#       ip_pool: BORDER_IP
+#       nodes: [s1-brdr2, s2-brdr2]
+#       interfaces: [Ethernet4, Ethernet4]
+#       as: [65103, 65203]
+#       descriptions: ["s1 Border Leaf 1", "s2 Border Leaf 1"]
+#       include_in_underlay_protocol: true
 
 
 
@@ -55,14 +55,14 @@ bfd_multihop:
   min_rx: 1200
   multiplier: 3
 
-# atd parameters
+# ATD parameters
 mgmt_interface: Management0
 name_servers:
   - 192.168.2.1
   - 8.8.8.8
 dns_domain: atd.lab
 
-# act parameters
+# ACT parameters
 # mgmt_interface: Management1
 # name_servers:
 #   - 10.255.0.2

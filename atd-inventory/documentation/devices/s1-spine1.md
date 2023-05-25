@@ -3,13 +3,11 @@
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
+  - [DNS Domain](#dns-domain)
   - [Name Servers](#name-servers)
-  - [NTP](#ntp)
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
-  - [Local Users](#local-users)
 - [Monitoring](#monitoring)
-  - [TerminAttr Daemon](#terminattr-daemon)
 - [Spanning Tree](#spanning-tree)
   - [Spanning Tree Summary](#spanning-tree-summary)
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
@@ -47,22 +45,33 @@
 
 | Management Interface | description | Type | VRF | IP Address | Gateway |
 | -------------------- | ----------- | ---- | --- | ---------- | ------- |
-| Management1 | oob_management | oob | default | 192.168.0.10/24 | 192.168.0.1 |
+| Management0 | oob_management | oob | default | 192.168.0.10/24 | 192.168.0.1 |
 
 #### IPv6
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | default | - | - |
+| Management0 | oob_management | oob | default | - | - |
 
 ### Management Interfaces Device Configuration
 
 ```eos
 !
-interface Management1
+interface Management0
    description oob_management
    no shutdown
    ip address 192.168.0.10/24
+```
+
+## DNS Domain
+
+### DNS domain: atd.lab
+
+### DNS Domain Device Configuration
+
+```eos
+dns domain atd.lab
+!
 ```
 
 ## Name Servers
@@ -71,33 +80,14 @@ interface Management1
 
 | Name Server | Source VRF |
 | ----------- | ---------- |
-| 10.255.0.2 | default |
+| 192.168.2.1 | default |
+| 8.8.8.8 | default |
 
 ### Name Servers Device Configuration
 
 ```eos
-ip name-server vrf default 10.255.0.2
-```
-
-## NTP
-
-### NTP Summary
-
-#### NTP Servers
-
-| Server | VRF | Preferred | Burst | iBurst | Version | Min Poll | Max Poll | Local-interface | Key |
-| ------ | --- | --------- | ----- | ------ | ------- | -------- | -------- | --------------- | --- |
-| 0.pool.ntp.org | - | - | - | - | - | - | - | Management1 | - |
-| 1.pool.ntp.org | - | - | - | - | - | - | - | Management1 | - |
-
-#### NTP Authentication
-
-### NTP Device Configuration
-
-```eos
-!
-ntp server 0.pool.ntp.org local-interface Management1
-ntp server 1.pool.ntp.org local-interface Management1
+ip name-server vrf default 8.8.8.8
+ip name-server vrf default 192.168.2.1
 ```
 
 ## Management API HTTP
@@ -128,43 +118,7 @@ management api http-commands
 
 # Authentication
 
-## Local Users
-
-### Local Users Summary
-
-| User | Privilege | Role | Disabled |
-| ---- | --------- | ---- | -------- |
-| admin | 15 | network-admin | False |
-| ansible | 15 | network-admin | False |
-| cvpadmin | 15 | network-admin | False |
-
-### Local Users Device Configuration
-
-```eos
-!
-username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
-username ansible privilege 15 role network-admin secret sha512 $6$Dzu11L7yp9j3nCM9$FSptxMPyIL555OMO.ldnjDXgwZmrfMYwHSr0uznE5Qoqvd9a6UdjiFcJUhGLtvXVZR1r.A/iF5aAt50hf/EK4/
-username cvpadmin privilege 15 role network-admin secret sha512 $6$qI16FDuEyTyahgyH$su2QQ4zgkOLu1269G7PM1pdM0xHV0AeBJ6nSUzCcGeTrIqCJYpEK8t/KKDtUy6Q8YyUGoYe2ZFPNYqprB482b0
-```
-
 # Monitoring
-
-## TerminAttr Daemon
-
-### TerminAttr Daemon Summary
-
-| CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
-| -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 192.168.0.5:9910 | default | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
-
-### TerminAttr Daemon Device Configuration
-
-```eos
-!
-daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=192.168.0.5:9910 -cvauth=token,/tmp/token -cvvrf=default -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
-   no shutdown
-```
 
 # Spanning Tree
 
