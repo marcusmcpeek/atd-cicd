@@ -1,24 +1,21 @@
 router_bgp:
   as: '65555'
   router_id: 10.200.10.1
-  bgp_defaults:
-  - no bgp default ipv4-unicast
-  - distance bgp 20 200 200
-  - graceful-restart restart-time 300
-  - graceful-restart
-  - maximum-paths 4 ecmp 4
-  bgp_cluster_id: 10.200.10.1
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  graceful_restart:
+    enabled: true
+    restart_time: 300
   peer_groups:
   - name: MPLS-OVERLAY-PEERS
-    type: mpls
-    update_source: Loopback0
-    bfd: true
-    password: $1c$G8BQN0ezkiJOX2cuAYpsEA==
-    send_community: all
-    maximum_routes: 0
-    remote_as: '65555'
-    route_reflector_client: true
-  - name: RR-OVERLAY-PEERS
     type: mpls
     update_source: Loopback0
     bfd: true
@@ -30,16 +27,12 @@ router_bgp:
     peer_groups:
     - name: MPLS-OVERLAY-PEERS
       activate: false
-    - name: RR-OVERLAY-PEERS
-      activate: false
   address_family_evpn:
     neighbor_default:
       encapsulation: mpls
       next_hop_self_source_interface: Loopback0
     peer_groups:
     - name: MPLS-OVERLAY-PEERS
-      activate: true
-    - name: RR-OVERLAY-PEERS
       activate: true
   neighbors:
   - ip_address: 10.200.10.2
@@ -48,6 +41,9 @@ router_bgp:
   - ip_address: 10.200.10.3
     peer_group: MPLS-OVERLAY-PEERS
     description: s2-core1
+  - ip_address: 10.200.10.4
+    peer_group: MPLS-OVERLAY-PEERS
+    description: s2-core2
   vpws:
   - name: VPN_SERVICE
     rd: 10.200.10.1:10000
@@ -120,6 +116,11 @@ mpls:
     router_id: 10.200.10.1
     shutdown: false
     transport_address_interface: Loopback0
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
 ethernet_interfaces:
 - name: Ethernet1
   peer: s1-core2
@@ -198,11 +199,6 @@ ethernet_interfaces:
   lldp:
     transmit: false
     receive: false
-router_bfd:
-  multihop:
-    interval: 1200
-    min_rx: 1200
-    multiplier: 3
 patch_panel:
   patches:
   - name: CIRCUIT_1

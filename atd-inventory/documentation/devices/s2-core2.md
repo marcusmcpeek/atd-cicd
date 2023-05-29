@@ -215,7 +215,7 @@ interface Ethernet1
    isis hello padding
    isis network point-to-point
    isis authentication mode md5
-   isis authentication key 7 $1c$sTNAlR6rKSw=
+   isis authentication key 7 <removed>
 !
 interface Ethernet2
    no shutdown
@@ -244,7 +244,7 @@ interface Ethernet4
    isis hello padding
    isis network point-to-point
    isis authentication mode md5
-   isis authentication key 7 $1c$sTNAlR6rKSw=
+   isis authentication key 7 <removed>
 !
 interface Ethernet6
    description P2P_LINK_TO_s2-core1_Ethernet6
@@ -261,7 +261,7 @@ interface Ethernet6
    isis hello padding
    isis network point-to-point
    isis authentication mode md5
-   isis authentication key 7 $1c$sTNAlR6rKSw=
+   isis authentication key 7 <removed>
 ```
 
 ### Loopback Interfaces
@@ -415,33 +415,17 @@ router isis CORE
 | ------ | --------- |
 | 65555|  10.200.10.4 |
 
-| BGP AS | Cluster ID |
-| ------ | --------- |
-| 65555|  10.200.10.4 |
-
 | BGP Tuning |
 | ---------- |
-| no bgp default ipv4-unicast |
-| distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
+| no bgp default ipv4-unicast |
+| distance bgp 20 200 200 |
 | maximum-paths 4 ecmp 4 |
 
 #### Router BGP Peer Groups
 
 ##### MPLS-OVERLAY-PEERS
-
-| Settings | Value |
-| -------- | ----- |
-| Address Family | mpls |
-| Remote AS | 65555 |
-| Route Reflector Client | Yes |
-| Source | Loopback0 |
-| BFD | True |
-| Send community | all |
-| Maximum routes | 0 (no limit) |
-
-##### RR-OVERLAY-PEERS
 
 | Settings | Value |
 | -------- | ----- |
@@ -456,8 +440,9 @@ router isis CORE
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- |
-| 10.200.10.2 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - |
-| 10.200.10.3 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - |
+| 10.200.10.1 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | - | - |
+| 10.200.10.2 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | - | - |
+| 10.200.10.3 | Inherited from peer group MPLS-OVERLAY-PEERS | default | - | Inherited from peer group MPLS-OVERLAY-PEERS | Inherited from peer group MPLS-OVERLAY-PEERS | - | Inherited from peer group MPLS-OVERLAY-PEERS | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -466,7 +451,6 @@ router isis CORE
 | Peer Group | Activate | Encapsulation |
 | ---------- | -------- | ------------- |
 | MPLS-OVERLAY-PEERS | True | default |
-| RR-OVERLAY-PEERS | True | default |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -487,27 +471,20 @@ router isis CORE
 !
 router bgp 65555
    router-id 10.200.10.4
-   bgp cluster-id 10.200.10.4
-   no bgp default ipv4-unicast
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
    maximum-paths 4 ecmp 4
+   no bgp default ipv4-unicast
    neighbor MPLS-OVERLAY-PEERS peer group
    neighbor MPLS-OVERLAY-PEERS remote-as 65555
    neighbor MPLS-OVERLAY-PEERS update-source Loopback0
-   neighbor MPLS-OVERLAY-PEERS route-reflector-client
    neighbor MPLS-OVERLAY-PEERS bfd
-   neighbor MPLS-OVERLAY-PEERS password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==
+   neighbor MPLS-OVERLAY-PEERS password 7 <removed>
    neighbor MPLS-OVERLAY-PEERS send-community
    neighbor MPLS-OVERLAY-PEERS maximum-routes 0
-   neighbor RR-OVERLAY-PEERS peer group
-   neighbor RR-OVERLAY-PEERS remote-as 65555
-   neighbor RR-OVERLAY-PEERS update-source Loopback0
-   neighbor RR-OVERLAY-PEERS bfd
-   neighbor RR-OVERLAY-PEERS password 7 $1c$G8BQN0ezkiJOX2cuAYpsEA==
-   neighbor RR-OVERLAY-PEERS send-community
-   neighbor RR-OVERLAY-PEERS maximum-routes 0
+   neighbor 10.200.10.1 peer group MPLS-OVERLAY-PEERS
+   neighbor 10.200.10.1 description s1-core1
    neighbor 10.200.10.2 peer group MPLS-OVERLAY-PEERS
    neighbor 10.200.10.2 description s1-core2
    neighbor 10.200.10.3 peer group MPLS-OVERLAY-PEERS
@@ -526,11 +503,9 @@ router bgp 65555
    address-family evpn
       neighbor default encapsulation mpls next-hop-self source-interface Loopback0
       neighbor MPLS-OVERLAY-PEERS activate
-      neighbor RR-OVERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor MPLS-OVERLAY-PEERS activate
-      no neighbor RR-OVERLAY-PEERS activate
 ```
 
 ## BFD

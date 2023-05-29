@@ -18,10 +18,10 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision | Serial Number |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- | ------------- |
-| CORE_MPLS | pe | s1-core1 | 192.168.0.102/24 | CEOS-LAB | Provisioned | - |
-| CORE_MPLS | pe | s1-core2 | 192.168.0.103/24 | CEOS-LAB | Provisioned | - |
-| CORE_MPLS | pe | s2-core1 | 192.168.0.202/24 | CEOS-LAB | Provisioned | - |
-| CORE_MPLS | pe | s2-core2 | 192.168.0.203/24 | CEOS-LAB | Provisioned | - |
+| CORE_MPLS | pe | s1-core1 | 192.168.0.102/24 | VEOS-LAB | Provisioned | - |
+| CORE_MPLS | pe | s1-core2 | 192.168.0.103/24 | VEOS-LAB | Provisioned | - |
+| CORE_MPLS | pe | s2-core1 | 192.168.0.202/24 | VEOS-LAB | Provisioned | - |
+| CORE_MPLS | pe | s2-core2 | 192.168.0.203/24 | VEOS-LAB | Provisioned | - |
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 
