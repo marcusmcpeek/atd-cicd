@@ -1,0 +1,151 @@
+{
+  "dashboards": [
+    {
+      "key": "28136d54-85d9-4d0b-870e-331383c73a70",
+      "createdAt": [
+        87444286,
+        1569
+      ],
+      "createdBy": "arista",
+      "metaData": {
+        "schemaVersion": "3",
+        "legacyKey": "",
+        "legacyVersion": ""
+      },
+      "name": "Route and Application Information",
+      "description": "",
+      "widgets": [
+        {
+          "id": "0820d26b-ee4e-4cd8-8113-63884bc367ed",
+          "name": "",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "dimensions": {
+            "width": 12,
+            "height": 9
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "V4_TOTAL_ROUTES_TABLE_SIZE"
+            ],
+            "metricSource": "devices",
+            "selectedCustomTags": [],
+            "tags": "device:s1-leaf1 OR device:s1-leaf2 OR device:s1-leaf3 OR device:s1-leaf4 OR device:s1-spine1 OR device:s1-spine2 ",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "7129f47c-18e0-4201-af3d-7c17c393135b",
+          "name": "",
+          "position": {
+            "x": 12,
+            "y": 0
+          },
+          "dimensions": {
+            "width": 11,
+            "height": 9
+          },
+          "type": "metrics-widget-table",
+          "inputs": {
+            "components": [],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "V4_TOTAL_ROUTES_TABLE_SIZE"
+            ],
+            "metricSource": "devices",
+            "selectedCustomTags": [],
+            "tags": "device:s1-leaf1 OR device:s1-leaf2 OR device:s1-leaf3 OR device:s1-leaf4 OR device:s1-spine1 OR device:s1-spine2 ",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "5a8a251d-ac78-479f-8ca5-c9cf8721cd26",
+          "name": "",
+          "position": {
+            "x": 12,
+            "y": 9
+          },
+          "dimensions": {
+            "width": 11,
+            "height": 6
+          },
+          "type": "metrics-widget-table",
+          "inputs": {
+            "components": [],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "INTERFACE_OPER_STATUS"
+            ],
+            "metricSource": "interfaces",
+            "selectedCustomTags": [],
+            "tags": "interface:Ethernet4@s1-leaf1 OR interface:Ethernet4@s1-leaf2 ",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "7f5a2560-589d-4617-b0ac-a0552fd71eec",
+          "name": "",
+          "position": {
+            "x": 0,
+            "y": 9
+          },
+          "dimensions": {
+            "width": 12,
+            "height": 6
+          },
+          "type": "metrics-widget",
+          "inputs": {
+            "components": [],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "INTERFACE_OPER_STATUS"
+            ],
+            "metricSource": "interfaces",
+            "selectedCustomTags": [],
+            "tags": "interface:Ethernet4@s1-leaf1 OR interface:Ethernet4@s1-leaf2 ",
+            "viewType": "metric"
+          },
+          "location": "main"
+        },
+        {
+          "id": "73b39761-89c4-4b0d-acb2-37cd2aeaad45",
+          "name": "",
+          "position": {
+            "x": 0,
+            "y": 15
+          },
+          "dimensions": {
+            "width": 23,
+            "height": 7
+          },
+          "type": "metrics-widget-table",
+          "inputs": {
+            "components": [],
+            "isTokenSearchEnabled": true,
+            "metricKeys": [
+              "BGP_ENABLED",
+              "BGP_ESTABLISHED_PEER_COUNT_DEFAULT_VRF",
+              "BGP_PEER_COUNT_DEFAULT_VRF",
+              "BGP_UNESTABLISHED_PEER_COUNT_DEFAULT_VRF"
+            ],
+            "metricSource": "devices",
+            "selectedCustomTags": [],
+            "tags": "device:s1-leaf1 OR device:s1-leaf2 OR device:s1-leaf3 OR device:s1-leaf4 OR device:s1-spine1 OR device:s1-spine2",
+            "viewType": "metric"
+          },
+          "location": "main"
+        }
+      ],
+      "lastUpdated": 1684939979857,
+      "lastUpdatedBy": "arista"
+    }
+  ]
+}
