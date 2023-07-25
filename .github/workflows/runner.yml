@@ -15,7 +15,7 @@ jobs:
         run: pip install ansible
 
       - name: Install Arista AVD
-        run: ansible-galaxy collection install arista.avd:=3.8.6
+        run: ansible-galaxy collection install arista.avd:=4.1.0
         # run: ansible-galaxy collection install arista.avd:>=3.8
 
       - name: Install AVD Requirements
