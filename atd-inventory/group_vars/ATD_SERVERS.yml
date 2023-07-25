@@ -1,17 +1,17 @@
 ---
 port_profiles:
-  Profile1:
+  - profile: Profile1
     mode: trunk
     vlans: "100,110,200"
-  Profile2:
+  - profile: Profile2
     mode: trunk
     vlans: "100,110,200,210"
-  Profile3:
+  - profile: Profile3
     mode: trunk
     vlans: "100"
 
 servers:
-  s1-Host1:
+  - name: s1-Host1
     adapters:
       - endpoint_ports: [ E1, E2 ]
         switch_ports: [ Ethernet4, Ethernet4 ]
@@ -20,7 +20,7 @@ servers:
         port_channel:
           description: PortChannel to s1-Host1
           mode: active
-  s1-Host2:
+  - name: s1-Host2
     adapters:
       - endpoint_ports: [ E1, E2 ]
         switch_ports: [ Ethernet4, Ethernet4 ]
@@ -29,7 +29,7 @@ servers:
         port_channel:
           description: PortChannel to s1-Host2
           mode: active
-  s2-Host1:
+  - name: s2-Host1
     adapters:
       - endpoint_ports: [ E1, E2 ]
         switch_ports: [ Ethernet4, Ethernet4 ]
@@ -38,7 +38,7 @@ servers:
         port_channel:
           description: PortChannel to s2-Host1
           mode: active
-  s2-Host2:
+  - name: s2-Host2
     adapters:
       - endpoint_ports: [ E1, E2 ]
         switch_ports: [ Ethernet4, Ethernet4 ]

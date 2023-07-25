@@ -6,16 +6,15 @@ spine:
     bgp_as: 65001
     loopback_ipv4_pool: 192.0.255.0/24
     bgp_defaults:
-      - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
     mlag: false
   nodes:
-    s1-spine1:
+    - name: s1-spine1
       id: 1
       mgmt_ip: 192.168.0.10/24
-    s1-spine2:
+    - name: s1-spine2
       id: 2
       mgmt_ip: 192.168.0.11/24
 
@@ -35,7 +34,6 @@ l3leaf:
     mlag_peer_l3_ipv4_pool: 10.255.251.0/24
     virtual_router_mac_address: 00:1c:73:00:dc:01
     bgp_defaults:
-      - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
@@ -44,39 +42,39 @@ l3leaf:
     filter:
       only_vlans_in_use: true
   node_groups:
-    ATD_LEAF1-DC1:
+    - group: ATD_LEAF1-DC1
       # filter: 
       #   tags: [ standard_vlans ]
       bgp_as: 65101
       nodes:
-        s1-leaf1:
+        - name: s1-leaf1
           id: 1
           mgmt_ip: 192.168.0.12/24
           uplink_switch_interfaces: [ Ethernet2, Ethernet2 ]
-        s1-leaf2:
+        - name: s1-leaf2
           id: 2
           mgmt_ip: 192.168.0.13/24
           uplink_switch_interfaces: [ Ethernet3, Ethernet3 ]
-    ATD_LEAF2-DC1:
+    - group: ATD_LEAF2-DC1
       # filter:
       #   tags: [ standard_vlans ]
       bgp_as: 65102
       nodes:
-        s1-leaf3:
+        - name: s1-leaf3
           id: 3
           mgmt_ip: 192.168.0.14/24
           uplink_switch_interfaces: [ Ethernet4, Ethernet4 ]
-        s1-leaf4:
+        - name: s1-leaf4
           id: 4
           mgmt_ip: 192.168.0.15/24
           uplink_switch_interfaces: [ Ethernet5, Ethernet5 ]
-    ATD_BORDER-DC1:
+    - group: ATD_BORDER-DC1
       filter: 
         only_vlans_in_use: false
         tags: [ standard_vlans ]
       bgp_as: 65103
       nodes:
-        s1-brdr1:
+        - name: s1-brdr1
           id: 5
           mgmt_ip: 192.168.0.100/24
           uplink_switch_interfaces: [ Ethernet7, Ethernet7 ]
@@ -88,7 +86,7 @@ l3leaf:
           #   evpn_l3:
           #     enabled: true
           #     inter_domain: true
-        s1-brdr2:
+        - name: s1-brdr2
           id: 6
           mgmt_ip: 192.168.0.101/24
           uplink_switch_interfaces: [ Ethernet8, Ethernet8 ]
