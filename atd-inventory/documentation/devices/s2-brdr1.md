@@ -200,7 +200,6 @@ vlan internal order ascending range 1006 1199
 | 110 | Extend | - |
 | 200 | VLAN200 | - |
 | 210 | VLAN210 | - |
-| 300 | VLAN300 | - |
 | 3009 | MLAG_iBGP_customerA | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
@@ -220,9 +219,6 @@ vlan 200
 !
 vlan 210
    name VLAN210
-!
-vlan 300
-   name VLAN300
 !
 vlan 3009
    name MLAG_iBGP_customerA
@@ -370,7 +366,6 @@ interface Loopback100
 | Vlan100 | VLAN100 | customerA | - | False |
 | Vlan200 | VLAN200 | customerA | - | False |
 | Vlan210 | VLAN210 | customerA | - | False |
-| Vlan300 | VLAN300 | customerA | - | False |
 | Vlan3009 | MLAG_PEER_L3_iBGP: vrf customerA | customerA | 9000 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9000 | False |
 | Vlan4094 | MLAG_PEER | default | 9000 | False |
@@ -382,7 +377,6 @@ interface Loopback100
 | Vlan100 |  customerA  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
 | Vlan200 |  customerA  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
 | Vlan210 |  customerA  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan300 |  customerA  |  -  |  30.30.30.1/24  |  -  |  -  |  -  |  -  |
 | Vlan3009 |  customerA  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.8/31  |  -  |  -  |  -  |  -  |  -  |
@@ -408,12 +402,6 @@ interface Vlan210
    no shutdown
    vrf customerA
    ip address virtual 10.1.10.1/24
-!
-interface Vlan300
-   description VLAN300
-   no shutdown
-   vrf customerA
-   ip address virtual 30.30.30.1/24
 !
 interface Vlan3009
    description MLAG_PEER_L3_iBGP: vrf customerA
@@ -454,7 +442,6 @@ interface Vlan4094
 | 110 | 10110 | - | - |
 | 200 | 10200 | - | - |
 | 210 | 10210 | - | - |
-| 300 | 10300 | - | - |
 
 ##### VRF to VNI and Multicast Group Mappings
 
@@ -475,7 +462,6 @@ interface Vxlan1
    vxlan vlan 110 vni 10110
    vxlan vlan 200 vni 10200
    vxlan vlan 210 vni 10210
-   vxlan vlan 300 vni 10300
    vxlan vrf customerA vni 10
 ```
 
@@ -637,7 +623,7 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| customerA | 192.2.255.7:10 | 10:10<br>remote 10:10 | - | - | learned | 100,200,210,300 |
+| customerA | 192.2.255.7:10 | 10:10<br>remote 10:10 | - | - | learned | 100,200,210 |
 | Extend | 192.2.255.7:10110 | 10110:10110<br>remote 10110:10110 | - | - | learned | 110 |
 
 #### Router BGP VRFs
@@ -710,7 +696,7 @@ router bgp 65203
       route-target both 10:10
       route-target import export evpn domain remote 10:10
       redistribute learned
-      vlan 100,200,210,300
+      vlan 100,200,210
    !
    vlan-aware-bundle Extend
       rd 192.2.255.7:10110
