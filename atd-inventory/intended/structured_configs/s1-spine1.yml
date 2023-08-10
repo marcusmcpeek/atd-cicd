@@ -1,3 +1,4 @@
+hostname: s1-spine1
 router_bgp:
   as: '65001'
   router_id: 192.0.255.1

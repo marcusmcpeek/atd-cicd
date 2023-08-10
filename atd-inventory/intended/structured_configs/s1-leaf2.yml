@@ -1,3 +1,4 @@
+hostname: s1-leaf2
 router_bgp:
   as: '65101'
   router_id: 192.0.255.4
