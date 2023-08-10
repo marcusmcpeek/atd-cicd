@@ -4,7 +4,8 @@ all:
     cv_servers:
       hosts:
         cv_atd1:
-          ansible_host: avddemo-1-922cdcf0-eos.topo.testdrive.arista.com
+          ansible_host: cidemo-1-991e9a11-eos.topo.testdrive.arista.com
+          ansible_password: aristax35x
           cv_collection: v3
           execute_tasks: true
         cv_act:
@@ -59,54 +60,54 @@ all:
                           ansible_host: 192.168.0.100
                         s1-brdr2:
                           ansible_host: 192.168.0.101
-            DC2:
-              children:
-                ATD_SPINES_DC2:
-                  vars:
-                    type: spine
-                  hosts:
-                    s2-spine1:
-                      ansible_host: 192.168.0.20
-                    s2-spine2:
-                      ansible_host: 192.168.0.21
-                ATD_LEAFS_DC2:
-                  children:
-                    ATD_LEAF1_DC2:
-                      vars:
-                        type: l3leaf
-                      hosts:
-                        s2-leaf1:
-                          ansible_host: 192.168.0.22
-                        s2-leaf2:
-                          ansible_host: 192.168.0.23
-                    ATD_LEAF2_DC2:
-                      vars:
-                        type: l3leaf
-                      hosts:
-                        s2-leaf3:
-                          ansible_host: 192.168.0.24
-                        s2-leaf4:
-                          ansible_host: 192.168.0.25
-                    ATD_BORDER_DC2:
-                      vars:
-                        type: l3leaf
-                      hosts:
-                        s2-brdr1:
-                          ansible_host: 192.168.0.200
-                        s2-brdr2:
-                          ansible_host: 192.168.0.201
+            # DC2:
+            #   children:
+            #     ATD_SPINES_DC2:
+            #       vars:
+            #         type: spine
+            #       hosts:
+            #         s2-spine1:
+            #           ansible_host: 192.168.0.20
+            #         s2-spine2:
+            #           ansible_host: 192.168.0.21
+            #     ATD_LEAFS_DC2:
+            #       children:
+            #         ATD_LEAF1_DC2:
+            #           vars:
+            #             type: l3leaf
+            #           hosts:
+            #             s2-leaf1:
+            #               ansible_host: 192.168.0.22
+            #             s2-leaf2:
+            #               ansible_host: 192.168.0.23
+            #         ATD_LEAF2_DC2:
+            #           vars:
+            #             type: l3leaf
+            #           hosts:
+            #             s2-leaf3:
+            #               ansible_host: 192.168.0.24
+            #             s2-leaf4:
+            #               ansible_host: 192.168.0.25
+            #         ATD_BORDER_DC2:
+            #           vars:
+            #             type: l3leaf
+            #           hosts:
+            #             s2-brdr1:
+            #               ansible_host: 192.168.0.200
+            #             s2-brdr2:
+            #               ansible_host: 192.168.0.201
         ATD_TENANTS_NETWORKS:
           children:
             ATD_LEAFS_DC1:
-            ATD_LEAFS_DC2:
+            # ATD_LEAFS_DC2:
         ATD_SERVERS:
           children:
             ATD_LEAFS_DC1:
-            ATD_LEAFS_DC2:
+            # ATD_LEAFS_DC2:
   vars:
     ansible_user: arista
     # ansible_password: "{{ lookup('env', 'PASS') }}"
-    ansible_password: arista38lw
+    ansible_password: aristax35x
     ansible_network_os: arista.eos.eos
     # Configure privilege escalation
     ansible_become: true
