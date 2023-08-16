@@ -31,11 +31,6 @@ tenants:
             tags: [ standard_vlans ]
             enabled: true
             ip_address_virtual: 10.10.10.1/24
-          - id: 200
-            name: VLAN200
-            tags: [ standard_vlans ]
-            enabled: true
-            ip_address_virtual: 20.20.20.1/24
     l2vlans:
       - id: 110
         name: Extend
