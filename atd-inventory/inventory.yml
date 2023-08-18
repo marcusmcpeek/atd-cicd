@@ -4,22 +4,10 @@ all:
     cv_servers:
       hosts:
         cv_atd1:
-          ansible_host: cvpdemo-1-5b3acd05-eos.topo.testdrive.arista.com
-          ansible_password: aristakkgz
+          ansible_host: cidemo-1-d5d93357-eos.topo.testdrive.arista.com
+          ansible_password: aristafn6i
           cv_collection: v3
           execute_tasks: true
-        cv_act:
-          ansible_host: 10.255.59.106
-          cv_collection: v3
-          execute_tasks: true
-          ansible_user: cvpadmin
-          ansible_password: "cvp123!"
-    CVP_ZTP:
-      hosts:
-        cv_ztp:
-          ansible_host: 10.255.59.106
-          ansible_user: root
-          ansible_password: cvproot
     ATD_LAB:
       children:
         ATD_FABRIC:
