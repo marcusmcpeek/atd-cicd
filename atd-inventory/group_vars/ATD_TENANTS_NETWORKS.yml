@@ -18,7 +18,7 @@
 #         svis:
 #           - id: 100
 #             name: VLAN100
-#             tags: [ standard_vlans ]
+#             # tags: [ standard_vlans ]
 #             enabled: true
 #             ip_address_virtual: 10.10.10.1/24
     # l2vlans:

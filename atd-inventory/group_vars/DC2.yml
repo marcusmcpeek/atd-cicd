@@ -39,8 +39,8 @@ l3leaf:
       - 'graceful-restart'
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
-    filter:
-      only_vlans_in_use: true
+    # filter:
+    #   only_vlans_in_use: true
   node_groups:
     - group: ATD_LEAF1-DC2
       # filter: 
@@ -69,9 +69,9 @@ l3leaf:
           mgmt_ip: 192.168.0.25/24
           uplink_switch_interfaces: [ Ethernet5, Ethernet5 ]
     - group: ATD_BORDER-DC2
-      filter: 
-        only_vlans_in_use: false
-        tags: [ standard_vlans ]
+      # filter: 
+      #   only_vlans_in_use: false
+      #   tags: [ standard_vlans ]
       bgp_as: 65203
       nodes:
         - name: s2-brdr1
