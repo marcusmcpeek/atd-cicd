@@ -5,9 +5,9 @@ on:
 
 jobs:
   test-deploy-dev:
-    env:
-      net: dev
-      PASS: ${{ secrets.PASS }}
+    # env:
+    #   net: dev
+    #   PASS: ${{ secrets.PASS }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
