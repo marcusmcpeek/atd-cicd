@@ -42,9 +42,6 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
-- [Virtual Source NAT](#virtual-source-nat)
-  - [Virtual Source NAT Summary](#virtual-source-nat-summary)
-  - [Virtual Source NAT Configuration](#virtual-source-nat-configuration)
 
 ## Management
 
@@ -196,21 +193,12 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
-| 100 | VLAN100 | - |
-| 3009 | MLAG_iBGP_customerA | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
 ### VLANs Device Configuration
 
 ```eos
-!
-vlan 100
-   name VLAN100
-!
-vlan 3009
-   name MLAG_iBGP_customerA
-   trunk group LEAF_PEER_L3
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -313,7 +301,6 @@ interface Port-Channel1
 | --------- | ----------- | --- | ---------- |
 | Loopback0 | EVPN_Overlay_Peering | default | 192.0.255.8/32 |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | 192.0.254.7/32 |
-| Loopback100 | customerA_VTEP_DIAGNOSTICS | customerA | 10.255.1.8/32 |
 
 ##### IPv6
 
@@ -321,7 +308,6 @@ interface Port-Channel1
 | --------- | ----------- | --- | ------------ |
 | Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
-| Loopback100 | customerA_VTEP_DIAGNOSTICS | customerA | - |
 
 
 #### Loopback Interfaces Device Configuration
@@ -337,12 +323,6 @@ interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    no shutdown
    ip address 192.0.254.7/32
-!
-interface Loopback100
-   description customerA_VTEP_DIAGNOSTICS
-   no shutdown
-   vrf customerA
-   ip address 10.255.1.8/32
 ```
 
 ### VLAN Interfaces
@@ -351,8 +331,6 @@ interface Loopback100
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan100 | VLAN100 | customerA | - | False |
-| Vlan3009 | MLAG_PEER_L3_iBGP: vrf customerA | customerA | 9000 | False |
 | Vlan4093 | MLAG_PEER_L3_PEERING | default | 9000 | False |
 | Vlan4094 | MLAG_PEER | default | 9000 | False |
 
@@ -360,27 +338,12 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
-| Vlan100 |  customerA  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  customerA  |  10.255.251.9/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.9/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.9/31  |  -  |  -  |  -  |  -  |  -  |
 
 #### VLAN Interfaces Device Configuration
 
 ```eos
-!
-interface Vlan100
-   description VLAN100
-   no shutdown
-   vrf customerA
-   ip address virtual 10.10.10.1/24
-!
-interface Vlan3009
-   description MLAG_PEER_L3_iBGP: vrf customerA
-   no shutdown
-   mtu 9000
-   vrf customerA
-   ip address 10.255.251.9/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -406,18 +369,6 @@ interface Vlan4094
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
-##### VLAN to VNI, Flood List and Multicast Group Mappings
-
-| VLAN | VNI | Flood List | Multicast Group |
-| ---- | --- | ---------- | --------------- |
-| 100 | 10100 | - | - |
-
-##### VRF to VNI and Multicast Group Mappings
-
-| VRF | VNI | Multicast Group |
-| ---- | --- | --------------- |
-| customerA | 10 | - |
-
 #### VXLAN Interface Device Configuration
 
 ```eos
@@ -427,8 +378,6 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
-   vxlan vlan 100 vni 10100
-   vxlan vrf customerA vni 10
 ```
 
 ## Routing
@@ -462,14 +411,12 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | True |
-| customerA | True |
 
 #### IP Routing Device Configuration
 
 ```eos
 !
 ip routing
-ip routing vrf customerA
 ```
 
 ### IPv6 Routing
@@ -479,7 +426,6 @@ ip routing vrf customerA
 | VRF | Routing Enabled |
 | --- | --------------- |
 | default | False |
-| customerA | false |
 | default | false |
 
 ### Static Routes
@@ -566,7 +512,6 @@ ip route 0.0.0.0/0 192.168.0.1
 | 192.0.255.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.0.255.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - |
 | 192.1.255.8 | 65203 | default | - | Inherited from peer group EVPN-OVERLAY-CORE | Inherited from peer group EVPN-OVERLAY-CORE | - | Inherited from peer group EVPN-OVERLAY-CORE | - | - | - |
-| 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | customerA | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -584,18 +529,6 @@ ip route 0.0.0.0/0 192.168.0.1
 | Remote Domain Peer Groups | EVPN-OVERLAY-CORE |
 | L3 Gateway Configured | True |
 | L3 Gateway Inter-domain | True |
-
-#### Router BGP VLAN Aware Bundles
-
-| VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
-| ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| customerA | 192.0.255.8:10 | 10:10<br>remote 10:10 | - | - | learned | 100 |
-
-#### Router BGP VRFs
-
-| VRF | Route-Distinguisher | Redistribute |
-| --- | ------------------- | ------------ |
-| customerA | 192.0.255.8:10 | connected |
 
 #### Router BGP Device Configuration
 
@@ -655,14 +588,6 @@ router bgp 65103
    neighbor 192.1.255.8 description s2-brdr2
    redistribute connected route-map RM-CONN-2-BGP
    !
-   vlan-aware-bundle customerA
-      rd 192.0.255.8:10
-      rd evpn domain remote 192.0.255.8:10
-      route-target both 10:10
-      route-target import export evpn domain remote 10:10
-      redistribute learned
-      vlan 100
-   !
    address-family evpn
       neighbor EVPN-OVERLAY-CORE activate
       neighbor EVPN-OVERLAY-CORE domain remote
@@ -674,14 +599,6 @@ router bgp 65103
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
-   !
-   vrf customerA
-      rd 192.0.255.8:10
-      route-target import evpn 10:10
-      route-target export evpn 10:10
-      router-id 192.0.255.8
-      neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
-      redistribute connected
 ```
 
 ## BFD
@@ -773,26 +690,8 @@ route-map RM-MLAG-PEER-IN permit 10
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
-| customerA | enabled |
 
 ### VRF Instances Device Configuration
 
 ```eos
-!
-vrf instance customerA
-```
-
-## Virtual Source NAT
-
-### Virtual Source NAT Summary
-
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| customerA | 10.255.1.8 |
-
-### Virtual Source NAT Configuration
-
-```eos
-!
-ip address virtual source-nat vrf customerA address 10.255.1.8
 ```
