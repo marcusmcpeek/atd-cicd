@@ -70,6 +70,33 @@ router_bgp:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
       activate: true
+  vrfs:
+  - name: customerA
+    router_id: 192.1.255.5
+    rd: 192.1.255.5:10
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '10:10'
+    redistribute_routes:
+    - source_protocol: connected
+    neighbors:
+    - ip_address: 10.255.251.5
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+  vlan_aware_bundles:
+  - name: customerA
+    rd: 192.1.255.5:10
+    route_targets:
+      both:
+      - '10:10'
+    redistribute_routes:
+    - learned
+    vlan: '100'
 static_routes:
 - vrf: default
   destination_address_prefix: 0.0.0.0/0
@@ -95,6 +122,9 @@ spanning_tree:
 vrfs:
 - name: default
   ip_routing: false
+- name: customerA
+  tenant: Tenant_A
+  ip_routing: true
 management_interfaces:
 - name: Management0
   description: oob_management
@@ -118,6 +148,14 @@ vlans:
   name: MLAG_PEER
   trunk_groups:
   - MLAG
+- id: 100
+  name: VLAN100
+  tenant: Tenant_A
+- id: 3009
+  name: MLAG_iBGP_customerA
+  trunk_groups:
+  - LEAF_PEER_L3
+  tenant: Tenant_A
 vlan_interfaces:
 - name: Vlan4093
   description: MLAG_PEER_L3_PEERING
@@ -130,6 +168,20 @@ vlan_interfaces:
   ip_address: 10.255.252.4/31
   no_autostate: true
   mtu: 9000
+- name: Vlan100
+  tenant: Tenant_A
+  description: VLAN100
+  shutdown: false
+  ip_address_virtual: 10.10.10.1/24
+  vrf: customerA
+- name: Vlan3009
+  tenant: Tenant_A
+  type: underlay_peering
+  shutdown: false
+  description: 'MLAG_PEER_L3_iBGP: vrf customerA'
+  vrf: customerA
+  mtu: 9000
+  ip_address: 10.255.251.4/31
 port_channel_interfaces:
 - name: Port-Channel1
   description: MLAG_PEER_s2-leaf4_Po1
@@ -226,6 +278,11 @@ loopback_interfaces:
   description: VTEP_VXLAN_Tunnel_Source
   shutdown: false
   ip_address: 192.1.254.5/32
+- name: Loopback100
+  description: customerA_VTEP_DIAGNOSTICS
+  shutdown: false
+  vrf: customerA
+  ip_address: 10.255.1.5/32
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -248,3 +305,12 @@ vxlan_interface:
       udp_port: 4789
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
+      vlans:
+      - id: 100
+        vni: 10100
+      vrfs:
+      - name: customerA
+        vni: 10
+virtual_source_nat_vrfs:
+- name: customerA
+  ip_address: 10.255.1.5
