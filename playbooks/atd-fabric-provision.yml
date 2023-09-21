@@ -1,6 +1,6 @@
 ---
 - name: Configuration deployment with CVP
-  hosts: cv_atd1
+  hosts: cv_servers
   connection: local
   gather_facts: false
   tasks:

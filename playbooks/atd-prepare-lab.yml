@@ -1,6 +1,6 @@
 ---
 - name: Configlet upload management
-  hosts: cv_atd1
+  hosts: cv_servers
   connection: local
   gather_facts: false
   collections:
@@ -17,7 +17,7 @@
         execute_tasks: false
 
 - name: Provision ATD environment to prepare AVD Lab
-  hosts: cv_atd1
+  hosts: cv_servers
   connection: local
   gather_facts: false
   vars:

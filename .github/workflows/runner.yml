@@ -15,7 +15,7 @@ jobs:
         run: pip install ansible-core==2.14.2
 
       - name: Install Arista AVD
-        run: ansible-galaxy collection install arista.avd:=4.1.0
+        run: ansible-galaxy collection install arista.avd
 
       - name: Install AVD Requirements
         run: sudo pip install -r ~/.ansible/collections/ansible_collections/arista/avd/requirements.txt
@@ -32,8 +32,8 @@ jobs:
           file_or_dir: atd-inventory/group_vars/
           config_file: .yamllint.yml
 
-      - name: Build Configurations
-        run: ansible-playbook -i atd-inventory/inventory.yml playbooks/atd-fabric-build.yml
+      # - name: Build Configurations
+      #   run: ansible-playbook -i atd-inventory/inventory.yml playbooks/atd-fabric-build.yml
       
       - name: Deploy Configurations
         run: ansible-playbook -i atd-inventory/inventory.yml playbooks/atd-fabric-provision.yml
